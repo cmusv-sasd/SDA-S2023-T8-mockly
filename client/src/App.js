@@ -6,6 +6,7 @@ import DashboardPage from './pages/Dashboard'
 import FeedbackHistoryPage from './pages/FeedbackHistory'
 import FeedbackPage from './pages/Feedback'
 import ProfilePage from './pages/Profile'
+import RegistrationPage from './pages/Registration'
 
 const App = () => {
   return (
@@ -44,6 +45,7 @@ const App = () => {
           }
         />
         <Route path='/login' element={<LandingPage />} />
+        <Route path='/registration' element={<RegistrationPage />} />
       </Routes>
     </Router>
   )

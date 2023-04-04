@@ -8,7 +8,8 @@ class MatchController {
   * Create a match between a interviewer and interviewee
   */
   async create(interviewer, interviewee, preferences, time) {
-    const match = new Match({ interviewer, interviewee, preferences, time })
+    // TODO: set url
+    const match = new Match({ interviewer, interviewee, preferences, time, url: '', isPaid: false })
     await match.save()
     return match
   }

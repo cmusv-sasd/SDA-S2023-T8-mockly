@@ -13,7 +13,9 @@ const MatchSchema = new Schema({
     type: String
   },
   time: Number,
-  preferences: Object
+  preferences: Object,
+  url: String,
+  isPaid: Boolean
 })
 
 export default mongoose.model('Match', MatchSchema)

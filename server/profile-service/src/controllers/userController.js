@@ -44,11 +44,16 @@ export const getUserById = async (req, res) => {
     })
 }
 
+/**
+ * Controller for POST /users
+ * Creates a new user during registration
+ * Request body must contain andrewId, password, firstName, lastName, email
+ */
 export const createUser = async (req, res) => {
-  const { andrewId, password } = req.body
+  const { andrewId, password, firstName, lastName, email } = req.body
 
   // Check if andrewId and password are provided
-  if (!andrewId || !password) {
+  if (!andrewId || !password || !firstName || !lastName || !email) {
     return res.status(400).json({
       message: 'Missing required fields',
     })
@@ -64,7 +69,7 @@ export const createUser = async (req, res) => {
     }
 
     // Create a new user document
-    const user = new User({ andrewId, password })
+    const user = new User({ andrewId, password, firstName, lastName, email })
 
     // Save the user document to the database
     await user.save()
@@ -90,7 +95,8 @@ export const validateUserCredentials = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
-    if (!user.comparePassword(password)) {
+    const isPasswordVerified = await user.comparePassword(password)
+    if (!isPasswordVerified) {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
     // eslint-disable-next-line
