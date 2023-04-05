@@ -174,8 +174,8 @@ const InterviewModal = ({ open, setOpen }) => {
                   format="MM/DD/YY h A" 
                   onOk={addTimeSlot} 
                   disabledDate={current => {
-                    const inPast = current && current < dayjs().endOf('day')
-                    const afterThreeWeeks = current && current && current > dayjs().endOf('day').add(3, 'week')
+                    const inPast = current && current < dayjs()
+                    const afterThreeWeeks = current && current && current > dayjs().add(3, 'week')
                     return inPast || afterThreeWeeks
                   }}
                 />
