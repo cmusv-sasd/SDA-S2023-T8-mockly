@@ -20,11 +20,20 @@ class paymentProcessor {
     if (!payee || payee.error) {
       return { success: false, message: "payee account cannot be fetched" }
     }
-    const result = request(payer, payee, amount)
-    const processedResult = processResult(result)
-    // TODO update isPaid
-    const res = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/interviews`, { method: 'GET' })
-    const match = await res.json()
+    // TODO this API is not available yet
+    const getRes = await fetch(
+      `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
+      { method: 'GET' }
+    )
+    const match = await getRes.json()
+    const rawResult = request(payer, payee, amount)
+    const processedResult = processResult(rawResult)
+    if (processedResult.success) {
+      await fetch(
+        `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
+        { method: 'PATCH', body: JSON.stringify(match) }
+      )
+    }
     return processedResult
   }
 
