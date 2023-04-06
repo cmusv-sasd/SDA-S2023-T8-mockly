@@ -6,7 +6,7 @@ import PaypalProcessor from 'processing/PaypalProcessor'
 
 app.post('/payment', (req, res) => {
   const { payer, payee, match } = req.body
-  // TODO: verify payer is current user (or don't pass payer from req.body)
+  // TODO: payer is probably a paypal token
   // TODO: call paypalprocessor
   var paymentProcessor = new PaymentProcessor(payer, payee, match)
   const result = paymentProcessor.processPayment()
@@ -19,8 +19,7 @@ app.post('/payment', (req, res) => {
 })
   
 app.get('/payment-method', async (req, res) => {
-  // TODO: get current user id
-  const userId = None
+  const userId = req.params.userId
   try {
     const paymentMethod = await getPaymentMethodByUserId(userId)
     if (!paymentMethod) {
@@ -40,8 +39,7 @@ app.get('/payment-method', async (req, res) => {
 })
 
 app.post('/payment-method', async (req, res) => {
-  // TODO: get current user id
-  const userId = None
+  const userId = req.params.userId
   const { type, account } = request.query;
   try {
     const paymentMethod = await updatePaymentMethodByUserId(userId, type, account)
@@ -56,8 +54,7 @@ app.post('/payment-method', async (req, res) => {
 })
 
 app.delete('/payment-method', (req, res) => {
-  // TODO: get current user id
-  const userId = None
+  const userId = req.params.userId
   try {
     const result = deletePaymentMethodByUserId(userId)
   } catch (err) {
