@@ -20,20 +20,24 @@ class paymentProcessor {
     if (!payee || payee.error) {
       return { success: false, message: "payee account cannot be fetched" }
     }
-    // TODO this API is not available yet
-    const getRes = await fetch(
-      `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
-      { method: 'GET' }
-    )
-    const match = await getRes.json()
+    // // TODO this API is not available yet
+    // const getRes = await fetch(
+    //   `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
+    //   { method: 'GET' }
+    // )
+    // const match = await getRes.json()
+    // if (match.isPaid) {
+    //   return { success: false, message: "match already paid for" }
+    // }
     const rawResult = request(payer, payee, amount)
     const processedResult = processResult(rawResult)
-    if (processedResult.success) {
-      await fetch(
-        `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
-        { method: 'PATCH', body: JSON.stringify(match) }
-      )
-    }
+    // if (processedResult.success) {
+    //   match.isPaid = true
+    //   await fetch(
+    //     `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
+    //     { method: 'PATCH', body: JSON.stringify(match) }
+    //   )
+    // }
     return processedResult
   }
 
