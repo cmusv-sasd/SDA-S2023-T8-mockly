@@ -92,18 +92,6 @@ const DashboardPage = () => {
         time={currTime}
         interviewer={currInterviewer}
       />
-      {/*REMOVE THIS AS THIS IS TESTING CODE*/}
-      <Button
-        type='default'
-        onClick={(e) => {
-          e.stopPropagation()
-          //  this should be an ID instead
-          setSelectedFeedbackForm(100)
-          setOpenFeedbackForm(true)
-        }}
-      >
-        Complete Feedback
-      </Button>
     </div>
   )
 }

@@ -30,7 +30,13 @@ const FeedbackHistoryPage = () => {
         dispatch(setFeedbackHistory(response))
         */
         // eslint-disable-next-line no-unused-vars
-        const res = await fetchFeedback(user._id)
+        console.log(
+          'user',
+          user,
+          user['firstName'],
+          user.firstName + ' ' + user.lastName
+        )
+        const res = await fetchFeedback(user.firstName + ' ' + user.lastName)
         dispatch(setFeedbackHistory(res))
       } catch (error) {
         console.error(error)

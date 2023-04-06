@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import request from '../utils/request'
 // eslint-disable-next-line no-unused-vars
-const fetchFeedback = async (userId) => {
-  return [
+const fetchFeedback = async (userName) => {
+  const dummyData = [
     {
       time: '2019-01-25',
       reviewer: 'userA',
@@ -84,6 +84,11 @@ const fetchFeedback = async (userId) => {
       answers: {},
     },
   ]
+  console.log(dummyData)
+  console.log('this is the name: ', userName)
+  return request(`feedback/feedback?revieweeName=${userName}`, {
+    method: 'GET',
+  })
 }
 /*
 request(`/feedback?userId=${userId}`, {
