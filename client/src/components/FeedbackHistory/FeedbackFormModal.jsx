@@ -1,4 +1,4 @@
-import { Modal, Slider, Input, Form, Button } from 'antd'
+import { Modal, Slider, Input, Form, Button, Space } from 'antd'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -53,11 +53,12 @@ const FeedbackFormModal = ({
   */
 
   const onFinish = async (values) => {
-    console.log('Success:', values)
+    //  console.log('Success:', values)
     //  save to MongoDB
     try {
       //const questions = { questions: values }
-      console.log('in onFinish', interviewer)
+      //  console.log('in onFinish', interviewer)
+      setOpen(false)
       await createFeedback({
         questions: feedback.questions,
         answers: values,
@@ -73,6 +74,10 @@ const FeedbackFormModal = ({
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
+
+  const validateMessages = {
+    required: "Please fill this out!",
+  };
 
   //
   useEffect(() => {
@@ -120,7 +125,7 @@ const FeedbackFormModal = ({
           },
         }
 
-        console.log('done')
+        //  console.log('done')
         dispatch(setFeedbackQuestions(response))
       } catch (error) {
         console.error(error)
@@ -133,7 +138,11 @@ const FeedbackFormModal = ({
       open={open}
       onCancel={() => setOpen(false)}
       width={1000}
-      footer={null}
+      footer={[<Space key="feedback-space" direction="horizontal" style={{width: '100%', justifyContent: 'center'}}>
+          <Button type='primary' htmlType='submit' form="feedbackForm" key="submit-feedback">
+            Submit
+          </Button>
+        </Space>]}
     >
       <Form
         name='feedbackForm'
@@ -141,12 +150,13 @@ const FeedbackFormModal = ({
         onFinishFailed={onFinishFailed}
         autoComplete='off'
         layout='vertical'
+        validateMessages={validateMessages}
       >
         {open &&
           feedback &&
           Object.keys(feedback.questions).map((key) => {
             const currQuestion = feedback.questions[key]
-            console.log(currQuestion)
+            //  console.log(currQuestion)
             const questionType = currQuestion.type
             switch (questionType) {
               case 'text':
@@ -177,13 +187,14 @@ const FeedbackFormModal = ({
                       },
                     ]}
                     key={`question-${key}-item`}
+                    initialValue={3}
                   >
                     <Slider
                       step={1}
                       min={0} max={5}
                       marks={{ 0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5 }}
                       tooltip={{open:false}}
-                      defaultValue={3}
+                      
                     />
                   </Form.Item>
                 )
@@ -194,12 +205,6 @@ const FeedbackFormModal = ({
                 break
             }
           })}
-
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type='primary' htmlType='submit'>
-            Submit
-          </Button>
-        </Form.Item>
       </Form>
     </Modal>
   )
