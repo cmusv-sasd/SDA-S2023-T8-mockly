@@ -1,6 +1,6 @@
 
+import fetch from 'node-fetch'
 import { getPaymentMethodByUserId } from '../controllers/PaymentMethodController'
-import Match from '../../../../matching-service/models/Match'
 
 class paymentProcessor {
   constructor(payerId, payeeId, matchId) {
@@ -10,11 +10,7 @@ class paymentProcessor {
   }
 
   async processPayment() {
-    const match = await fetchMatch()
-    if (!match) {
-      return { success: false, message: "match cannot be fetched" }
-    }
-
+    const amount = 20
     const payer = await fetchPaymentMethod(payerId)
     if (!payer || payer.error) {
       return { success: false, message: "payer account cannot be fetched" }
@@ -24,21 +20,12 @@ class paymentProcessor {
     if (!payee || payee.error) {
       return { success: false, message: "payee account cannot be fetched" }
     }
-    
-    if (match.isPaid || match.fee == 0) {
-      return { success: false, message: "match does not require payment" }
-    }
-    else {
-      const result = request(payer, payee, match.fee)
-      const processedResult = processResult(result)
-      return processedResult
-    }
-  }
-
-  async fetchMatch(matchId) {
-    // TODO: how to fetch info from another service?
-    const match = await Match.findById(matchId)
-    return match
+    const result = request(payer, payee, amount)
+    const processedResult = processResult(result)
+    // TODO update isPaid
+    const res = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/interviews`, { method: 'GET' })
+    const match = await res.json()
+    return processedResult
   }
 
   async fetchPaymentMethod(userId) {
