@@ -179,9 +179,11 @@ const FeedbackFormModal = ({
                     key={`question-${key}-item`}
                   >
                     <Slider
-                      step={20}
-                      marks={{ 0: 0, 20: 1, 40: 2, 60: 3, 80: 4, 100: 5 }}
-                      initialValues={60}
+                      step={1}
+                      min={0} max={5}
+                      marks={{ 0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5 }}
+                      tooltip={{open:false}}
+                      defaultValue={3}
                     />
                   </Form.Item>
                 )

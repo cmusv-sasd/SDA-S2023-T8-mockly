@@ -6,7 +6,6 @@ import { feedbackHistorySelector } from '../../store/feedbackHistorySlice'
 const FeedbackModal = ({ open, setOpen, selectedFeedback }) => {
   const feedbackHistory = useSelector(feedbackHistorySelector)
   const feedback = feedbackHistory[selectedFeedback]
-  console.log('THIS IS THE FEEDBACK', feedback)
   // eslint-disable-next-line no-unused-vars
   return (
     <Modal open={open} onCancel={() => setOpen(false)} width={1000}>

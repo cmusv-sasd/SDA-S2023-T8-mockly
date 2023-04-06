@@ -54,6 +54,7 @@ const InterviewCard = (interview) => {
                 setCurrTime(time)
               }}
             >
+              Complete Feedback
               </Button>
           </>
         }

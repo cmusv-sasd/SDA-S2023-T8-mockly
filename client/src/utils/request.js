@@ -14,7 +14,6 @@ const request = async (endpoint, options) => {
       if (response.ok) {
         return body
       } else {
-        console.log('in request')
         // eslint-disable-next-line
         throw { status: response.status, ...body }
       }
