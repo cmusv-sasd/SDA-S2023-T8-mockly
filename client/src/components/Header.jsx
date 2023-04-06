@@ -36,7 +36,7 @@ const Header = ({ children }) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Layout.Sider collapsible>
+      <Layout.Sider collapsible breakpoint='lg' collapsedWidth={0}>
         <Menu theme='dark' mode='inline' items={items} onClick={handleClick} />
       </Layout.Sider>
       <Layout className='site-layout'>
@@ -49,7 +49,7 @@ const Header = ({ children }) => {
             alignItems: 'center',
           }}
         >
-          <LinkContainer to='/dashboard'>
+          <LinkContainer to='/'>
             <Image src={Logo} width={200} preview={false} />
           </LinkContainer>
           <LinkContainer to='/' onClick={handleLogout}>

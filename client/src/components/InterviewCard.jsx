@@ -1,22 +1,20 @@
-import { Card, Divider, Button, Space } from 'antd'
-import { fieldMapping } from '../utils/constants'
+import { Card, Divider, Button, Space, Tag } from "antd"
+import { fieldMapping } from "../utils/constants"
 import dayjs from 'dayjs'
 
 const InterviewCard = (interview) => {
-  const {
-    time,
-    interviewer,
-    preferences,
-    setSelectedFeedbackForm,
+  const { time, interviewer, preferences, isPaid,    setSelectedFeedbackForm,
     setOpenFeedbackForm,
     setCurrTime,
-    setCurrInterviewer,
-  } = interview
+    setCurrInterviewer, } = interview
   const { andrewId } = interviewer
 
   const { field, interviewer: interviewerType, difficulty } = preferences
   const isUpcoming = dayjs().isBefore(dayjs(time))
   const formattedTime = dayjs(time).format('MM/DD/YY h A')
+  // eslint-disable-next-line
+  let toBePaid = !isUpcoming && !isPaid
+  toBePaid = true
 
   const handleLaunch = () => {
     console.log('launch meeting')
@@ -35,16 +33,16 @@ const InterviewCard = (interview) => {
         </p>
         <p>Interviewer: {andrewId}</p>
         <p>Level: {difficulty}</p>
+        {toBePaid ? <Tag color="volcano">To be paid</Tag> : null}
         <Divider />
         {isUpcoming ? (
           <>
-            <Button type='primary' onClick={handleLaunch}>
-              Launch Meeting
-            </Button>
-            <Button danger>Delete</Button>
-          </>
-        ) : (
+            <Button type="primary" onClick={handleLaunch}>Launch Meeting</Button>
+            <Button danger type="primary">Delete</Button>
+          </>)
+          :
           <>
+            {toBePaid ? <Button danger type="default">Pay</Button> : null}
             <Button
               type='default'
               onClick={(e) => {
@@ -56,10 +54,9 @@ const InterviewCard = (interview) => {
                 setCurrTime(time)
               }}
             >
-              Complete Feedback
-            </Button>
+              </Button>
           </>
-        )}
+        }
       </Space>
     </Card>
   )
