@@ -1,3 +1,4 @@
+// TODO: Remove this file (unused)
 import { validate } from '../utils/token'
 
 /** This middleware function extracts the authentication token from the request header,

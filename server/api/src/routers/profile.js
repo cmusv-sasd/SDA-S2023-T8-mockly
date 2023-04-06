@@ -1,8 +1,5 @@
 import { Router } from 'express'
 import fetch from 'node-fetch'
-// eslint-disable-next-line no-unused-vars
-import { validate } from '../utils/token'
-import { setUserIdFromToken } from '../middlewares/setUserIdFromToken'
 import { headers } from '../utils/constants'
 import { verifyUserIdParam } from '../middlewares/verifyUserIdParam'
 
@@ -58,7 +55,7 @@ router.put(
 // Update personal information fields for a user
 router.put(
   '/:userId/personal-information',
-  setUserIdFromToken,
+  verifyUserIdParam,
   async (request, response) => {
     const userId = request.params.userId
     const options = {
@@ -305,25 +302,21 @@ router.delete('/experiences', async (request, response) => {
 
 // PUT /users/:userId/summary
 // Update the summary field for a user
-router.put(
-  '/:userId/summary',
-  setUserIdFromToken,
-  async (request, response) => {
-    const userId = request.params.userId
-    const options = {
-      method: 'PUT',
-      body: JSON.stringify(request.body),
-      headers,
-    }
-    try {
-      const resp = await fetch(`${BASE_URL}/${userId}/summary`, options)
-      const respJSON = await resp.json()
-      response.json(respJSON)
-    } catch (e) {
-      response.status(500)
-    }
+router.put('/:userId/summary', verifyUserIdParam, async (request, response) => {
+  const userId = request.params.userId
+  const options = {
+    method: 'PUT',
+    body: JSON.stringify(request.body),
+    headers,
   }
-)
+  try {
+    const resp = await fetch(`${BASE_URL}/${userId}/summary`, options)
+    const respJSON = await resp.json()
+    response.json(respJSON)
+  } catch (e) {
+    response.status(500)
+  }
+})
 
 // PUT /users/interviewer-details
 // Update the interviewer details card for a user
