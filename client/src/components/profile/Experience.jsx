@@ -327,8 +327,8 @@ const ExperienceCard = () => {
         </Button>
       }
     >
-      {renderExperienceList()}
       {addExperienceMode && renderExperienceForm()}
+      {renderExperienceList()}
     </Card>
   )
 }

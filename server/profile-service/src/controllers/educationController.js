@@ -13,7 +13,7 @@ export const createEducation = async (req, res) => {
   if (!userId || !schoolName || !startDate || !educationLevel || !major) {
     return res.status(400).json({
       message:
-        'Request body must contain userId, schoolName, educationLevel, major and startDate fields',
+        'Request must contain userId, schoolName, educationLevel, major and startDate fields',
     })
   }
 

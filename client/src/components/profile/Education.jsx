@@ -54,7 +54,7 @@ const EducationCard = () => {
   const [addEducationMode, setAddEducationMode] = useState(false)
   // set loading to true to see loading spinner else false to hide the spinner
   const [loading, setLoading] = useState(false)
-  // set  the education details  that is to be edited
+  // set the education details that is to be edited
   const [selectedEducation, setSelectedEducation] = useState(null)
 
   const dispatch = useDispatch()
