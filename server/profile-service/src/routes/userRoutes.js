@@ -4,24 +4,34 @@ import {
   getUserById,
   createUser,
   validateUserCredentials,
-  updatePersonalIdentity,
-  updatePersonalInformation,
-  createEducation,
-  updateEducation,
-  deleteEducation,
-  createSkill,
-  deleteSkill,
-  createCourse,
-  deleteCourse,
-  createProject,
-  updateProject,
-  deleteProject,
-  createExperience,
-  updateExperience,
-  deleteExperience,
   updateSummary,
   updateInterviewerDetails,
 } from '../controllers/userController'
+
+import {
+  updatePersonalIdentity,
+  updatePersonalInformation,
+} from '../controllers/informationController'
+
+import {
+  createEducation,
+  updateEducation,
+  deleteEducation,
+} from '../controllers/educationController'
+
+import { createSkill, deleteSkill } from '../controllers/skillsController'
+import { createCourse, deleteCourse } from '../controllers/coursesController'
+import {
+  createProject,
+  updateProject,
+  deleteProject,
+} from '../controllers/projectsController'
+
+import {
+  createExperience,
+  updateExperience,
+  deleteExperience,
+} from '../controllers/experienceController'
 
 const router = Router()
 
