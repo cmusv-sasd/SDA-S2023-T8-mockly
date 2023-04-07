@@ -1,26 +1,26 @@
 import User from '../models/user'
 
 /**
- * Controller for POST /users/:userId/experience
+ * Controller for POST /users/:userId/experiences
  * adds new experience details entry to user's experience list
  */
 export const createExperience = async (req, res) => {
   const userId = req.params.userId
-  const { company, position, startDate, endDate, location, description } =
+  const { companyName, position, startDate, endDate, location, description } =
     req.body
 
   // Check if all required fields are present
-  if (!userId || !company || !position || !startDate) {
+  if (!userId || !companyName || !position || !startDate) {
     return res.status(400).json({
       message:
-        'Request body must contain userId, company, and startDate fields',
+        'Request body must contain userId, companyName, position, and startDate fields',
     })
   }
 
   try {
     // Create a new experience object and set its fields
     const newExperience = {
-      company,
+      companyName,
       position,
       startDate,
       endDate,
@@ -57,7 +57,7 @@ export const createExperience = async (req, res) => {
 }
 
 /**
- * Controller for PUT /users/:userId/experience
+ * Controller for PUT /users/:userId/experiences
  * Update an existing experience entry for a particular user
  */
 export const updateExperience = async (req, res) => {
@@ -105,7 +105,7 @@ export const updateExperience = async (req, res) => {
 }
 
 /**
- * Controller for DELETE /users/:userId/experience
+ * Controller for DELETE /users/:userId/experiences
  * delete an experience entry for a user
  */
 export const deleteExperience = async (req, res) => {

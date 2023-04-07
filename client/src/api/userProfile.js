@@ -92,7 +92,7 @@ export const updateEducationDetailsAPI = async (userId, payload) =>
 // add experience details (companyName, position, startDate, endDate, location, description) for a particular user
 // POST /api/users/:userId/experience
 export const addExperienceDetailsAPI = async (userId, payload) =>
-  request(`users/${userId}/experience`, {
+  request(`users/${userId}/experiences`, {
     method: 'POST',
     body: JSON.stringify(payload),
   })
@@ -100,7 +100,7 @@ export const addExperienceDetailsAPI = async (userId, payload) =>
 // delete experience details for a particular user
 // DELETE /api/users/:userId/experience
 export const deleteExperienceDetailsAPI = async (userId, payload) =>
-  request(`users/${userId}/experience`, {
+  request(`users/${userId}/experiences`, {
     method: 'DELETE',
     body: JSON.stringify(payload),
   })
@@ -108,7 +108,7 @@ export const deleteExperienceDetailsAPI = async (userId, payload) =>
 // update particular experience details for a particular user
 // PUT /api/users/:userId/experience
 export const updateExperienceDetailsAPI = async (userId, payload) =>
-  request(`users/${userId}/experience`, {
+  request(`users/${userId}/experiences`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   })
