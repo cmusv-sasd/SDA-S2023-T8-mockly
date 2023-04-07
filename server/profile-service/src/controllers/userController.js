@@ -1,4 +1,5 @@
 import User from '../models/user'
+import { orderBy } from 'lodash'
 
 /**
  * Controller for GET /users, GET /users?fields=firstName,lastName,type,fields,time
@@ -32,6 +33,18 @@ export const getUserById = async (req, res) => {
           message: `User with ID ${userId} not found`,
         })
       }
+
+      // Sort education, experience, and projects by startDate in chronological order using lodash
+      if (user.education) {
+        user.education = orderBy(user.education, 'startDate', 'desc')
+      }
+      if (user.experience) {
+        user.experience = orderBy(user.experience, 'startDate', 'desc')
+      }
+      if (user.projects) {
+        user.projects = orderBy(user.projects, 'startDate', 'desc')
+      }
+
       return res.status(200).json(user)
     })
     .catch((error) => {
