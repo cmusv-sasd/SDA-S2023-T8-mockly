@@ -227,93 +227,115 @@ router.delete(
   }
 )
 
-// POST /users/projects
-// Create a new project entry for a user
-router.post('/projects', async (req, res) => {
-  const options = {
-    method: 'POST',
-    body: JSON.stringify(req.body),
-    headers: { 'Content-Type': 'application/json' },
+// POST /users/:userId/projects
+// Create a new project entry for a particular user
+router.post(
+  '/:userId/projects',
+  verifyUserIdParam,
+  async (request, response) => {
+    const userId = request.params.userId
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(request.body),
+      headers,
+    }
+    try {
+      const resp = await fetch(`${BASE_URL}/${userId}/projects`, options)
+      const project = await resp.json()
+      response.json(project)
+    } catch (e) {
+      response.status(500).json({ message: 'Internal Server Error' })
+    }
   }
-  try {
-    const resp = await fetch(`${BASE_URL}/projects`, options)
-    const project = await resp.json()
-    res.json(project)
-  } catch (e) {
-    res.status(500)
-  }
-})
+)
 
-// PUT /users/projects
-// Update an existing project entry for a user
-router.put('/projects', async (req, res) => {
-  const options = {
-    method: 'PUT',
-    body: JSON.stringify(req.body),
-    headers: { 'Content-Type': 'application/json' },
+// PUT /users/:userId/projects
+// Update an existing project entry for a particular user
+router.put(
+  '/:userId/projects',
+  verifyUserIdParam,
+  async (request, response) => {
+    const userId = request.params.userId
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify(request.body),
+      headers,
+    }
+    try {
+      const resp = await fetch(`${BASE_URL}/${userId}/projects`, options)
+      const project = await resp.json()
+      response.json(project)
+    } catch (e) {
+      response.status(500).json({ message: 'Internal Server Error' })
+    }
   }
-  try {
-    const resp = await fetch(`${BASE_URL}/projects`, options)
-    const project = await resp.json()
-    res.json(project)
-  } catch (e) {
-    res.status(500)
-  }
-})
+)
 
-// DELETE /users/projects
-// Delete an existing project entry for a user
-router.delete('/projects', async (request, response) => {
-  const { body } = request
-  const options = { method: 'DELETE', body: JSON.stringify(body), headers }
+// DELETE /users/:userId/projects
+// Delete an existing project entry for a particular user
+router.delete('/:userId/projects', async (request, response) => {
+  const userId = request.params.userId
+  const options = {
+    method: 'DELETE',
+    body: JSON.stringify(request.body),
+    headers,
+  }
   try {
-    const resp = await fetch(`${BASE_URL}/projects`, options)
+    const resp = await fetch(`${BASE_URL}/${userId}/projects`, options)
     const project = await resp.json()
     response.json(project)
   } catch (e) {
-    response.status(500)
+    response.status(500).json({ message: 'Internal Server Error' })
   }
 })
 
-// POST /users/experiences
-// Create a new experience entry for a user
-router.post('/experiences', async (request, response) => {
-  const { body } = request
-  const options = { method: 'POST', body: JSON.stringify(body), headers }
+// POST /users/:userId/experiences
+// Create a new experience entry for a particular user
+router.post('/:userId/experiences', async (request, response) => {
+  const userId = request.params.userId
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(request.body),
+    headers,
+  }
   try {
-    const resp = await fetch(`${BASE_URL}/experiences`, options)
+    const resp = await fetch(`${BASE_URL}/${userId}/experiences`, options)
     const experience = await resp.json()
     response.json(experience)
   } catch (e) {
-    response.status(500)
+    response.status(500).json({ message: 'Internal Server Error' })
   }
 })
 
-// PUT /users/experiences
-// Update an existing experience entry for a user
-router.put('/experiences', async (request, response) => {
-  const { body } = request
-  const options = { method: 'PUT', body: JSON.stringify(body), headers }
+// PUT /users/:userId/experiences
+// Update an existing experience entry for a particular user
+router.put('/:userId/experiences', async (request, response) => {
+  const userId = request.params.userId
+  const options = { method: 'PUT', body: JSON.stringify(request.body), headers }
   try {
-    const resp = await fetch(`${BASE_URL}/experiences`, options)
+    const resp = await fetch(`${BASE_URL}/${userId}/experiences`, options)
     const experience = await resp.json()
     response.json(experience)
   } catch (e) {
-    response.status(500)
+    response.status(500).json({ message: 'Internal Server Error' })
   }
 })
 
-// DELETE /users/experiences
-// Delete an existing experience entry for a user
-router.delete('/experiences', async (request, response) => {
-  const { body } = request
-  const options = { method: 'DELETE', body: JSON.stringify(body), headers }
+// DELETE /users/:userId/experiences
+// Delete an existing experience entry for a particular user
+router.delete('/:userId/experiences', async (request, response) => {
+  const userId = request.params.userId
+  const options = {
+    method: 'DELETE',
+    body: JSON.stringify(request.body),
+    headers,
+  }
   try {
-    const resp = await fetch(`${BASE_URL}/experiences`, options)
+    const resp = await fetch(`${BASE_URL}/${userId}/experiences`, options)
     const experience = await resp.json()
     response.json(experience)
   } catch (e) {
-    response.status(500)
+    response.status(500).json({ message: 'Internal Server Error' })
   }
 })
 

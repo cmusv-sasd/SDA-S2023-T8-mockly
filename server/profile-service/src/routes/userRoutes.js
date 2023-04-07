@@ -87,29 +87,29 @@ router.post('/:userId/courses', createCourse)
 // Delete an existing course entry for a user
 router.delete('/:userId/courses', deleteCourse)
 
-// POST /users/projects
+// POST /users/:userId/projects
 // Create a new project entry for a user
-router.post('/projects', createProject)
+router.post('/:userId/projects', createProject)
 
-// PUT /users/projects
+// PUT /users/:userId/projects
 // Update an existing project entry for a user
-router.put('/projects', updateProject)
+router.put('/:userId/projects', updateProject)
 
-// DELETE /users/projects
+// DELETE /users/:userId/projects
 // Delete an existing project entry for a user
-router.delete('/projects', deleteProject)
+router.delete('/:userId/projects', deleteProject)
 
-// POST /users/experiences
+// POST /users/:userId/experiences
 // Create a new experience entry for a user
-router.post('/experiences', createExperience)
+router.post('/:userId/experiences', createExperience)
 
-// PUT /users/experiences
+// PUT /users/:userId/experiences
 // Update an existing experience entry for a user
-router.put('/experiences', updateExperience)
+router.put('/:userId/experiences', updateExperience)
 
-// DELETE /users/experiences
+// DELETE /users/:userId/experiences
 // Delete an existing experience entry for a user
-router.delete('/experiences', deleteExperience)
+router.delete('/:userId/experiences', deleteExperience)
 
 // PUT /users/:userId/summary
 // Update the summary field for a user

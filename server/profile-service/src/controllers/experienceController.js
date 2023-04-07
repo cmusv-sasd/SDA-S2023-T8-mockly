@@ -1,113 +1,161 @@
-import { isEmpty } from 'lodash'
 import User from '../models/user'
 
-// Create a new experience entry for a user
+/**
+ * Controller for POST /users/:userId/experience
+ * adds new experience details entry to user's experience list
+ */
 export const createExperience = async (req, res) => {
-  const { userId, companyName, position, startDate, endDate, description } =
+  const userId = req.params.userId
+  const { company, position, startDate, endDate, location, description } =
     req.body
 
-  // Check if request body contains all required fields
-  if (!userId || !companyName || !position || !startDate) {
+  // Check if all required fields are present
+  if (!userId || !company || !position || !startDate) {
     return res.status(400).json({
       message:
-        'Request body must contain userId, companyName, position and startDate',
+        'Request body must contain userId, company, and startDate fields',
     })
   }
 
   try {
-    // Find the user document and add the new experience to the experience array
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        $push: {
-          experience: {
-            companyName,
-            position,
-            startDate,
-            endDate,
-            description,
-          },
-        },
-      },
-      { new: true }
-    )
-    if (!user) {
-      return res.status(404).json({
-        message: `User with ID ${userId} not found`,
-      })
+    // Create a new experience object and set its fields
+    const newExperience = {
+      company,
+      position,
+      startDate,
+      endDate,
+      location,
+      description,
     }
-    // Return the newly created experience object
-    const newExperience = user.experience.slice(-1)[0]
-    return res.status(201).json(newExperience)
+
+    // Use findOneAndUpdate to add the new experience object to the user's experience array,
+    // and return the updated user object
+    const result = await User.findOneAndUpdate(
+      { _id: userId },
+      { $push: { experience: newExperience } },
+      { new: true, upsert: false, runValidators: true }
+    )
+
+    // return 404 error if result is null as the user is not found
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: `User with ID ${userId} not found` })
+    }
+
+    // Get the newly added experience object
+    const addedExperience = result.experience[result.experience.length - 1]
+
+    // Return status 201 with the created experience object in the response
+    return res.status(201).json(addedExperience)
   } catch (error) {
     console.error(error)
-    return res.status(500).json({
-      message: 'Error creating experience',
-      error: error,
-    })
+    return res
+      .status(500)
+      .json({ message: 'Error creating experience entry', error })
   }
 }
 
-// Update an existing experience entry for a user
+/**
+ * Controller for PUT /users/:userId/experience
+ * Update an existing experience entry for a particular user
+ */
 export const updateExperience = async (req, res) => {
-  const { experienceId, userId, ...updateObject } = req.body
+  const userId = req.params.userId
+  const { experienceId, ...updateFields } = req.body
 
-  // Check if request body contains at least one field to update
-  if (isEmpty(updateObject)) {
-    return res.status(400).json({
-      message: 'Request body must contain at least one field to update',
-    })
+  // Check if the request body is empty
+  if (Object.keys(updateFields).length === 0) {
+    return res.status(400).json({ message: 'Request body cannot be empty' })
   }
 
   try {
-    // Find the user document and the experience to update
-    const user = await User.findOneAndUpdate(
+    // Find and update the experience entry
+    const updatedUser = await User.findOneAndUpdate(
       { _id: userId, 'experience._id': experienceId },
       {
-        $set: {
-          'experience.$': {
-            ...updateObject,
-          },
-        },
+        $set: Object.entries(updateFields).reduce(
+          (acc, [key, value]) => ({ ...acc, [`experience.$.${key}`]: value }),
+          {}
+        ),
       },
       { new: true }
     )
-    if (!user) {
+
+    // Check if the user and experience entry exist
+    if (!updatedUser) {
       return res.status(404).json({
-        message: `User with ID ${userId} or experience with ID ${experienceId} not found`,
+        message: `User with ID ${userId} or experience entry with ID ${experienceId} not found`,
       })
     }
-    // Return the updated experience object
-    const updatedExperience = user.experience.find(
-      (exp) => exp._id.toString() === experienceId
+
+    // Find the updated experience object in the user's experience array
+    const updatedExperience = updatedUser.experience.find(
+      (experience) => experience._id.toString() === experienceId
     )
+
+    // Return the updated experience object in the response
     return res.status(200).json(updatedExperience)
   } catch (error) {
     console.error(error)
-    return res.status(500).json({
-      message: 'Error updating experience',
-      error: error,
-    })
+    return res
+      .status(500)
+      .json({ message: 'Error updating experience entry', error })
   }
 }
 
+/**
+ * Controller for DELETE /users/:userId/experience
+ * delete an experience entry for a user
+ */
 export const deleteExperience = async (req, res) => {
-  try {
-    const { userId, experienceId } = req.body
+  const userId = req.params.userId
+  const { experienceId } = req.body
 
-    const updatedUser = await User.findByIdAndUpdate(
+  // Check if userId and experienceId are present
+  if (!userId || !experienceId) {
+    return res.status(400).json({
+      message:
+        'Request must contain userId (in URL params) and experienceId (in request body)',
+    })
+  }
+
+  try {
+    // Use findOneAndUpdate to find the user and remove the experience entry with the specified experienceId
+    // Return the updated user object if successful
+    const result = await User.findOneAndUpdate(
       userId,
       { $pull: { experience: { _id: experienceId } } },
       { new: true }
     )
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' })
+    // If the result is null, the user was not found
+    if (!result) {
+      return res
+        .status(404)
+        .json({ message: `User with ID ${userId} not found` })
     }
 
-    res.status(204).send()
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: 'Server error' })
+    // Check if the experience entry was removed by comparing the updated user object's experience array length
+    const entryRemoved = result.experience.some(
+      (entry) => entry._id.toString() === experienceId
+    )
+
+    // If the experience entry was not removed, it was not found
+    if (!entryRemoved) {
+      return res
+        .status(404)
+        .json({ message: `Experience entry with ID ${experienceId} not found` })
+    }
+
+    // Return a 200 response with a success message if the operation was successful
+    return res.status(200).json({
+      message: `Experience entry with ID ${experienceId} deleted successfully`,
+    })
+  } catch (error) {
+    console.error(error)
+    return res
+      .status(500)
+      .json({ message: 'Error deleting experience entry', error })
   }
 }
