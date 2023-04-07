@@ -64,3 +64,27 @@ export const updateInterviewerDetailsAPI = async (userId, payload) =>
     method: 'PUT',
     body: JSON.stringify(payload),
   })
+
+// add education details (schoolName, educationLevel, startDate, endDate, major, minor, gpa) for a particular user
+// POST /api/users/:userId/education
+export const addEducationDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/education`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+
+// delete education details for a particular user
+// DELETE /api/users/:userId/education
+export const deleteEducationDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/education`, {
+    method: 'DELETE',
+    body: JSON.stringify(payload),
+  })
+
+// update particular education details for a particular user
+// PUT /api/users/:userId/education
+export const updateEducationDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/education`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })

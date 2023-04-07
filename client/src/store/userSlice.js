@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { concat, reject, remove } from 'lodash'
+import { concat, reject, remove, findIndex, assign } from 'lodash'
 
 const initialState = {
   _id: '',
@@ -74,7 +74,23 @@ const userSlice = createSlice({
       state.education = concat(state.education, action.payload)
     },
     removeEducation: (state, action) => {
-      remove(state.education, action.payload)
+      remove(state.education, (education) => {
+        return education._id === action.payload
+      })
+    },
+    updateEducation: (state, action) => {
+      const updatedEducation = action.payload
+      // Find the index of the education entry to be updated in the user's education array
+      const educationIndex = findIndex(state.education, {
+        _id: updatedEducation._id,
+      })
+      // Check if the education entry exists in the user's education array
+      if (educationIndex !== -1) {
+        // Replace the old education entry with the updated one in the user's education array
+        assign(state.education[educationIndex], updatedEducation)
+      } else {
+        console.log(`Education entry with ID ${updatedEducation._id} not found`)
+      }
     },
     addExperience: (state, action) => {
       state.experience = concat(state.experience, action.payload)
@@ -108,6 +124,7 @@ export const {
   removeSkill,
   addEducation,
   removeEducation,
+  updateEducation,
   addExperience,
   removeExperience,
   addProject,

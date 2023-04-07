@@ -45,21 +45,21 @@ router.post('/credentials', validateUserCredentials)
 // Update personal identity fields for a user
 router.put('/:userId/personal-identity', updatePersonalIdentity)
 
-// PUT /users/:userId/personal-information/:id
+// PUT /users/:userId/personal-information
 // Update personal information fields for a user
 router.put('/:userId/personal-information', updatePersonalInformation)
 
-// POST /users/education
+// POST /users/:userId/education
 // Create a new education entry for a user
-router.post('/education', createEducation)
+router.post('/:userId/education', createEducation)
 
-// PUT /users/education
+// PUT /users/:userId/education
 // Update an existing education entry for a user
-router.put('/education', updateEducation)
+router.put('/:userId/education', updateEducation)
 
-// DELETE /users/education
+// DELETE /users/:userId/education
 // Delete an existing education entry for a user
-router.delete('/education', deleteEducation)
+router.delete('/:userId/education', deleteEducation)
 
 // POST /users/:userId/skills
 // Create a new skill for a user

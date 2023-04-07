@@ -23,13 +23,12 @@ const userSchema = new Schema({
   courses: [{ title: String }],
   education: [
     {
-      institution: String,
+      schoolName: String,
       educationLevel: String,
-      degree: String,
       major: String,
       minor: String,
-      startDate: String,
-      endDate: String,
+      startDate: Number,
+      endDate: Number,
       gpa: Number,
     },
   ],

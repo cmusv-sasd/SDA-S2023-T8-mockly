@@ -51,7 +51,7 @@ router.put(
   }
 )
 
-// PUT /users/:userId/personal-information/:id
+// PUT /users/:userId/personal-information
 // Update personal information fields for a user
 router.put(
   '/:userId/personal-information',
@@ -71,60 +71,77 @@ router.put(
       const updatedUser = await resp.json()
       response.json(updatedUser)
     } catch (e) {
-      response.status(500).send('Internal Server Error')
+      response.status(500).json({ message: 'Internal Server Error' })
     }
   }
 )
 
-// POST /users/education
-// Create a new education entry for a user
-router.post('/education', async (request, response) => {
-  try {
-    const { body } = request
-    const resp = await fetch(`${BASE_URL}/education`, {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers,
-    })
-    const newEducation = await resp.json()
-    response.json(newEducation)
-  } catch (e) {
-    response.status(500).send('Internal Server Error')
-  }
-})
+// POST /users/:userId/education
+// Create a new education entry for a particular user
+router.post(
+  '/:userId/education',
+  verifyUserIdParam,
+  async (request, response) => {
+    try {
+      const userId = request.params.userId
+      const options = {
+        method: 'POST',
+        body: JSON.stringify(request.body),
+        headers,
+      }
 
-// PUT /users/education
-// Update an existing education entry for a user
-router.put('/education', async (request, response) => {
-  try {
-    const { body } = request
-    const resp = await fetch(`${BASE_URL}/education`, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-      headers,
-    })
-    const updatedEducation = await resp.json()
-    response.json(updatedEducation)
-  } catch (e) {
-    response.status(500).send('Internal Server Error')
+      const resp = await fetch(`${BASE_URL}/${userId}/education`, options)
+      const newEducation = await resp.json()
+      response.json(newEducation)
+    } catch (e) {
+      response.status(500).json({ message: 'Internal Server Error' })
+    }
   }
-})
+)
 
-// DELETE /users/education
-// Delete an existing education entry for a user
-router.delete('/education', async (request, response) => {
-  try {
-    const { body } = request
-    const resp = await fetch(`${BASE_URL}/education`, {
-      method: 'DELETE',
-      body: JSON.stringify(body),
-      headers,
-    })
-    response.sendStatus(resp.status)
-  } catch (e) {
-    response.status(500).send('Internal Server Error')
+// PUT /users/:userId/education
+// Update an existing education entry for a particular user
+router.put(
+  '/:userId/education',
+  verifyUserIdParam,
+  async (request, response) => {
+    try {
+      const userId = request.params.userId
+      const options = {
+        method: 'PUT',
+        body: JSON.stringify(request.body),
+        headers,
+      }
+      const resp = await fetch(`${BASE_URL}/${userId}/education`, options)
+      const updatedEducation = await resp.json()
+      response.json(updatedEducation)
+    } catch (e) {
+      response.status(500).json({ message: 'Internal Server Error' })
+    }
   }
-})
+)
+
+// DELETE /users/:userId/education
+// Delete an existing education entry for a particular user
+router.delete(
+  '/:userId/education',
+  verifyUserIdParam,
+  async (request, response) => {
+    try {
+      const userId = request.params.userId
+      const options = {
+        method: 'DELETE',
+        body: JSON.stringify(request.body),
+        headers,
+      }
+      const resp = await fetch(`${BASE_URL}/${userId}/education`, options)
+      const respJSON = await resp.json()
+      response.json(respJSON)
+    } catch (e) {
+      response.status(500).json({ message: 'Internal Server Error' })
+    }
+  }
+)
 
 // POST /users/:userId/skills
 // Create a new skill for a particular user
