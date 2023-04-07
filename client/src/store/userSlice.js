@@ -96,13 +96,47 @@ const userSlice = createSlice({
       state.experience = concat(state.experience, action.payload)
     },
     removeExperience: (state, action) => {
-      remove(state.experience, action.payload)
+      remove(state.experience, (experience) => {
+        return experience._id === action.payload
+      })
+    },
+    updateExperience: (state, action) => {
+      const updatedExperience = action.payload
+      // Find the index of the experience entry to be updated in the user's experience array
+      const experienceIndex = findIndex(state.experience, {
+        _id: updatedExperience._id,
+      })
+      // Check if the experience entry exists in the user's experience array
+      if (experienceIndex !== -1) {
+        // Replace the old experience entry with the updated one in the user's experience array
+        assign(state.experience[experienceIndex], updatedExperience)
+      } else {
+        console.log(
+          `Experience entry with ID ${updatedExperience._id} not found`
+        )
+      }
     },
     addProject: (state, action) => {
       state.projects = concat(state.projects, action.payload)
     },
     removeProject: (state, action) => {
-      remove(state.projects, action.payload)
+      remove(state.projects, (project) => {
+        return project._id === action.payload
+      })
+    },
+    updateProject: (state, action) => {
+      const updatedProject = action.payload
+      // Find the index of the project entry to be updated in the user's projects array
+      const projectIndex = findIndex(state.projects, {
+        _id: updatedProject._id,
+      })
+      // Check if the project entry exists in the user's projects array
+      if (projectIndex !== -1) {
+        // Replace the old project entry with the updated one in the user's projects array
+        assign(state.projects[projectIndex], updatedProject)
+      } else {
+        console.log(`Project entry with ID ${updatedProject._id} not found`)
+      }
     },
     addCourse: (state, action) => {
       state.courses = concat(state.courses, action.payload)

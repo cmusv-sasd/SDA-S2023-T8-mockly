@@ -88,3 +88,51 @@ export const updateEducationDetailsAPI = async (userId, payload) =>
     method: 'PUT',
     body: JSON.stringify(payload),
   })
+
+// add experience details (companyName, position, startDate, endDate, location, description) for a particular user
+// POST /api/users/:userId/experience
+export const addExperienceDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/experience`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+
+// delete experience details for a particular user
+// DELETE /api/users/:userId/experience
+export const deleteExperienceDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/experience`, {
+    method: 'DELETE',
+    body: JSON.stringify(payload),
+  })
+
+// update particular experience details for a particular user
+// PUT /api/users/:userId/experience
+export const updateExperienceDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/experience`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+
+// add projects details (title, url, startDate, endDate, description) for a particular user
+// POST /api/users/:userId/projects
+export const addProjectDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/projects`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+
+// delete project details for a particular user
+// DELETE /api/users/:userId/projects
+export const deleteProjectDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/projects`, {
+    method: 'DELETE',
+    body: JSON.stringify(payload),
+  })
+
+// update particular project details for a particular user
+// PUT /api/users/:userId/projects
+export const updateProjectDetailsAPI = async (userId, payload) =>
+  request(`users/${userId}/projects`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
