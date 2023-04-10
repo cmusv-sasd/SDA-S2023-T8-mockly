@@ -23,7 +23,7 @@ router.post('/', async (request, response) => {
     const paymentResponse = await resp.json()
     response.json(paymentResponse)
   } catch (e) {
-    response.status(500).send('Internal Server Error')
+    response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
@@ -46,7 +46,7 @@ router.get('/confirm', async (req, res) => {t
     })
     response.json(resp)
   } catch (e) {
-    response.status(500).json({ message: 'Internal Server Error' })
+    response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
@@ -69,7 +69,7 @@ router.get('/cancel', async (req, res) => {t
     // TODO: redirect back to meetings
     response.json(resp)
   } catch (e) {
-    response.status(500).json({ message: 'Internal Server Error' })
+    response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
@@ -86,7 +86,7 @@ router.get('/payment-method', async (request, response) => {
     const paymentMethod = await resp.json()
     response.json(paymentMethod)
   } catch (e) {
-    response.status(500).json({ message: 'Internal Server Error' })
+    response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
@@ -105,7 +105,7 @@ router.post('/payment-method', async (request, response) => {
     const paymentMethod = await resp.json()
     response.json(paymentMethod)
   } catch (e) {
-    response.status(500).json({ message: 'Internal Server Error' })
+    response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
@@ -122,7 +122,7 @@ router.delete('/payment-method', async (request, response) => {
     const deleteResp = await resp.json()
     response.json(deleteResp)
   } catch (e) {
-    response.status(500).json({ message: 'Internal Server Error' })
+    response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
