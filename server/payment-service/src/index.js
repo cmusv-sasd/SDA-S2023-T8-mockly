@@ -3,6 +3,7 @@ import cors from 'cors'
 import * as Database from './utils/Database'
 import paymentRoutes from './routes/paymentRoutes'
 
+// eslint-disable-next-line no-undef
 const PORT = parseInt(process.env.PORT || '3004')
 
 const app = express().use(
