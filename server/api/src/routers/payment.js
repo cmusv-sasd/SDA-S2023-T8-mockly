@@ -27,6 +27,52 @@ router.post('/', async (request, response) => {
   }
 })
 
+// GET /payment/confirm
+// Confirm payment
+router.get('/confirm', async (req, res) => {t
+  try {
+    let urlQuery = ''
+    for (const key in request.query) {
+      if (request.query.hasOwnProperty(key)) {
+        urlQuery += `${key}=${request.query[key]}&`
+      }
+    }
+    urlQuery = urlQuery.slice(0, -1)
+
+    let requestURL = `${BASE_URL}/confirm?${urlQuery}`
+    const resp = await fetch(requestURL, {
+      method: 'GET',
+      headers,
+    })
+    response.json(resp)
+  } catch (e) {
+    response.status(500).json({ message: 'Internal Server Error' })
+  }
+})
+
+// GET /payment/cancel
+// Cancel payment
+router.get('/cancel', async (req, res) => {t
+  try {
+    let urlQuery = ''
+    for (const key in request.query) {
+      if (request.query.hasOwnProperty(key)) {
+        urlQuery += `${key}=${request.query[key]}&`
+      }
+    }
+    urlQuery = urlQuery.slice(0, -1)
+    let requestURL = `${BASE_URL}/cancel?${urlQuery}`
+    const resp = await fetch(requestURL, {
+      method: 'GET',
+      headers,
+    })
+    // TODO: redirect back to meetings
+    response.json(resp)
+  } catch (e) {
+    response.status(500).json({ message: 'Internal Server Error' })
+  }
+})
+
 // GET /payment/payment-method
 // Get payment method
 router.get('/payment-method', async (request, response) => {

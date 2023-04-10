@@ -7,6 +7,8 @@ import PaymentProcessor from './controllers/processing/PaymentProcessor'
 // eslint-disable-next-line no-undef
 const PORT = parseInt(process.env.PORT || '3004')
 
+const amount = 20
+
 const app = express().use(
   cors({
     origin: ['http://localhost:3001'],
@@ -21,16 +23,41 @@ app.get('/api/', (req, res) => {
 
 app.post('/', (req, res) => {
   const { payer, payee, match } = req.body
-  const amount = 20
   var paymentProcessor = new PaymentProcessor(payer, payee, match, amount)
   const result = paymentProcessor.processPayment()
   if (result.error) {
     res.status(400).json(result)
   }
+  else if (result.redirect) {
+    res.redirect(result.link)
+  }
   else {
     res.status(200).json(result)
   }
 })
+
+app.get('/confirm', async (req, res) => {
+  try {
+    console.log(req.query)
+    let payload = req.query
+    payload.amount = amount
+    const result = PaymentProcessor.confirmPayment(payload)
+    if (result.success){
+      console.log(result)
+      res.status(200)
+    }
+  }
+  catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  } 
+})
+
+app.get('/cancel', async (req, res) => {
+  res.status(200)
+})
+
+// TODO: payment/success and payment/cancel
   
 app.get('/payment-method', async (req, res) => {
   const userId = req.query.userId
