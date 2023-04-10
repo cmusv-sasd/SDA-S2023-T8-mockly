@@ -19,7 +19,7 @@ app.get('/api/', (req, res) => {
   res.json({ message: 'Hello from Payment' })
 })
 
-app.post('/payment', (req, res) => {
+app.post('/', (req, res) => {
   const { payer, payee, match } = req.body
   const amount = 20
   var paymentProcessor = new PaymentProcessor(payer, payee, match, amount)
@@ -33,7 +33,7 @@ app.post('/payment', (req, res) => {
 })
   
 app.get('/payment-method', async (req, res) => {
-  const userId = req.params.userId
+  const userId = req.query.userId
   try {
     const paymentMethod = await PaymentMethodController.getPaymentMethodByUserId(userId)
     if (!paymentMethod) {
@@ -53,8 +53,16 @@ app.get('/payment-method', async (req, res) => {
 })
 
 app.post('/payment-method', async (req, res) => {
-  const userId = req.params.userId
-  const { type, account } = req.query;
+  const userId = req.query.userId
+  const { type, account } = req.body
+  
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (type == 'paypal' && !emailPattern.test(account)) {
+    return res.status(400).json({
+      error: 'Paypal account input must be email address'
+    })
+  }
+
   try {
     const paymentMethod = await PaymentMethodController.updatePaymentMethodByUserId(userId, type, account)
     return res.status(200).json(paymentMethod)
@@ -68,7 +76,7 @@ app.post('/payment-method', async (req, res) => {
 })
 
 app.delete('/payment-method', (req, res) => {
-  const userId = req.params.userId
+  const userId = req.query.userId
   try {
     const result = PaymentMethodController.deletePaymentMethodByUserId(userId)
     return res.status(200).json(result)

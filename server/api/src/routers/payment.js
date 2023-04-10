@@ -31,11 +31,10 @@ router.post('/', async (request, response) => {
 // Get payment method
 router.get('/payment-method', async (request, response) => {
   try {
-    const { body } = request
-    let requestURL = `${BASE_URL}/payment-method`
+    const { userId } = request.query
+    let requestURL = `${BASE_URL}/payment-method?userId=${userId}`
     const resp = await fetch(requestURL, {
       method: 'GET',
-      body: JSON.stringify(body),
       headers,
     })
     const paymentMethod = await resp.json()
@@ -47,10 +46,11 @@ router.get('/payment-method', async (request, response) => {
 
 // POST /payment/payment-method
 // Create/Update payment method
-router.get('/payment-method', async (request, response) => {
+router.post('/payment-method', async (request, response) => {
   try {
+    const { userId } = request.query
     const { body } = request
-    let requestURL = `${BASE_URL}/payment-method`
+    let requestURL = `${BASE_URL}/payment-method?userId=${userId}`
     const resp = await fetch(requestURL, {
       method: 'GET',
       body: JSON.stringify(body),
@@ -65,13 +65,12 @@ router.get('/payment-method', async (request, response) => {
 
 // DELETE /payment/payment-method
 // Delete payment method
-router.get('/payment-method', async (request, response) => {
+router.delete('/payment-method', async (request, response) => {
   try {
-    const { body } = request
-    let requestURL = `${BASE_URL}/payment-method`
+    const { userId } = request.query
+    let requestURL = `${BASE_URL}/payment-method?userId=${userId}`
     const resp = await fetch(requestURL, {
       method: 'DELETE',
-      body: JSON.stringify(body),
       headers,
     })
     const deleteResp = await resp.json()
