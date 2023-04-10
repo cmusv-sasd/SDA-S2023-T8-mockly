@@ -1,4 +1,3 @@
-import InterviewFeedback from "../models/InterviewFeedback"
 import Feedback from "../models/Feedback"
 import fetch from 'node-fetch'
 

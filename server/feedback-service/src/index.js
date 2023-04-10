@@ -5,6 +5,7 @@ import LanguageDecorator from "./feedback/LanguageDecorator";
 import TechnicalDecorator from "./feedback/TechnicalDecorator";
 import ProfessionalismDecorator from './feedback/ProfessionalismDecorator';
 import FeedbackController from './controllers/FeedbackController'
+import FeedbackDecoratorController from './controllers/FeedbackDecoratorController';
 import * as Database from './util/Database'
 
 const PORT = parseInt(process.env.PORT || '3002')
@@ -24,7 +25,6 @@ app.get('/api/', (req, res) => {
 
 
 app.get('/feedbackAll', async (request, response) => {
-  console.log("IN FEEDBACK GET ALL")
   //  const { userId } = request.query
   try {
     const receivedFeedback = await FeedbackController.getAll()
@@ -36,10 +36,8 @@ app.get('/feedbackAll', async (request, response) => {
 })
 
 app.get('/feedback', async (request, response) => {
-  console.log("IN FEEDBACK GET SPECIFC")
   const { revieweeName } = request.query
   try {
-    console.log("this is the reviewee name: ", revieweeName)
     const receivedFeedback = await FeedbackController.getFeedback(revieweeName )
     response.json(receivedFeedback)
   } catch (e) {
@@ -49,22 +47,33 @@ app.get('/feedback', async (request, response) => {
 })
 
 app.post('/feedback', async (request, response) => {
-  console.log("in feedback api")
-  console.log("REQUEST BODY located: ", request.body["answers"])
   const { answers , reviewer, time, reviewee, questions} = request.body
-
   try {
-    console.log(answers , reviewer, time, reviewee)
     const feedback= await FeedbackController.create(reviewer, reviewee, time, questions, answers)
-    /*
-    const res = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interview.interviewer}`, { method: 'GET' })
-    const interviewerDetails = await res.json()
-    console.log('interview', interview.toObject())
-    console.log('details', interviewerDetails)
-    
-    const data = { ...interview.toObject(), interviewer: interviewerDetails }
-    */
     response.json(feedback)
+  } catch (e) {
+    console.error(e)
+    response.status(500).send({ message: 'Internal server error.'})
+  }
+})
+
+app.get('/feedbackQuestions', async (request, response) => {
+  const { revieweeName } = request.query
+  try {
+    const receivedQuestions = await FeedbackDecoratorController.getQuestions(revieweeName )
+    response.json(receivedQuestions)
+  } catch (e) {
+    console.error(e)
+    response.status(500).send({ message: 'Internal server error.'})
+  }
+})
+
+app.patch('/feedbackQuestions/:userName', async (request, response) => {
+  const { userName } = request.params
+  const {isInterviewer, questions} = request.body
+  try {
+    const modifiedQuestions= await FeedbackDecoratorController.modifyFeedbackQuestions(userName, questions, isInterviewer)
+    response.status(200).json(modifiedQuestions)
   } catch (e) {
     console.error(e)
     response.status(500).send({ message: 'Internal server error.'})
