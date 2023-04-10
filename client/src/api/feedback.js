@@ -90,6 +90,13 @@ const fetchFeedback = async (userName) => {
     method: 'GET',
   })
 }
+
+const fetchFeedbackQuestions = async (userName) => {
+  console.log('this is the name for FQ: ', userName)
+  return request(`feedback/feedbackQuestions?userName=${userName}`, {
+    method: 'GET',
+  })
+}
 /*
 request(`/feedback?userId=${userId}`, {
   method: 'GET'
@@ -111,4 +118,10 @@ const createFeedback = async (feedbackData) => {
   })
 }
 
-export { fetchFeedback, createFeedback }
+const updateFeedbackQuestions = async (userId, payload) =>
+  request(`feedback/feedbackQuestions/${userId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+
+export { fetchFeedback, createFeedback, fetchFeedbackQuestions, updateFeedbackQuestions }

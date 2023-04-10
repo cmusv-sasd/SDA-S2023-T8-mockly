@@ -15,6 +15,18 @@ export default Router()
       response.status(500).send({ message: 'Internal server error '})
     }
   })
+  .get('/feedbackQuestions', async (request, response) => {
+    const options = { method: 'GET', headers }
+    const { userName } = request.query
+    try {
+      const resp = await fetch(`http://mockly-feedback-service:3002/feedbackQuestions?usereName=${userName}`, options)
+      const receivedQuestions = await resp.json()
+      console.log("RQ:", receivedQuestions)
+      response.json(receivedQuestions)
+    } catch (e) {
+      response.status(500).send({ message: 'Internal server error '})
+    }
+  })
   
   .post('/addFeedback', async (request, response) => {
     const { body } = request
@@ -23,6 +35,18 @@ export default Router()
       const resp = await fetch('http://mockly-feedback-service:3002/feedback', options)
       const match = await resp.json()
       response.json(match)
+    } catch (e) {
+      response.status(500).send({ message: 'Internal server error '})
+    }
+  })
+  .patch('/feedbackQuestions', async (request, response) => {
+    const options = { method: 'PATCH' , body: JSON.stringify(body), headers }
+    const { userName } = request.params.userName
+    try {
+      const resp = await fetch(`http://mockly-feedback-service:3002/feedbackQuestions/${userName}`, options)
+      const receivedQuestions = await resp.json()
+      console.log("RQ in PATCH:", receivedQuestions)
+      response.json(receivedQuestions)
     } catch (e) {
       response.status(500).send({ message: 'Internal server error '})
     }

@@ -9,6 +9,7 @@ import {
   feedbackHistorySelector,
 } from '../store/feedbackHistorySlice'
 import FeedbackModal from '../components/FeedbackHistory/FeedbackModal'
+import FeedbackQuestions from '../components/FeedbackHistory/FeedbackQuestions'
 import { userSelector } from '../store/userSlice'
 
 const FeedbackHistoryPage = () => {
@@ -46,6 +47,7 @@ const FeedbackHistoryPage = () => {
   }, [dispatch])
   return (
     <div>
+      <FeedbackQuestions />
       {feedbackHistory.map((each, index) => {
         return (
           <FeedbackRow
