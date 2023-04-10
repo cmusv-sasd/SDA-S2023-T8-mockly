@@ -1,48 +1,41 @@
 
 import fetch from 'node-fetch'
-import { getPaymentMethodByUserId } from '../controllers/PaymentMethodController'
+import PaymentMethodController from '../PaymentMethodController'
 
-class paymentProcessor {
-  constructor(payerId, payeeId, matchId) {
+import { PORTS } from '../../utils/constants'
+
+class PaymentProcessor {
+  constructor(payerId, payeeId, matchId, amount) {
     this.payerId = payerId
     this.payeeId = payeeId
     this.matchId = matchId
+    this.amount = amount
   }
 
   async processPayment() {
-    const amount = 20
-    const payer = await fetchPaymentMethod(payerId)
+    const payer = await PaymentProcessor.fetchPaymentMethod(this.payerId)
     if (!payer || payer.error) {
       return { success: false, message: "payer account cannot be fetched" }
     }
 
-    const payee = await fetchPaymentMethod(payeeId)
+    const payee = await PaymentProcessor.fetchPaymentMethod(this.payeeId)
     if (!payee || payee.error) {
       return { success: false, message: "payee account cannot be fetched" }
     }
-    // // TODO this API is not available yet
-    // const getRes = await fetch(
-    //   `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
-    //   { method: 'GET' }
-    // )
-    // const match = await getRes.json()
-    // if (match.isPaid) {
-    //   return { success: false, message: "match already paid for" }
-    // }
-    const rawResult = request(payer, payee, amount)
-    const processedResult = processResult(rawResult)
-    // if (processedResult.success) {
-    //   match.isPaid = true
-    //   await fetch(
-    //     `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
-    //     { method: 'PATCH', body: JSON.stringify(match) }
-    //   )
-    // }
+    const rawResult = PaymentProcessor.request(payer, payee, this.amount)
+    const processedResult = PaymentProcessor.processResult(rawResult)
+    if (processedResult.success) {
+      const patch = {isPaid: true}
+      await fetch(
+        `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
+        { method: 'PATCH', body: JSON.stringify(patch) }
+      )
+    }
     return processedResult
   }
 
   async fetchPaymentMethod(userId) {
-    const user = await getPaymentMethodByUserId(userId)
+    const user = await PaymentMethodController.getPaymentMethodByUserId(userId)
     return user
   }
 
@@ -58,3 +51,5 @@ class paymentProcessor {
   }
 
 }
+
+export default new PaymentProcessor
