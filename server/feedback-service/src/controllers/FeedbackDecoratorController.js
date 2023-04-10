@@ -5,9 +5,23 @@ class FeedbackDecoratorController {
   /*
   * Create a feedback result created by reviewer for the user
   */
-  async create(user="default user",  questions) {
+  async create(user="default user",  questions={}) {
     //  prob should check that the feedback is written then return something
-    const ifs = new Feedback ({ user,  questions })
+    const ifs = new FeedbackQuestions ({ userName: user,  questionsInterviewee:{B1: {
+        question: "How would you rate this interview experience?",
+        type: "1-5"
+      },
+      B2: {
+        question: "Any additional comments?",
+        type: "text"
+      }}, questionsInterviewer:{B1: {
+        question: "How would you rate this interview experience?",
+        type: "1-5"
+      },
+      B2: {
+        question: "Any additional comments?",
+        type: "text"
+      }} })
     await ifs.save()
     return ifs
   }
@@ -20,7 +34,7 @@ class FeedbackDecoratorController {
 
   async getQuestions(userName){
     //  const [firstName, lastName] = userName.split(" ")
-    const questions  = await FeedbackQuestions.find({ user: userName } ).exec()
+    const questions  = await FeedbackQuestions.findOne({ userName } ).exec()
     return questions
   }
 

@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 
 const FeedbackQuestionsSchema = new Schema({
   // uuid of interviewee
-  reviewee: {
+  userName: {
     required: true,
     type: String
   },

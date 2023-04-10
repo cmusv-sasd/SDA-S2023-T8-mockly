@@ -124,4 +124,11 @@ const updateFeedbackQuestions = async (userId, payload) =>
     body: JSON.stringify(payload),
   })
 
-export { fetchFeedback, createFeedback, fetchFeedbackQuestions, updateFeedbackQuestions }
+
+const createFeedbackQuestions = async (userName) =>
+  request(`feedback/addFeedbackQuestions`, {
+    method: 'POST',
+    body: JSON.stringify({userName}),
+  })
+
+export { fetchFeedback, createFeedback, fetchFeedbackQuestions, updateFeedbackQuestions, createFeedbackQuestions }

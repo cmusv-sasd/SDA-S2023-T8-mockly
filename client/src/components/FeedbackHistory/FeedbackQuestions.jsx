@@ -10,7 +10,8 @@ import {
 import { userSelector } from '../../store/userSlice'
 // eslint-disable-next-line no-unused-vars
 import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
-import { fetchFeedbackQuestions } from '../../api/feedback'
+// eslint-disable-next-line no-unused-vars
+import { fetchFeedbackQuestions, updateFeedbackQuestions,createFeedbackQuestions } from '../../api/feedback'
 // eslint-disable-next-line no-unused-vars
 const { TextArea } = Input
 // eslint-disable-next-line no-unused-vars
@@ -55,7 +56,17 @@ const FeedbackQuestions = () => {
   useEffect(() => {
     const getFeedback = async () => {
       try {
-        const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+        let res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+        console.log("res", res)
+        console.log("name is ", user.firstName + ' ' + user.lastName)
+        if(res === null || res.length <= 0){
+          console.log("creating FQ")
+          await createFeedbackQuestions(user.firstName + ' ' + user.lastName)
+          //  await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {isInterviewer: false, questions:{}})
+          //  await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {isInterviewer: true, questions:{}})
+          res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+        }
+        console.log("res updated", res)
         dispatch(setFeedbackQuestions(res))
       } catch (error) {
         console.error(error)
