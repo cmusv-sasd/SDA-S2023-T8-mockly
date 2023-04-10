@@ -5,7 +5,6 @@ import ProtectedRoute from './components/ProtectedRoute'
 import DashboardPage from './pages/Dashboard'
 import PaymentMethodForm from './pages/PaymentMethod'
 import FeedbackHistoryPage from './pages/FeedbackHistory'
-import FeedbackPage from './pages/Feedback'
 import ProfilePage from './pages/Profile'
 import RegistrationPage from './pages/Registration'
 
@@ -42,14 +41,6 @@ const App = () => {
           element={
             <ProtectedRoute>
               <FeedbackHistoryPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/sendFeedback'
-          element={
-            <ProtectedRoute>
-              <FeedbackPage />
             </ProtectedRoute>
           }
         />

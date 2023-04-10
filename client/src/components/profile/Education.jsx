@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Row,
   Col,
@@ -11,14 +11,28 @@ import {
   Typography,
   List,
 } from 'antd'
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
-import { addEducation, removeEducation } from '../../store/userSlice'
+import { useForm } from 'antd/es/form/Form'
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import {
+  addEducation,
+  removeEducation,
+  updateEducation,
+} from '../../store/userSlice'
 import { getUserEducation } from '../../store/userSelector'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  addEducationDetailsAPI,
+  deleteEducationDetailsAPI,
+  updateEducationDetailsAPI,
+} from '../../api/userProfile'
+import { find } from 'lodash'
+import dayjs from 'dayjs'
 
 const { Title, Paragraph } = Typography
+const { Option } = Select
 
 const EducationCard = () => {
+  // initial state of the form when adding new education details
   const initialFormState = {
     schoolName: '',
     educationLevel: '',
@@ -29,32 +43,150 @@ const EducationCard = () => {
     gpa: '',
   }
 
+  const EDUCATION_LEVEL = [
+    { value: 'highSchool', text: 'High School' },
+    { value: 'associateDegree', text: 'Associates Degree' },
+    { value: 'bachelorsDegree', text: 'Bachelors Degree' },
+    { value: 'mastersDegree', text: 'Masters Degree' },
+  ]
+
+  // set addEducationMode to true to display a form for adding new education details
   const [addEducationMode, setAddEducationMode] = useState(false)
+  // set loading to true to see loading spinner else false to hide the spinner
+  const [loading, setLoading] = useState(false)
+  // set the education details that is to be edited
+  const [selectedEducation, setSelectedEducation] = useState(null)
 
   const dispatch = useDispatch()
+  const [form] = useForm()
+
+  // Retrieve the user's education details list from the Redux store
   const userEducationList = useSelector(getUserEducation)
 
-  const [formData, setFormData] = useState({ ...initialFormState })
+  // useEffect to initiate form values when the selectedEducation state changes
+  // avoid error caused by updating parent component's state (educationList) by the child component(educationForm)
+  useEffect(() => {
+    if (selectedEducation) {
+      initiateValues(selectedEducation)
+    }
+  }, [selectedEducation, form])
 
+  // Set the initial form values depending on whether an education entry is being edited or not
+  const initiateValues = (education) => {
+    // if education is defined then we are updating existing education details
+    // else adding new education details
+    if (education) {
+      // Convert the startDate and endDate from Unix timestamps to Day.js objects
+      const startDate = dayjs.unix(education.startDate)
+      const endDate = education.endDate ? dayjs.unix(education.endDate) : null
+
+      form.setFieldsValue({ ...education, startDate, endDate })
+    } else {
+      form.setFieldsValue(initialFormState)
+    }
+  }
+
+  // Handle the click event for adding new education
   const handleAddEducationClick = () => {
-    setFormData(initialFormState)
+    initiateValues()
     setAddEducationMode((prevAddMode) => !prevAddMode)
+    setSelectedEducation(null)
   }
 
-  const handleAddNewEducation = () => {
-    dispatch(addEducation(formData))
+  // Handle adding new education to the user's education list
+  const handleAddNewEducation = async () => {
+    setLoading(true)
+    const userId = localStorage.getItem('id')
+    try {
+      // Validate the form fields and obtain the form values
+      const formValues = await form.validateFields()
+      // Convert the startDate and endDate to Unix timestamps
+      const startDate = dayjs(formValues.startDate).unix()
+      const endDate = dayjs(formValues.endDate).unix()
+      const formData = {
+        ...formValues,
+        startDate,
+        endDate,
+      }
+      // Make an API call to add new education to user's education list
+      const res = await addEducationDetailsAPI(userId, { ...formData })
+      console.log('Education Details added: ', res)
+      // if API call is successful, dispatch the addEducation action to update the Redux store
+      if (!res.status) {
+        dispatch(addEducation(res))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    setLoading(false)
     setAddEducationMode(false)
   }
 
-  const handleCancelAddEducationClick = () => {
-    setFormData(initialFormState)
+  // Handle the cancel button click event in the add education form
+  const handleCancelAddEducation = () => {
+    initiateValues()
     setAddEducationMode(false)
   }
 
-  const deleteEducationDetails = (educationObj) => {
-    dispatch(removeEducation(educationObj))
+  // Handle deleting an education entry from the user's education list
+  const deleteEducationDetails = async (educationId) => {
+    const userId = localStorage.getItem('id')
+    try {
+      // Make an API call to delete education from user's education list
+      const res = await deleteEducationDetailsAPI(userId, { educationId })
+      console.log('Education Details delete: ', res)
+      // if API call is successful, dispatch the removeEducation action to update the Redux store
+      if (!res.status) {
+        dispatch(removeEducation(educationId))
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
+  // Handle the click event for editing an education entry
+  const handleEditEducationClick = (education) => {
+    setSelectedEducation(education)
+    setAddEducationMode(false)
+  }
+
+  // Handle updating an existing education entry in the user's education list
+  const handleEditEducation = async () => {
+    setLoading(true)
+    const userId = localStorage.getItem('id')
+    try {
+      // Validate the form fields and obtain the form values
+      const formValues = await form.validateFields()
+      const startDate = dayjs(formValues.startDate).unix()
+      const endDate = formValues.endDate
+        ? dayjs(formValues.endDate).unix()
+        : null
+      const formData = {
+        ...formValues,
+        educationId: selectedEducation._id,
+        startDate,
+        endDate,
+      }
+      // Make an API call to add new education to user's education list
+      const res = await updateEducationDetailsAPI(userId, { ...formData })
+      console.log('Education Details updated: ', res)
+      // if API call is successful, dispatch the updateEducation action to update the Redux store
+      if (!res.status) {
+        dispatch(updateEducation(res))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    setSelectedEducation(null)
+    setLoading(false)
+  }
+
+  const handleCancelEditEducation = () => {
+    initiateValues()
+    setSelectedEducation(null)
+  }
+
+  // Function to render the user's education list
   const renderEducationList = () => {
     if (userEducationList.education.length === 0) {
       return <Paragraph>No education information available.</Paragraph>
@@ -64,70 +196,73 @@ const EducationCard = () => {
       <List
         itemLayout='vertical'
         dataSource={userEducationList.education}
-        renderItem={(education) => (
-          <List.Item>
-            <Title level={3} style={{ marginBottom: '5px' }}>
-              {education.schoolName}
-            </Title>
-            <Title level={4} style={{ marginTop: '5px' }}>
-              {education.educationLevel}
-            </Title>
-            <Paragraph>
-              {education.startDate} - {education.endDate}
-            </Paragraph>
-            <Paragraph>
-              {education.major} {education.minor ? `(${education.minor})` : ''}
-            </Paragraph>
-            <Paragraph strong>GPA: {education.gpa}</Paragraph>
-            <Button danger onClick={() => deleteEducationDetails(education)}>
-              <DeleteOutlined />
-            </Button>
-          </List.Item>
-        )}
+        renderItem={(education) => {
+          // if an entry is selected for editing then display edit form for that entry
+          // else display the entry as a list item
+          if (selectedEducation && selectedEducation._id === education._id) {
+            return renderEducationForm()
+          } else {
+            const startDate = dayjs.unix(education.startDate).format('MMM YYYY')
+            const endDate = education.endDate
+              ? dayjs.unix(education.endDate).format('MMM YYYY')
+              : null
+            const educationLevelObj = find(EDUCATION_LEVEL, {
+              value: education.educationLevel,
+            })
+
+            return (
+              <List.Item>
+                <Title level={3} style={{ marginBottom: '5px' }}>
+                  {education.schoolName}
+                </Title>
+                <Title level={4} style={{ marginTop: '5px' }}>
+                  {educationLevelObj.text}
+                </Title>
+                <Paragraph>
+                  {startDate} - {endDate || 'Current'}
+                </Paragraph>
+                <Paragraph>
+                  {education.major}{' '}
+                  {education.minor ? `(${education.minor})` : ''}
+                </Paragraph>
+                <Paragraph strong>GPA: {education.gpa}</Paragraph>
+                <Button
+                  danger
+                  onClick={() => deleteEducationDetails(education._id)}
+                >
+                  <DeleteOutlined />
+                </Button>
+                <Button
+                  type='primary'
+                  ghost
+                  onClick={() => handleEditEducationClick(education)}
+                >
+                  <EditOutlined />
+                </Button>
+              </List.Item>
+            )
+          }
+        }}
       />
     )
   }
 
-  const handleInputChange = (e) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
-  const handleSelectChange = (value, name) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }))
-  }
-
-  const handleStartDateChange = (_, dateString) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      startDate: dateString,
-    }))
-  }
-  const handleEndDateChange = (_, dateString) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      endDate: dateString,
-    }))
-  }
-
-  const renderAddEducationForm = () => {
+  // Function to render the education form used for adding or editing education entries
+  const renderEducationForm = () => {
     return (
-      <Form layout='vertical' onFinish={handleAddNewEducation}>
+      <Form
+        layout='vertical'
+        onFinish={
+          selectedEducation ? handleEditEducation : handleAddNewEducation
+        }
+        form={form}
+      >
         <Form.Item
           label='School Name'
           name='schoolName'
           rules={[{ required: true, message: 'Please input the school name' }]}
         >
-          <Input
-            name='schoolName'
-            value={formData.schoolName}
-            onChange={handleInputChange}
-          />
+          <Input name='schoolName' />
         </Form.Item>
         <Row gutter={16}>
           <Col span={18}>
@@ -141,33 +276,18 @@ const EducationCard = () => {
                 },
               ]}
             >
-              <Select
-                value={formData.educationLevel}
-                onChange={(value) =>
-                  handleSelectChange(value, 'educationLevel')
-                }
-              >
-                <Select.Option value='High School'>High School</Select.Option>
-                <Select.Option value='Associates Degree'>
-                  Associates Degree
-                </Select.Option>
-                <Select.Option value='Bachelors Degree'>
-                  Bachelors Degree
-                </Select.Option>
-                <Select.Option value='Masters Degree'>
-                  Masters Degree
-                </Select.Option>
-                <Select.Option value='PhD'>PhD</Select.Option>
+              <Select>
+                {EDUCATION_LEVEL.map((type) => (
+                  <Option key={type.value} value={type.value}>
+                    {type.text}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item label='GPA' name='gpa'>
-              <Input
-                name='gpa'
-                value={formData.gpa}
-                onChange={handleInputChange}
-              />
+              <Input name='gpa' />
             </Form.Item>
           </Col>
         </Row>
@@ -182,27 +302,17 @@ const EducationCard = () => {
             >
               <DatePicker
                 name='startDate'
-                value={formData.startDate}
                 picker='month'
                 style={{ width: '100%' }}
-                onChange={handleStartDateChange}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              label='End Date'
-              name='endDate'
-              rules={[
-                { required: true, message: 'Please select the end date' },
-              ]}
-            >
+            <Form.Item label='End Date' name='endDate'>
               <DatePicker
                 name='endDate'
-                value={formData.endDate}
                 picker='month'
                 style={{ width: '100%' }}
-                onChange={handleEndDateChange}
               />
             </Form.Item>
           </Col>
@@ -214,20 +324,12 @@ const EducationCard = () => {
               name='major'
               rules={[{ required: true, message: 'Please input the major' }]}
             >
-              <Input
-                name='major'
-                value={formData.major}
-                onChange={handleInputChange}
-              />
+              <Input name='major' />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label='Minor' name='minor'>
-              <Input
-                name='minor'
-                value={formData.minor}
-                onChange={handleInputChange}
-              />
+              <Input name='minor' />
             </Form.Item>
           </Col>
         </Row>
@@ -237,7 +339,11 @@ const EducationCard = () => {
               className='user-right-card--cancel-btn'
               type='default'
               shape='round'
-              onClick={handleCancelAddEducationClick}
+              onClick={
+                selectedEducation
+                  ? handleCancelEditEducation
+                  : handleCancelAddEducation
+              }
             >
               Cancel
             </Button>
@@ -246,6 +352,7 @@ const EducationCard = () => {
               type='primary'
               shape='round'
               htmlType='submit'
+              loading={loading}
             >
               Save
             </Button>
@@ -265,8 +372,8 @@ const EducationCard = () => {
         </Button>
       }
     >
+      {addEducationMode && renderEducationForm()}
       {renderEducationList()}
-      {addEducationMode && renderAddEducationForm()}
     </Card>
   )
 }

@@ -6,12 +6,12 @@ const isObjEmpty = (obj) => {
     
 
 class ProfessionalismDecorator extends FeedbackDecorator{
-  addQuestions(newQuestionsObj={}){
+  addQuestions(newQuestionsObj={}, isInterviewer=false){
     //  call the previous decorators first
     console.log("Outside Professionalism loop", newQuestionsObj)
     super.addQuestions();
     //  Do what the Professionalism Decorator should do
-    if(isObjEmpty(newQuestionsObj)){
+    if(isObjEmpty(newQuestionsObj) && isInterviewer){
       console.log("Inside Professionalism loop")
       newQuestionsObj = {
         P1: 
@@ -25,6 +25,20 @@ class ProfessionalismDecorator extends FeedbackDecorator{
             type: "1-5"
           },
         P3:
+          {
+            question: "Any additional feedback on my professionalism?",
+            type: "text"
+          }
+      }
+    }
+    else if(isObjEmpty(newQuestionsObj) && !isInterviewer){
+      newQuestionsObj = {
+        P1: 
+          {
+            question: "Was my demeanor professional?",
+            type: "1-5"
+          },
+        P2:
           {
             question: "Any additional feedback on my professionalism?",
             type: "text"

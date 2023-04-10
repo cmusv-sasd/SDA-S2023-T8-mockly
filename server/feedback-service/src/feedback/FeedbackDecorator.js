@@ -3,7 +3,7 @@ class FeedbackDecorator {
     this.feedback = feedback;
   }
 
-  addQuestions(newQuestionsObj={}){
+  addQuestions(newQuestionsObj={},isInterviewer=false){
       this.feedback.addQuestions(newQuestionsObj);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Row,
   Col,
@@ -6,22 +6,34 @@ import {
   Button,
   Form,
   Input,
-  Checkbox,
   DatePicker,
   Typography,
   List,
 } from 'antd'
-import { PlusOutlined, LinkOutlined, DeleteOutlined } from '@ant-design/icons'
+import {
+  PlusOutlined,
+  LinkOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
+import { useForm } from 'antd/es/form/Form'
 import { useSelector, useDispatch } from 'react-redux'
 import { getUserProjects } from '../../store/userSelector'
-import { addProject, removeProject } from '../../store/userSlice'
+import { addProject, removeProject, updateProject } from '../../store/userSlice'
+import {
+  addProjectDetailsAPI,
+  deleteProjectDetailsAPI,
+  updateProjectDetailsAPI,
+} from '../../api/userProfile'
+import dayjs from 'dayjs'
 
 const { Title, Paragraph } = Typography
 const { Item } = List
 
 const ProjectsCard = () => {
+  // initial state of the form when adding new project details
   const initialFormState = {
-    name: '',
+    title: '',
     url: '',
     startDate: null,
     endDate: null,
@@ -29,33 +41,142 @@ const ProjectsCard = () => {
   }
 
   const dispatch = useDispatch()
+  const [form] = useForm()
 
+  // set addProjectMode to true to display a form for adding new project details
   const [addProjectMode, setAddProjectMode] = useState(false)
-  const [formData, setFormData] = useState({ ...initialFormState })
+  // set loading to true to see loading spinner else false to hide the spinner
+  const [loading, setLoading] = useState(false)
+  // set the project details that is to be edited
+  const [selectedProject, setSelectedProject] = useState(null)
+
+  // Retrieve the user's project details list from the Redux store
   const userProjectsList = useSelector(getUserProjects)
 
+  // useEffect to initiate form values when the selectedProject state changes
+  useEffect(() => {
+    if (selectedProject) {
+      initiateValues(selectedProject)
+    }
+  }, [selectedProject, form])
+
+  // Set the initial form values depending on whether an project entry is being edited or not
+  const initiateValues = (project) => {
+    // if project is defined then we are updating existing project details
+    // else adding new project details
+    if (project) {
+      // Convert the startDate and endDate from Unix timestamps to Day.js objects
+      const startDate = project.startDate ? dayjs.unix(project.startDate) : null
+      const endDate = project.endDate ? dayjs.unix(project.endDate) : null
+
+      form.setFieldsValue({ ...project, startDate, endDate })
+    } else {
+      form.setFieldsValue(initialFormState)
+    }
+  }
+
+  // Handle the click event for adding new project
   const handleAddProjectClick = () => {
-    setFormData(initialFormState)
-    setCurrent(false)
+    initiateValues()
     setAddProjectMode((prevMode) => !prevMode)
+    setSelectedProject(null)
   }
 
-  const handleAddNewProject = () => {
-    dispatch(addProject(formData))
-    setCurrent(false)
+  // Handle adding new project to the user's project list
+  const handleAddNewProject = async () => {
+    setLoading(true)
+    const userId = localStorage.getItem('id')
+    try {
+      // Validate the form fields and obtain the form values
+      const formValues = await form.validateFields()
+      // Convert the startDate and endDate to Unix timestamps
+      const startDate = dayjs(formValues.startDate).unix()
+      const endDate = dayjs(formValues.endDate).unix()
+      const formData = {
+        ...formValues,
+        startDate,
+        endDate,
+      }
+      // Make an API call to add new project to user's projects list
+      const res = await addProjectDetailsAPI(userId, { ...formData })
+      console.log('Project Details added: ', res)
+      // if API call is successful, dispatch the addProject action to update the Redux store
+      if (!res.status) {
+        dispatch(addProject(res))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    setLoading(false)
     setAddProjectMode(false)
   }
 
+  // Handle the cancel button click event in the add project form
   const handleCancelProjectClick = () => {
-    setFormData(initialFormState)
-    setCurrent(false)
+    initiateValues()
     setAddProjectMode(false)
   }
 
-  const deleteProjectDetails = (project) => {
-    dispatch(removeProject(project))
+  // Handle deleting an project entry from the user's projects list
+  const deleteProjectDetails = async (projectId) => {
+    const userId = localStorage.getItem('id')
+    try {
+      // Make an API call to delete project from user's projects list
+      const res = await deleteProjectDetailsAPI(userId, { projectId })
+      console.log('Project Details delete: ', res)
+      // if API call is successful, dispatch the removeProject action to update the Redux store
+      if (!res.status) {
+        dispatch(removeProject(projectId))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  // Handle the click event for editing an project entry
+  const handleEditProjectClick = (project) => {
+    setSelectedProject(project)
+    setAddProjectMode(false)
   }
 
+  // Handle updating an existing project entry in the user's projects list
+  const handleEditProject = async () => {
+    setLoading(true)
+    const userId = localStorage.getItem('id')
+    try {
+      // Validate the form fields and obtain the form values
+      const formValues = await form.validateFields()
+      const startDate = formValues.startDate
+        ? dayjs(formValues.startDate).unix()
+        : null
+      const endDate = formValues.endDate
+        ? dayjs(formValues.endDate).unix()
+        : null
+      const formData = {
+        ...formValues,
+        projectId: selectedProject._id,
+        startDate,
+        endDate,
+      }
+      // Make an API call to add new project to user's projects list
+      const res = await updateProjectDetailsAPI(userId, { ...formData })
+      console.log('Project Details updated: ', res)
+      // if API call is successful, dispatch the updateProject action to update the Redux store
+      if (!res.status) {
+        dispatch(updateProject(res))
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    setSelectedProject(null)
+    setLoading(false)
+  }
+
+  const handleCancelEditProject = () => {
+    initiateValues()
+    setSelectedProject(null)
+  }
+
+  // Function to render the user's projects list
   const renderProject = () => {
     if (userProjectsList.projects.length === 0) {
       return <Paragraph>No project information available.</Paragraph>
@@ -65,163 +186,126 @@ const ProjectsCard = () => {
       <List
         itemLayout='vertical'
         dataSource={userProjectsList.projects}
-        renderItem={(project, index) => (
-          <Item key={index}>
-            <Item.Meta
-              title={
+        renderItem={(project) => {
+          // if an entry is selected for editing then display edit form for that entry
+          // else display the entry as a list item
+          if (selectedProject && selectedProject._id === project._id) {
+            return renderProjectForm()
+          } else {
+            const startDate = project.startDate
+              ? dayjs.unix(project.startDate).format('MMM YYYY')
+              : null
+            const endDate = project.endDate
+              ? dayjs.unix(project.endDate).format('MMM YYYY')
+              : null
+
+            return (
+              <Item>
+                <Item.Meta
+                  title={
+                    <Button
+                      type='link'
+                      href={project.url || null}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      style={{ paddingLeft: 0 }}
+                    >
+                      <Title level={3} style={{ marginBottom: '5px' }}>
+                        {project.title} {project.url && <LinkOutlined />}
+                      </Title>
+                    </Button>
+                  }
+                  description={
+                    <>
+                      {startDate && (
+                        <Paragraph>
+                          {startDate} - {endDate || 'current'}
+                        </Paragraph>
+                      )}
+                      <Paragraph style={{ whiteSpace: 'pre-wrap' }}>
+                        {project.description}
+                      </Paragraph>
+                    </>
+                  }
+                />
                 <Button
-                  type='link'
-                  href={project.url || null}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  style={{ paddingLeft: 0 }}
+                  danger
+                  onClick={() => deleteProjectDetails(project._id)}
                 >
-                  <Title level={3} style={{ marginBottom: '5px' }}>
-                    {project.name} {project.url && <LinkOutlined />}
-                  </Title>
+                  <DeleteOutlined />
                 </Button>
-              }
-              description={
-                <>
-                  <Paragraph>
-                    {project.startDate} - {project.endDate || 'Current'}
-                  </Paragraph>
-                  <Paragraph style={{ whiteSpace: 'pre-wrap' }}>
-                    {project.description}
-                  </Paragraph>
-                </>
-              }
-            />
-            <Button danger onClick={() => deleteProjectDetails(project)}>
-              <DeleteOutlined />
-            </Button>
-          </Item>
-        )}
+                <Button
+                  type='primary'
+                  ghost
+                  onClick={() => handleEditProjectClick(project)}
+                >
+                  <EditOutlined />
+                </Button>
+              </Item>
+            )
+          }
+        }}
       />
     )
   }
 
-  const [current, setCurrent] = useState(false)
-
-  const handleCurrentChange = (e) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      endDate: null,
-    }))
-    setCurrent(e.target.checked)
-  }
-
-  const handleInputChange = (e) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [e.target.name]: e.target.value,
-    }))
-  }
-
-  const handleStartDateChange = (_, dateString) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      startDate: dateString,
-    }))
-  }
-  const handleEndDateChange = (_, dateString) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      endDate: dateString,
-    }))
-  }
-
-  const renderAddProjectForm = () => {
+  // Function to render the project form used for adding or editing project entries
+  const renderProjectForm = () => {
     return (
-      <Form layout='vertical' onFinish={handleAddNewProject}>
+      <Form
+        layout='vertical'
+        onFinish={selectedProject ? handleEditProject : handleAddNewProject}
+        form={form}
+      >
         <Form.Item
-          label='Name'
-          name='name'
+          label='Title'
+          name='title'
           rules={[
             { required: true, message: 'Please enter the name of the project' },
           ]}
-          hasFeedback
         >
-          <Input
-            name='name'
-            placeholder='Project Name'
-            value={formData.name}
-            onChange={handleInputChange}
-          />
+          <Input name='title' />
         </Form.Item>
         <Form.Item
           label='URL'
           name='url'
           rules={[{ type: 'url', message: 'Please enter a valid URL' }]}
-          hasFeedback
         >
-          <Input
-            name='url'
-            placeholder='Project URL'
-            value={formData.url}
-            onChange={handleInputChange}
-          />
+          <Input name='url' />
         </Form.Item>
         <Row gutter={16}>
-          <Col span={10}>
-            <Form.Item
-              label='Start Date'
-              name='startDate'
-              rules={[
-                { required: true, message: 'Please select the start date' },
-              ]}
-            >
+          <Col span={12}>
+            <Form.Item label='Start Date' name='startDate'>
               <DatePicker
                 name='startDate'
-                value={formData.startDate}
-                onChange={handleStartDateChange}
                 picker='month'
                 style={{ width: '100%' }}
               />
             </Form.Item>
           </Col>
-          <Col span={10}>
-            <Form.Item
-              label='End Date'
-              name='endDate'
-              rules={[
-                {
-                  required: !current,
-                  message: 'Please select the end date',
-                },
-              ]}
-            >
+          <Col span={12}>
+            <Form.Item label='End Date' name='endDate'>
               <DatePicker
                 name='endDate'
-                value={formData.endDate}
-                onChange={handleEndDateChange}
                 picker='month'
                 style={{ width: '100%' }}
-                disabled={current}
               />
-            </Form.Item>
-          </Col>
-          <Col span={4} style={{ display: 'flex', alignItems: 'center' }}>
-            <Form.Item style={{ marginBottom: 0 }}>
-              <Checkbox onChange={handleCurrentChange}>Current</Checkbox>
             </Form.Item>
           </Col>
         </Row>
         <Form.Item label='Description' name='description'>
-          <Input.TextArea
-            name='description'
-            value={formData.description}
-            onChange={handleInputChange}
-            rows={4}
-            placeholder='Project Description'
-          />
+          <Input.TextArea name='description' rows={4} />
         </Form.Item>
         <div className='user-right-card--button-container'>
           <Button
             className='user-right-card--cancel-btn'
             type='default'
             shape='round'
-            onClick={handleCancelProjectClick}
+            onClick={
+              selectedProject
+                ? handleCancelEditProject
+                : handleCancelProjectClick
+            }
           >
             Cancel
           </Button>
@@ -230,6 +314,7 @@ const ProjectsCard = () => {
             type='primary'
             shape='round'
             htmlType='submit'
+            loading={loading}
           >
             Save
           </Button>
@@ -248,8 +333,8 @@ const ProjectsCard = () => {
         </Button>
       }
     >
+      {addProjectMode && renderProjectForm()}
       {renderProject()}
-      {addProjectMode && renderAddProjectForm()}
     </Card>
   )
 }

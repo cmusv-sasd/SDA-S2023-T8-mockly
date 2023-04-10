@@ -4,24 +4,34 @@ import {
   getUserById,
   createUser,
   validateUserCredentials,
-  updatePersonalIdentity,
-  updatePersonalInformation,
-  createEducation,
-  updateEducation,
-  deleteEducation,
-  createSkill,
-  deleteSkill,
-  createCourse,
-  deleteCourse,
-  createProject,
-  updateProject,
-  deleteProject,
-  createExperience,
-  updateExperience,
-  deleteExperience,
   updateSummary,
   updateInterviewerDetails,
 } from '../controllers/userController'
+
+import {
+  updatePersonalIdentity,
+  updatePersonalInformation,
+} from '../controllers/informationController'
+
+import {
+  createEducation,
+  updateEducation,
+  deleteEducation,
+} from '../controllers/educationController'
+
+import { createSkill, deleteSkill } from '../controllers/skillsController'
+import { createCourse, deleteCourse } from '../controllers/coursesController'
+import {
+  createProject,
+  updateProject,
+  deleteProject,
+} from '../controllers/projectsController'
+
+import {
+  createExperience,
+  updateExperience,
+  deleteExperience,
+} from '../controllers/experienceController'
 
 const router = Router()
 
@@ -45,21 +55,21 @@ router.post('/credentials', validateUserCredentials)
 // Update personal identity fields for a user
 router.put('/:userId/personal-identity', updatePersonalIdentity)
 
-// PUT /users/:userId/personal-information/:id
+// PUT /users/:userId/personal-information
 // Update personal information fields for a user
 router.put('/:userId/personal-information', updatePersonalInformation)
 
-// POST /users/education
+// POST /users/:userId/education
 // Create a new education entry for a user
-router.post('/education', createEducation)
+router.post('/:userId/education', createEducation)
 
-// PUT /users/education
+// PUT /users/:userId/education
 // Update an existing education entry for a user
-router.put('/education', updateEducation)
+router.put('/:userId/education', updateEducation)
 
-// DELETE /users/education
+// DELETE /users/:userId/education
 // Delete an existing education entry for a user
-router.delete('/education', deleteEducation)
+router.delete('/:userId/education', deleteEducation)
 
 // POST /users/:userId/skills
 // Create a new skill for a user
@@ -77,29 +87,29 @@ router.post('/:userId/courses', createCourse)
 // Delete an existing course entry for a user
 router.delete('/:userId/courses', deleteCourse)
 
-// POST /users/projects
+// POST /users/:userId/projects
 // Create a new project entry for a user
-router.post('/projects', createProject)
+router.post('/:userId/projects', createProject)
 
-// PUT /users/projects
+// PUT /users/:userId/projects
 // Update an existing project entry for a user
-router.put('/projects', updateProject)
+router.put('/:userId/projects', updateProject)
 
-// DELETE /users/projects
+// DELETE /users/:userId/projects
 // Delete an existing project entry for a user
-router.delete('/projects', deleteProject)
+router.delete('/:userId/projects', deleteProject)
 
-// POST /users/experiences
+// POST /users/:userId/experiences
 // Create a new experience entry for a user
-router.post('/experiences', createExperience)
+router.post('/:userId/experiences', createExperience)
 
-// PUT /users/experiences
+// PUT /users/:userId/experiences
 // Update an existing experience entry for a user
-router.put('/experiences', updateExperience)
+router.put('/:userId/experiences', updateExperience)
 
-// DELETE /users/experiences
+// DELETE /users/:userId/experiences
 // Delete an existing experience entry for a user
-router.delete('/experiences', deleteExperience)
+router.delete('/:userId/experiences', deleteExperience)
 
 // PUT /users/:userId/summary
 // Update the summary field for a user
