@@ -21,7 +21,7 @@ app.get('/api/', (req, res) => {
   res.json({ message: 'Hello from Payment' })
 })
 
-app.post('/', (req, res) => {
+app.post('/payment', (req, res) => {
   const { payer, payee, match } = req.body
   var paymentProcessor = new PaymentProcessor(payer, payee, match, amount)
   const result = paymentProcessor.processPayment()
@@ -36,7 +36,7 @@ app.post('/', (req, res) => {
   }
 })
 
-app.get('/confirm', async (req, res) => {
+app.get('/payment/confirm', async (req, res) => {
   try {
     console.log(req.query)
     let payload = req.query
@@ -53,13 +53,11 @@ app.get('/confirm', async (req, res) => {
   } 
 })
 
-app.get('/cancel', async (req, res) => {
+app.get('/payment/cancel', async (req, res) => {
   res.status(200)
 })
-
-// TODO: payment/success and payment/cancel
   
-app.get('/payment-method', async (req, res) => {
+app.get('/payment/payment-method', async (req, res) => {
   const userId = req.query.userId
   try {
     const paymentMethod = await PaymentMethodController.getPaymentMethodByUserId(userId)
@@ -79,7 +77,7 @@ app.get('/payment-method', async (req, res) => {
   }
 })
 
-app.post('/payment-method', async (req, res) => {
+app.post('/payment/payment-method', async (req, res) => {
   const userId = req.query.userId
   const { type, account } = req.body
   
@@ -102,7 +100,7 @@ app.post('/payment-method', async (req, res) => {
 
 })
 
-app.delete('/payment-method', (req, res) => {
+app.delete('/payment/payment-method', (req, res) => {
   const userId = req.query.userId
   try {
     const result = PaymentMethodController.deletePaymentMethodByUserId(userId)

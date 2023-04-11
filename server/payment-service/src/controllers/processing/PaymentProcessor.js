@@ -36,7 +36,7 @@ class PaymentProcessor {
     if (processedResult.success) {
       const patch = {isPaid: true}
       await fetch(
-        `http://mockly-profile-service:${PORTS.MATCHING}/matches/${this.matchId}`,
+        `http://mockly-matching-service:${PORTS.MATCHING}/matches/${this.matchId}`,
         { method: 'PATCH', body: JSON.stringify(patch) }
       )
     }

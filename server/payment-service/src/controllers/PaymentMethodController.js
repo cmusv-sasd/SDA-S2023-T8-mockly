@@ -9,13 +9,14 @@ class PaymentMethodController {
   async updatePaymentMethodByUserId(userId, type, account) {
     const paymentMethod = await PaymentMethod.findOneAndUpdate(
       { person: userId },
-      { type, account }
+      { person: userId, type, account },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
     )
     return paymentMethod
   }
 
   async deletePaymentMethodByUserId(userId) {
-    return await this.deleteOne({ person: userId });
+    return await PaymentMethod.findOneAndDelete({ person: userId });
   }
 }
 

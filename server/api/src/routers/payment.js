@@ -7,7 +7,7 @@ import { verifyUserIdParam } from '../middlewares/verifyUserIdParam'
 
 
 const router = Router()
-const BASE_URL = 'http://mockly-profile-service:3004/payment'
+const BASE_URL = 'http://mockly-payment-service:3004/payment'
 
 
 // POST /payment/
@@ -23,6 +23,7 @@ router.post('/', async (request, response) => {
     const paymentResponse = await resp.json()
     response.json(paymentResponse)
   } catch (e) {
+    console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
@@ -46,6 +47,7 @@ router.get('/confirm', async (req, res) => {t
     })
     response.json(resp)
   } catch (e) {
+    console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
@@ -69,6 +71,7 @@ router.get('/cancel', async (req, res) => {t
     // TODO: redirect back to meetings
     response.json(resp)
   } catch (e) {
+    console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
@@ -83,9 +86,11 @@ router.get('/payment-method', async (request, response) => {
       method: 'GET',
       headers,
     })
+    
     const paymentMethod = await resp.json()
     response.json(paymentMethod)
   } catch (e) {
+    console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
@@ -98,13 +103,14 @@ router.post('/payment-method', async (request, response) => {
     const { body } = request
     let requestURL = `${BASE_URL}/payment-method?userId=${userId}`
     const resp = await fetch(requestURL, {
-      method: 'GET',
+      method: 'POST',
       body: JSON.stringify(body),
       headers,
     })
     const paymentMethod = await resp.json()
     response.json(paymentMethod)
   } catch (e) {
+    console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
@@ -120,8 +126,14 @@ router.delete('/payment-method', async (request, response) => {
       headers,
     })
     const deleteResp = await resp.json()
-    response.json(deleteResp)
+    if (deleteResp) {
+      response.status(200).json(deleteResp)
+    }
+    else {
+      response.status(400).json({ error: 'Entry does not exist'})
+    }
   } catch (e) {
+    console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
