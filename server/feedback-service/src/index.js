@@ -97,9 +97,10 @@ app.post('/feedbackQuestions', async (request, response) => {
 })
 
 app.patch('/feedbackQuestions/:userName', async (request, response) => {
-  const { userName } = request.params
+  const userName = request.params.userName
   const {isInterviewer, questions} = request.body
-  console.log("IN PATCH")
+  console.log(request.params)
+  console.log("IN PATCH", userName, isInterviewer, questions)
   try {
     const modifiedQuestions= await FeedbackDecoratorController.modifyFeedbackQuestions(userName, questions, isInterviewer)
     response.status(200).json(modifiedQuestions)

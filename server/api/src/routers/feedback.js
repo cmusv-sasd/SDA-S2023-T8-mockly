@@ -56,7 +56,7 @@ export default Router()
   .patch('/feedbackQuestions/:userName', async (request, response) => {
     const { body } = request
     const options = { method: 'PATCH' , body: JSON.stringify(body), headers }
-    const { userName } = request.params.userName
+    const userName  = request.params.userName
     try {
       const resp = await fetch(`http://mockly-feedback-service:3002/feedbackQuestions/${userName}`, options)
       const receivedQuestions = await resp.json()

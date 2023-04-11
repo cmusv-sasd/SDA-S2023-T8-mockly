@@ -7,6 +7,9 @@ class FeedbackDecoratorController {
   */
   async create(user="default user",  questions={}) {
     //  prob should check that the feedback is written then return something
+    if(!user || user.length === 0 || user === " "){
+      return {}
+    }
     const ifs = new FeedbackQuestions ({ userName: user,  questionsInterviewee:{B1: {
         question: "How would you rate this interview experience?",
         type: "1-5"
@@ -42,10 +45,13 @@ class FeedbackDecoratorController {
   * Modify questions by name
   */ 
   async modifyFeedbackQuestions(userName, newQuestions, isInterviewer) {
-    const fq= isInterviewer ? await FeedbackQuestions.findByIdAndUpdate(userName, {questionsInterviewer: newQuestions}) : await Match.findByIdAndUpdate(userName, {questionsInterviewee: newQuestions})
+    console.log("In mFQ", userName, newQuestions, isInterviewer)
+    const fq= isInterviewer ? await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewer: newQuestions}) : await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewee: newQuestions})
     if (fq) {
+      console.log("mFQ result: ", fq)
       return fq
     } else {
+      console.log("failed mFQ")
       throw new Error('Failed to update feedback questions.')
     }
   }
