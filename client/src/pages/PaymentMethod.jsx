@@ -1,5 +1,5 @@
 import { Row, Typography, Form, Input, Select, Button } from 'antd'
-import React from "react"
+import React, { useEffect } from "react"
 import { useSelector } from 'react-redux'
 import { userSelector } from '../store/userSlice'
 import { getPaymentMethod, updatePaymentMethod, deletePaymentMethod } from '../api/payment'
@@ -11,24 +11,25 @@ const PaymentMethodForm = () => {
 
   const [form] = Form.useForm()
 
-  const getInitialValues = async () => {
+  const fetchInitialValues = async () => {
     try {
       const res = await getPaymentMethod(userId)
-      if(res.status === 200){
-        return {
-          type: res.body.type,
-          account: res.body.account
-        }
-      } else {
-        return {}
+      console.log(res)
+      const values = {
+        type: res.type,
+        account: res.account
       }
+      form.setFieldsValue(values)
     } 
     catch (e) {
       console.log(e)
-      return {}
     }
   }
-  
+
+  useEffect(() => {
+    fetchInitialValues();
+  }, [])
+
   const handleSubmit = (values) => {
     try {
       const res = updatePaymentMethod(userId, 
@@ -53,7 +54,7 @@ const PaymentMethodForm = () => {
     try {
       const res = deletePaymentMethod(userId)
       if (res.status === 200) {
-        form.resetFields()
+        form.setFieldsValue({})
       }
       else {
         // TODO: shouldn't be reached
@@ -72,7 +73,7 @@ const PaymentMethodForm = () => {
           <Typography.Title level={2}>Payment Method</Typography.Title>
         </Row>
       <Row justify='center'>
-        <Form onFinish={handleSubmit} initialValues={getInitialValues()}>
+        <Form form={form} onFinish={handleSubmit}>
           <Form.Item label="Type" name="type" rules={[{ required: true, message: '-- Select a payment option --' }]}>
             <Select>
               <Select.Option value="paypal">Paypal</Select.Option>
@@ -82,7 +83,7 @@ const PaymentMethodForm = () => {
             <Input />
           </Form.Item>
           <Form.Item>
-          <Button type="primary" htmlType="submit">Submit</Button>
+          <Button type="primary" htmlType="submit">Update</Button>
           <Button onClick={handleDelete}>Delete Existing</Button>
           </Form.Item>
         </Form>
