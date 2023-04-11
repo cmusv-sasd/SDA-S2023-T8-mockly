@@ -2,6 +2,7 @@ import Match from "../models/Match"
 import PreferenceBuilder from "../preferences/PreferenceBuilder"
 import fetch from 'node-fetch'
 import { PORTS } from '../utils/constants'
+import MeetingController, { authorize } from "./MeetingController"
 
 class MatchController {
   /*
@@ -9,6 +10,9 @@ class MatchController {
   */
   async create(interviewer, interviewee, preferences, time) {
     // TODO: set url
+    const m = new MeetingController()
+    const meeting = await m.createMeeting()
+    console.log('MEETING', meeting)
     const match = new Match({ interviewer, interviewee, preferences, time, url: '', isPaid: false })
     await match.save()
     return match
