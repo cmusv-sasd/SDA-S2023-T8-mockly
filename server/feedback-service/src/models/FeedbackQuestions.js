@@ -8,7 +8,9 @@ const FeedbackQuestionsSchema = new Schema({
   },
   //  for now, have answers as an object
   questionsInterviewer: Object,
-  questionsInterviewee: Object 
+  questionsInterviewee: Object,
+  decoratorsInterviewer: Array,
+  decoratorsInterviewee: Array
 
 })
 

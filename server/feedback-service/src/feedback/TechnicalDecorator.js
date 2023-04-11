@@ -1,16 +1,17 @@
-import FeedbackDecorator from "./FeedbackDecorator";
+import QuestionsDecorator from "./QuestionsDecorator";
 //  import { isObjEmpty } from "../../util/misc";
 const isObjEmpty = (obj) => {
   return Object.keys(obj).length === 0;
 }
-class TechnicalDecorator extends FeedbackDecorator{
-  addQuestions(newQuestionsObj={}, isInterviewer = false){
-    console.log("Outside technical loop", newQuestionsObj)
+class TechnicalDecorator extends QuestionsDecorator{
+  addQuestions(newQuestionsObj={}){
+    //console.log("Outside technical loop", newQuestionsObj)
     //  call the previous decorators first
     super.addQuestions();
+    console.log("TECHNICAL CHECK", newQuestionsObj, this.isInterviewer)
     //  Do what the Language Decorator should do
-    if(isObjEmpty(newQuestionsObj) && isInterviewer){
-      console.log("Inside technical loop")
+    if(isObjEmpty(newQuestionsObj) && this.isInterviewer){
+      //console.log("Inside technical loop")
       newQuestionsObj = {
         T1: 
           {
@@ -24,8 +25,8 @@ class TechnicalDecorator extends FeedbackDecorator{
           }
       }
     }
-    else if(isObjEmpty(newQuestionsObj) && !isInterviewer){
-      console.log("Inside technical loop")
+    else if(isObjEmpty(newQuestionsObj) && !this.isInterviewer){
+      //console.log("Inside technical loop")
       newQuestionsObj = {
         T1: 
           {
@@ -41,6 +42,7 @@ class TechnicalDecorator extends FeedbackDecorator{
     }
     //  add the new questions related to the Language
     super.addQuestions(newQuestionsObj)
+    console.log("T", newQuestionsObj)
   }
 }
 

@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import Feedback from './feedback/Feedback'
+import Feedback from './feedback/ConcreteFeedbackQuestions'
 import LanguageDecorator from "./feedback/LanguageDecorator";
 import TechnicalDecorator from "./feedback/TechnicalDecorator";
 import ProfessionalismDecorator from './feedback/ProfessionalismDecorator';

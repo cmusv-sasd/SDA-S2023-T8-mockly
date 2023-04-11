@@ -27,12 +27,12 @@ const FeedbackQuestions = () => {
   const [checkedInterviewee, setCheckedInterviewee] = useState([])
 
   const interviewerOptions = [
-    { label: "Feedback", value: "Feedback" },
+    { label: "Professionalism", value: "Professionalism" },
     { label: "Language", value: "Language" },
     { label: "Technical", value: "Technical" }
   ];
   const intervieweeOptions = [
-    { label: "Feedback", value: "Feedback" },
+    { label: "Professionalism", value: "Professionalism" },
     { label: "Language", value: "Language" },
     { label: "Technical", value: "Technical" }
   ];
