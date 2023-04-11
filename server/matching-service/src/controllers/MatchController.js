@@ -2,18 +2,20 @@ import Match from "../models/Match"
 import PreferenceBuilder from "../preferences/PreferenceBuilder"
 import fetch from 'node-fetch'
 import { PORTS } from '../utils/constants'
-import MeetingController, { authorize } from "./MeetingController"
+import MeetingController from "./MeetingController"
 
 class MatchController {
   /*
   * Create a match between a interviewer and interviewee
   */
   async create(interviewer, interviewee, preferences, time) {
-    // TODO: set url
-    const m = new MeetingController()
-    const meeting = await m.createMeeting()
-    console.log('MEETING', meeting)
-    const match = new Match({ interviewer, interviewee, preferences, time, url: '', isPaid: false })
+    const interviewerRes = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interviewer}`, { method: 'GET' })
+    const intervieweeRes = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interviewee}`, { method: 'GET' })
+    const interviewerDetails = await interviewerRes.json()
+    const intervieweeDetails = await intervieweeRes.json()
+    const meeting = await MeetingController.createMeeting(intervieweeDetails, interviewerDetails, preferences, time)
+    const { hangoutLink: url } = meeting
+    const match = new Match({ interviewer, interviewee, preferences, time, url, isPaid: false })
     await match.save()
     return match
   }

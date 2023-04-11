@@ -3,21 +3,6 @@ import dayjs from 'dayjs'
 import dotenv from 'dotenv'
 
 dotenv.config()
-
-const resource = {
-  start: { dateTime: dayjs(new Date()).add(1, 'day').toISOString(), timeZone: 'America/Los_Angeles' },
-  end: { dateTime: dayjs(new Date()).add(1, 'day').add(1, 'hour').toISOString(), timeZone: 'America/Los_Angeles' },
-  attendees: [{ email: "vishaalagartha@gmail.com" }],
-  conferenceData: {
-    createRequest: {
-      requestId: "sample123",
-      conferenceSolutionKey: { type: "hangoutsMeet" },
-    },
-  },
-  summary: "sample event with Meet link",
-  description: "sample description",
-}
-
 class MeetingController {
   constructor() {
 
@@ -32,12 +17,30 @@ class MeetingController {
     }
   }
 
-  async createMeeting() {
+  async createMeeting(intervieweeDetails, interviewerDetails, preferences, time) {
     const auth = await this.#authorize()
-    console.log(auth)
+    const { andrewId: interviewee, email: intervieweeEmail } = intervieweeDetails
+    const { andrewId: interviewer, email: interviewerEmail } = interviewerDetails
+    const summary = `Mockly Interview`
+    const { field } = preferences
+    const fieldString = field[0] + field.substring(1).replace(' ').toLowerCase()
+    const description = `Interviewer: ${interviewer}, Interviewee: ${interviewee}. Subject: ${fieldString}`
+    const resource = {
+      start: { dateTime: dayjs(time), timeZone: 'America/Los_Angeles' },
+      end: { dateTime: dayjs(time).add(1, 'hour').toISOString(), timeZone: 'America/Los_Angeles' },
+      attendees: [{ email: intervieweeEmail }, { email: interviewerEmail }],
+      conferenceData: {
+        createRequest: {
+          requestId: 'mockly-request',
+          conferenceSolutionKey: { type: 'hangoutsMeet' },
+        },
+      },
+      summary,
+      description,
+    }
     const calendar = google.calendar({version: 'v3', auth})
     try {
-      const data = await calendar.events
+      const { data } = await calendar.events
       .insert({
         calendarId: 'primary',
         resource: resource,
@@ -50,4 +53,4 @@ class MeetingController {
   }
 }
 
-export default MeetingController
+export default new MeetingController()

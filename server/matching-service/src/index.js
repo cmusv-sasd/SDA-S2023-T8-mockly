@@ -45,12 +45,9 @@ app.post('/interviews', async (request, response) => {
   const preference = new PreferenceBuilder().field(field).difficulty(difficulty).interviewer(interviewerType).make()
   const preferenceObj = preference.toObject()
   try {
-    console.log(interviewee, interviewer, preferenceObj, time)
     const interview = await MatchController.create(interviewee, interviewer, preferenceObj, time)
     const res = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interview.interviewer}`, { method: 'GET' })
     const interviewerDetails = await res.json()
-    console.log('interview', interview.toObject())
-    console.log('details', interviewerDetails)
     const data = { ...interview.toObject(), interviewer: interviewerDetails }
     response.json(data)
   } catch (e) {
