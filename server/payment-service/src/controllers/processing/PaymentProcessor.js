@@ -1,50 +1,55 @@
 
 import fetch from 'node-fetch'
-import { getPaymentMethodByUserId } from '../controllers/PaymentMethodController'
+import PaymentMethodController from '../PaymentMethodController'
 
-class paymentProcessor {
-  constructor(payerId, payeeId, matchId) {
+import { PORTS } from '../../utils/constants'
+
+class PaymentProcessor {
+  
+  // ============ Template methods ============
+
+  constructor(payerId, payeeId, matchId, amount) {
     this.payerId = payerId
     this.payeeId = payeeId
     this.matchId = matchId
+    this.amount = amount
   }
 
   async processPayment() {
-    const amount = 20
-    const payer = await fetchPaymentMethod(payerId)
+    const payer = await PaymentProcessor.fetchPaymentMethod(this.payerId)
     if (!payer || payer.error) {
       return { success: false, message: "payer account cannot be fetched" }
     }
 
-    const payee = await fetchPaymentMethod(payeeId)
+    const payee = await PaymentProcessor.fetchPaymentMethod(this.payeeId)
     if (!payee || payee.error) {
       return { success: false, message: "payee account cannot be fetched" }
     }
-    // // TODO this API is not available yet
-    // const getRes = await fetch(
-    //   `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
-    //   { method: 'GET' }
-    // )
-    // const match = await getRes.json()
-    // if (match.isPaid) {
-    //   return { success: false, message: "match already paid for" }
-    // }
-    const rawResult = request(payer, payee, amount)
-    const processedResult = processResult(rawResult)
-    // if (processedResult.success) {
-    //   match.isPaid = true
-    //   await fetch(
-    //     `http://mockly-profile-service:${PORTS.PROFILE}/matches/${this.matchId}`,
-    //     { method: 'PATCH', body: JSON.stringify(match) }
-    //   )
-    // }
+    const rawRequestResult = PaymentProcessor.request(payer, payee, this.amount)
+    const processedResult = PaymentProcessor.processRequestResult(rawRequestResult)
+    return processedResult
+  }
+  
+  async confirmPayment(payload) {
+    const rawConfirmResult = PaymentProcessor.confirm(payload)
+    const processedResult = PaymentProcessor.processConfirmResult(rawConfirmResult)
+    if (processedResult.success) {
+      const patch = {isPaid: true}
+      await fetch(
+        `http://mockly-matching-service:${PORTS.MATCHING}/matches/${this.matchId}`,
+        { method: 'PATCH', body: JSON.stringify(patch) }
+      )
+    }
     return processedResult
   }
 
   async fetchPaymentMethod(userId) {
-    const user = await getPaymentMethodByUserId(userId)
+    const user = await PaymentMethodController.getPaymentMethodByUserId(userId)
     return user
   }
+
+
+  // ============ Custom methods ============
 
   async request(payer, payee, amount) {
     console.log('Mock API request made.')
@@ -52,9 +57,22 @@ class paymentProcessor {
     const time = Date.now()
     return { success: true, payer, payee, amount, time }
   }
+
+  async confirm(payload) {
+    console.log('Mock API payment confirmed.')
+    console.log(payload)
+    const time = Date.now()
+    return { success: true, payload, time }
+  }
   
-  processResult(result) {
+  processRequestResult(result) {
+    return result
+  }
+
+  processConfirmResult(result) {
     return result
   }
 
 }
+
+export default new PaymentProcessor
