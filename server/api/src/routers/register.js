@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import fetch from 'node-fetch'
-import { generate } from '../utils/token'
 
 const router = Router()
 const BASE_URL = 'http://mockly-profile-service:3005/users'
@@ -22,8 +21,12 @@ router.post('/', async (req, res) => {
     const responseJSON = await response.json()
     if (response.status == 201) {
       // new user created
-      const token = generate(responseJSON.user._id)
-      res.status(response.status).json({ token, userId: responseJSON.user._id })
+      res
+        .status(response.status)
+        .json({
+          userId: responseJSON.user._id,
+          message: 'New user registered successfully',
+        })
     } else {
       /**
        * 400 - Missing required fields
