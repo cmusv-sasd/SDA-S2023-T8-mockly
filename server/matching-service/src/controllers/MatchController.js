@@ -8,7 +8,7 @@ class MatchController {
   /*
   * Create a match between a interviewer and interviewee
   */
-  async create(interviewer, interviewee, preferences, time) {
+  async create({ interviewee, interviewer, preferences, time }) {
     const interviewerRes = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interviewer}`, { method: 'GET' })
     const intervieweeRes = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interviewee}`, { method: 'GET' })
     const interviewerDetails = await interviewerRes.json()
@@ -25,8 +25,23 @@ class MatchController {
   * Find all of a user's interviews by user id
   */
   async getByUserId(userId) {
-    const interviews = await Match.find({ $or: [ { interviewee: userId }, { interviewee: userId } ] }).exec()
-    return interviews
+    const interviews = await Match.find({ $or: [ { interviewer: userId }, { interviewee: userId } ] }).exec()
+    const interviewPromise = Promise.all(
+        interviews.map(async (interview) => {
+          const { interviewer, interviewee } = interview
+          const interviewerRes = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interviewer}`, { method: 'GET' })
+          const intervieweeRes = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interviewee}`, { method: 'GET' })
+          const interviewerDetails = await interviewerRes.json()
+          const intervieweeDetails = await intervieweeRes.json()
+          return {
+            ...interview.toJSON(),
+            interviewer: interviewerDetails,
+            interviewee: intervieweeDetails,
+          }
+        })
+    )
+    const interviewData = await interviewPromise
+    return interviewData
   }
   
   /*
@@ -66,8 +81,9 @@ class MatchController {
   */ 
     async deleteInterview(interviewId) {
       try {
-        await Match.deleteById(interviewId)
+        await Match.deleteOne({ _id: interviewId })
       } catch (e) {
+        console.error(e)
         throw new Error('Failed to delete interview.')
       }
     }

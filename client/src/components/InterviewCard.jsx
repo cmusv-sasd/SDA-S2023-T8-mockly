@@ -1,29 +1,62 @@
 import { Card, Divider, Button, Space, Tag } from "antd"
 import { fieldMapping } from "../utils/constants"
 import dayjs from 'dayjs'
+import { useDispatch, useSelector } from "react-redux"
+import { userSelector } from "../store/userSlice"
+import { deleteInterview } from "../api/interview"
+import { deleteInterview as deleteInterviewFromStore } from '../store/interviewsSlice'
+import useMessage from "antd/es/message/useMessage"
 
 const InterviewCard = (interview) => {
-  const { time, interviewer, preferences, isPaid, setSelectedFeedbackForm,
+  const { 
+    _id,
+    time, 
+    interviewer, 
+    interviewee, 
+    preferences, 
+    url,
+    isPaid, 
+    setSelectedFeedbackForm,
     setOpenFeedbackForm,
     setCurrTime,
-    setCurrInterviewer, } = interview
-  const { andrewId, firstName, lastName } = interviewer
+    setCurrInterviewer,
+  } = interview
+  const dispatch = useDispatch()
+  const user = useSelector(userSelector)
+  const [messageApi, contextHolder] = useMessage()
+  const { _id: interviewerId, andrewId: interviewerAndrewId, firstName: interviewerFirstName, lastName: interviewerLastName } = interviewer
+  // eslint-disable-next-line
+  const { andrewId: intervieweeAndrewId, firstName: intervieweeFirstName, lastName: intervieweeLastName } = interviewee
 
+  const isInterviewer = user._id === interviewerId
   const { field, interviewer: interviewerType, difficulty } = preferences
   const isUpcoming = dayjs().isBefore(dayjs(time * 1000))
+  const isWithinHour = dayjs().add('hour', 1).isAfter(dayjs(time * 1000))
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
-  let toBePaid = !isUpcoming && !isPaid
-  toBePaid = true
+  const toBePaid = !isUpcoming && !isPaid && !isInterviewer
 
   const handleLaunch = () => {
-    console.log('launch meeting')
+    window.open(url, '_blank');
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deleteInterview(_id)
+      dispatch(deleteInterviewFromStore({ _id }))
+      messageApi.open({ type: 'success', content: 'Successfully deleted interview!'})
+    } catch (e) {
+      console.error(e)
+      messageApi.open({ type: 'error', content: 'Failed to delete interview.'})
+    }
   }
 
   return (
     <Card className='w-10 m-3'>
+      {contextHolder}
       <Space direction='vertical' className='text-center'>
         <Card.Meta
+          className='align-center'
           avatar={fieldMapping[field].icon}
           title={formattedTime}
         ></Card.Meta>
@@ -31,14 +64,30 @@ const InterviewCard = (interview) => {
         <p>
           {fieldMapping[field].string} with a {interviewerType}
         </p>
-        <p>Interviewer: {andrewId}</p>
+        {
+          isInterviewer
+          ?
+          <p>Interviewee: {intervieweeAndrewId}</p>
+          :
+          <p>Interviewer: {interviewerAndrewId}</p>
+        }
         <p>Level: {difficulty}</p>
         {toBePaid ? <Tag color="volcano">To be paid</Tag> : null}
         <Divider />
         {isUpcoming ? (
           <>
-            <Button type="primary" onClick={handleLaunch}>Launch Meeting</Button>
-            <Button danger type="primary">Delete</Button>
+            <>
+              <Button type="primary" disabled={!isWithinHour} onClick={handleLaunch}>
+                Launch Meeting
+              </Button> 
+              {!isWithinHour ? <p>Launch within an hour of interview</p> : null}
+            </>
+            <>
+              <Button danger type="primary" disabled={isWithinHour} onClick={handleDelete}>
+                Delete
+              </Button>
+              Cancel up to an hour within interview
+            </>
           </>)
           :
           <>
@@ -48,9 +97,9 @@ const InterviewCard = (interview) => {
               onClick={(e) => {
                 e.stopPropagation()
                 //  this should be an ID instead
-                setSelectedFeedbackForm(`${firstName} ${lastName}` + time)
+                setSelectedFeedbackForm(`${interviewerFirstName} ${interviewerLastName}` + time)
                 setOpenFeedbackForm(true)
-                setCurrInterviewer(`${firstName} ${lastName}`)
+                setCurrInterviewer(`${interviewerFirstName} ${interviewerLastName}`)
                 setCurrTime(time)
               }}
             >

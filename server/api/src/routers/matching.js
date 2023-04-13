@@ -12,7 +12,8 @@ export default Router()
       const matches = await resp.json()
       response.json(matches)
     } catch (e) {
-      response.status(500).send({ message: 'Internal server error '})
+      console.error(e)
+      response.status(500).json({ message: 'Internal server error '})
     }
     
   })
@@ -24,7 +25,8 @@ export default Router()
       const interviews = await resp.json()
       response.json(interviews)
     } catch (e) {
-      response.status(500).send({ message: 'Internal server error '})
+      console.error(e)
+      response.status(500).json({ message: 'Internal server error '})
     }
   })
   .post('/interviews', async (request, response) => {
@@ -35,6 +37,20 @@ export default Router()
       const match = await resp.json()
       response.json(match)
     } catch (e) {
-      response.status(500).send({ message: 'Internal server error '})
+      console.error(e)
+      response.status(500).json({ message: 'Internal server error '})
+    }
+  })
+  .delete('/interviews/:interviewId', async (request, response) => {
+    const { interviewId } = request.params
+    const options = { method: 'DELETE', headers }
+    try {
+      const resp = await fetch(`http://mockly-matching-service:3003/interviews/${interviewId}`, options)
+      const message = await resp.json()
+      console.log(message)
+      response.json(message)
+    } catch (e) {
+      console.error(e)
+      response.status(500).json({ message: 'Internal server error '})
     }
   })

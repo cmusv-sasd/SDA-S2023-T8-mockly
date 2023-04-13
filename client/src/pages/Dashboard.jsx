@@ -30,10 +30,10 @@ const DashboardPage = () => {
   //
 
   const upcomingInterviews = interviews.filter((interview) =>
-    now.isBefore(dayjs(interview.time))
+    now.isBefore(dayjs(interview.time * 1000))
   )
   const completedInterviews = interviews.filter(
-    (interview) => !now.isBefore(dayjs(interview.time))
+    (interview) => !now.isBefore(dayjs(interview.time * 1000))
   )
 
   useEffect(() => {
