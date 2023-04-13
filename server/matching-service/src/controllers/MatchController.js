@@ -38,13 +38,13 @@ class MatchController {
     const res = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users`, { method: 'GET' })
     const allInterviewers = await res.json()
     const filteredInterviewers = allInterviewers.filter(interviewer => preference.isMatch(interviewer))
-    // TODO: filter by schedule
-    // return filteredInterviewers
-    const matches = allInterviewers.map(interviewer => 
-      ({ 
-        interviewer: interviewer._id,
-        time: new Date().getTime(),
-      }))
+    const matches = []
+    filteredInterviewers.forEach(interviewer => {
+      const overlappingTimes = MeetingController.matchSchedule(schedule, interviewer.time)
+      overlappingTimes.forEach(time => {
+        matches.push({ username: interviewer.andrewId, interviewer: interviewer._id, time })
+      })
+    })
     return matches
   }
 

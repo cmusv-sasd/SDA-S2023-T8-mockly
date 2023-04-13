@@ -3,15 +3,15 @@ import { fieldMapping } from "../utils/constants"
 import dayjs from 'dayjs'
 
 const InterviewCard = (interview) => {
-  const { time, interviewer, preferences, isPaid,    setSelectedFeedbackForm,
+  const { time, interviewer, preferences, isPaid, setSelectedFeedbackForm,
     setOpenFeedbackForm,
     setCurrTime,
     setCurrInterviewer, } = interview
   const { andrewId, firstName, lastName } = interviewer
 
   const { field, interviewer: interviewerType, difficulty } = preferences
-  const isUpcoming = dayjs().isBefore(dayjs(time))
-  const formattedTime = dayjs(time).format('MM/DD/YY h A')
+  const isUpcoming = dayjs().isBefore(dayjs(time * 1000))
+  const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
   let toBePaid = !isUpcoming && !isPaid
   toBePaid = true

@@ -51,6 +51,10 @@ class MeetingController {
       return e
     }
   }
+
+  matchSchedule(intervieweeSchedule, interviewerSchedule) {
+    return intervieweeSchedule.filter(time => interviewerSchedule.includes(time))
+  }
 }
 
 export default new MeetingController()

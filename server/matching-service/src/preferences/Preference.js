@@ -11,8 +11,8 @@ class Preference {
   }
 
   isMatch (other) {
-    const { interviewer, fields } = other
-    return interviewer === this.interviewer && fields.indexOf(this.field) !== -1
+    const { type, fields } = other
+    return type === this.interviewer && fields.indexOf(this.field) !== -1
   }
 }
 
