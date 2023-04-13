@@ -1,0 +1,29 @@
+.user-profile-card .ant-card-body {
+  padding: 8px 24px;
+}
+
+.user-profile-card .ant-card-head {
+  min-height: 46px
+}
+
+.user-profile-card .ant-card-head-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.user-profile-card .user-identity--fullname {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 4px 0;
+  text-align: center;
+}
+
+.user-profile-card .user-identity--organization,
+.user-profile-card .user-identity--position {
+  font-size: 14px;
+  line-height: 24px;
+  margin-bottom: 4px;
+  text-align: center;
+}
