@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch } from 'react-redux'
 import Logo from '../assets/logo.png'
 import { resetUser } from '../store/userSlice'
+import '../styles/responsiveMargins.css'
 
 const items = [
   { key: '1', label: 'Profile' },
@@ -25,8 +26,8 @@ const Header = ({ children }) => {
         navigate('/feedback')
         break
       case '3':
-      navigate('/payment')
-      break
+        navigate('/payment')
+        break
     }
   }
 
@@ -62,7 +63,7 @@ const Header = ({ children }) => {
             </Button>
           </LinkContainer>
         </Layout.Header>
-        <Layout.Content className='m-5'>{children}</Layout.Content>
+        <Layout.Content className='layout-content'>{children}</Layout.Content>
       </Layout>
     </Layout>
   )

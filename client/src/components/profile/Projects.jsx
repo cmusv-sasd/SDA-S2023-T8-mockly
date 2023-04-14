@@ -303,29 +303,31 @@ const ProjectsCard = () => {
         <Form.Item label='Description' name='description'>
           <Input.TextArea name='description' rows={4} />
         </Form.Item>
-        <div className='user-right-card--button-container'>
-          <Button
-            className='user-right-card--cancel-btn'
-            type='default'
-            shape='round'
-            onClick={
-              selectedProject
-                ? handleCancelEditProject
-                : handleCancelProjectClick
-            }
-          >
-            Cancel
-          </Button>
-          <Button
-            className='user-right-card--save-btn'
-            type='primary'
-            shape='round'
-            htmlType='submit'
-            loading={loading}
-          >
-            Save
-          </Button>
-        </div>
+        <Form.Item>
+          <div className='user-right-card--button-container'>
+            <Button
+              className='user-right-card--cancel-btn'
+              type='default'
+              shape='round'
+              onClick={
+                selectedProject
+                  ? handleCancelEditProject
+                  : handleCancelProjectClick
+              }
+            >
+              Cancel
+            </Button>
+            <Button
+              className='user-right-card--save-btn'
+              type='primary'
+              shape='round'
+              htmlType='submit'
+              loading={loading}
+            >
+              Save
+            </Button>
+          </div>
+        </Form.Item>
       </Form>
     )
   }

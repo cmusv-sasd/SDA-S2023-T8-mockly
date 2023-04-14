@@ -197,6 +197,7 @@ const InterviewerDetailsCard = () => {
                   current > dayjs().endOf('day').add(3, 'week')
                 return inPast || afterThreeWeeks
               }}
+              style={{ width: '100%' }}
             />
           </Form.Item>
           <div>{renderTimeSlots(timeSlots, true)}</div>
