@@ -1,0 +1,11 @@
+.user-profile-card .user-profile-interviewer--tag {
+  padding: 2px;
+  margin-bottom: 4px;
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.user-profile-card .user-profile-interviewer--field-name {
+  margin-bottom: 4px;
+}
