@@ -1,0 +1,17 @@
+.user-tag-actions-div {
+  display: inline-flex;
+  margin-top: 10px;
+  width: 100%;
+}
+.user-tag-action-btn {
+  margin-left: 5px;
+}
+
+.user-tag {
+  padding: 5px;
+  margin-bottom: 4px;
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  border-radius: 10px;
+}

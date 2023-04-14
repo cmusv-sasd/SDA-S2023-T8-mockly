@@ -5,6 +5,7 @@ import { getUserCourses } from '../../store/userSelector'
 import { Card, Tag, Input, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { addCourseAPI, deleteCourseAPI } from '../../api/userProfile'
+import '../../styles/profile/tags.css'
 
 // CoursesCard component to display and manage user courses
 const CoursesCard = () => {
@@ -58,7 +59,7 @@ const CoursesCard = () => {
   const renderCourses = () => {
     return courses.map((course) => (
       <Tag
-        className='user-course-tag'
+        className='user-tag'
         closable
         key={course._id}
         onClose={() => handleRemoveCourseClick(course._id)}
@@ -72,14 +73,14 @@ const CoursesCard = () => {
   return (
     <Card className='user-profile-card' title='Courses' loading={loading}>
       {renderCourses()}
-      <div className='user-course-actions-div'>
+      <div className='user-tag-actions-div'>
         <Input
           value={newCourse}
           onChange={handleNewCourseChange}
           placeholder='Add course'
         />
         <Button
-          className='user-add-course-btn'
+          className='user-tag-action-btn'
           type='primary'
           onClick={handleAddCourseClick}
           icon={<PlusOutlined />}

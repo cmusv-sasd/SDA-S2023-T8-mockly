@@ -26,34 +26,3 @@
 .user-right-card--cancel-btn {
   width: 120px;
 }
-
-.user-skill-actions-div {
-  display: inline-flex;
-  margin-top: 10px;
-  width: 100%;
-}
-.user-add-skill-btn {
-  margin-left: 5px;
-}
-.user-course-actions-div {
-  display: inline-flex;
-  margin-top: 10px;
-  width: 100%;
-}
-.user-add-course-btn {
-  margin-left: 5px;
-}
-
-/* TODO: Combine user-skill-tag and user-course-tag */
-.user-skill-tag {
-  padding: 5px;
-  max-width: 100%;
-  white-space: normal;
-  word-wrap: break-word;
-}
-.user-course-tag {
-  padding: 5px;
-  max-width: 100%;
-  white-space: normal;
-  word-wrap: break-word;
-}

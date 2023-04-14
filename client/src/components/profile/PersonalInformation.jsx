@@ -190,17 +190,24 @@ const PersonalInformationCard = () => {
         </Form>
       ) : (
         <>
-          <Paragraph>{`Email Address: ${user.email}`}</Paragraph>
-          <Paragraph>{`Phone Number: ${user.phoneNumber}`}</Paragraph>
-          <Paragraph>{`Pronouns: ${
-            user.pronouns === '' ? '' : pronounsOptions[user.pronouns]
-          }`}</Paragraph>
-          <Paragraph>{`Gender: ${
-            user.gender === '' ? '' : genderOptions[user.gender]
-          }`}</Paragraph>
-          <Paragraph>{`Ethnicity: ${
-            user.ethnicity === '' ? '' : ethnicityOptions[user.ethnicity]
-          }`}</Paragraph>
+          <Paragraph>
+            <strong>Email Address:</strong> {user.email}
+          </Paragraph>
+          <Paragraph>
+            <strong>Phone Number:</strong> {user.phoneNumber}
+          </Paragraph>
+          <Paragraph>
+            <strong>Pronouns:</strong>{' '}
+            {user.pronouns === '' ? '' : pronounsOptions[user.pronouns]}
+          </Paragraph>
+          <Paragraph>
+            <strong>Gender:</strong>{' '}
+            {user.gender === '' ? '' : genderOptions[user.gender]}
+          </Paragraph>
+          <Paragraph>
+            <strong>Ethnicity:</strong>{' '}
+            {user.ethnicity === '' ? '' : ethnicityOptions[user.ethnicity]}
+          </Paragraph>
         </>
       )}
     </Card>
