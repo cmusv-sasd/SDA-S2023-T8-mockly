@@ -26,8 +26,9 @@ import {
   updateProjectDetailsAPI,
 } from '../../api/userProfile'
 import dayjs from 'dayjs'
+import '../../styles/profile/detailsList.css'
 
-const { Title, Paragraph } = Typography
+const { Paragraph } = Typography
 const { Item } = List
 
 const ProjectsCard = () => {
@@ -210,31 +211,33 @@ const ProjectsCard = () => {
                       rel='noopener noreferrer'
                       style={{ paddingLeft: 0 }}
                     >
-                      <Title level={3} style={{ marginBottom: '5px' }}>
+                      <Paragraph className='user-details-list--header'>
                         {project.title} {project.url && <LinkOutlined />}
-                      </Title>
+                      </Paragraph>
                     </Button>
                   }
                   description={
                     <>
                       {startDate && (
-                        <Paragraph>
+                        <Paragraph className='user-details-list--date'>
                           {startDate} - {endDate || 'current'}
                         </Paragraph>
                       )}
-                      <Paragraph style={{ whiteSpace: 'pre-wrap' }}>
+                      <Paragraph className='user-details-list--content content-description'>
                         {project.description}
                       </Paragraph>
                     </>
                   }
                 />
                 <Button
+                  className='user-details-list--actions'
                   danger
                   onClick={() => deleteProjectDetails(project._id)}
                 >
                   <DeleteOutlined />
                 </Button>
                 <Button
+                  className='user-details-list--actions'
                   type='primary'
                   ghost
                   onClick={() => handleEditProjectClick(project)}
@@ -254,9 +257,13 @@ const ProjectsCard = () => {
     return (
       <Form
         layout='vertical'
+        className='user-details-list--form'
         onFinish={selectedProject ? handleEditProject : handleAddNewProject}
         form={form}
       >
+        <Paragraph className='user-details-list--form-header'>
+          {selectedProject ? 'Edit details' : 'Add new details'}
+        </Paragraph>
         <Form.Item
           label='Title'
           name='title'

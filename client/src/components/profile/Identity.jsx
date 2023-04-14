@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Typography, Form, Input, Button } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import {
-  EditOutlined,
-  UserOutlined,
-  IdcardOutlined,
-  BankOutlined,
-} from '@ant-design/icons'
+import { EditOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserIdentity } from '../../store/userSelector'
 import { setIdentity } from '../../store/userSlice'
@@ -97,16 +92,16 @@ const IdentityCard = () => {
               ]}
               hasFeedback
             >
-              <Input name='firstName' prefix={<UserOutlined />} />
+              <Input name='firstName' />
             </Form.Item>
             <Form.Item name='lastName' label='Last Name'>
-              <Input name='lastName' prefix={<UserOutlined />} />
+              <Input name='lastName' />
             </Form.Item>
             <Form.Item name='position' label='Position/Degree Name'>
-              <Input name='position' prefix={<IdcardOutlined />} />
+              <Input name='position' />
             </Form.Item>
             <Form.Item name='organization' label='Organization'>
-              <Input name='organization' prefix={<BankOutlined />} />
+              <Input name='organization' />
             </Form.Item>
             <Form.Item>
               <div className='user-card--button-container'>

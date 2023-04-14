@@ -27,8 +27,9 @@ import {
 } from '../../api/userProfile'
 import { find } from 'lodash'
 import dayjs from 'dayjs'
+import '../../styles/profile/detailsList.css'
 
-const { Title, Paragraph } = Typography
+const { Paragraph } = Typography
 const { Option } = Select
 
 const EducationCard = () => {
@@ -212,27 +213,39 @@ const EducationCard = () => {
 
             return (
               <List.Item>
-                <Title level={3} style={{ marginBottom: '5px' }}>
+                <Paragraph className='user-details-list--header'>
                   {education.schoolName}
-                </Title>
-                <Title level={4} style={{ marginTop: '5px' }}>
+                </Paragraph>
+                <Paragraph className='user-details-list--subheader'>
                   {educationLevelObj.text}
-                </Title>
-                <Paragraph>
+                </Paragraph>
+                <Paragraph className='user-details-list--date'>
                   {startDate} - {endDate || 'Current'}
                 </Paragraph>
-                <Paragraph>
-                  {education.major}{' '}
-                  {education.minor ? `(${education.minor})` : ''}
+                <Paragraph className='user-details-list--content'>
+                  <strong>Major in: </strong>
+                  {education.major}
                 </Paragraph>
-                <Paragraph strong>GPA: {education.gpa}</Paragraph>
+                {education.minor && (
+                  <Paragraph className='user-details-list--content'>
+                    <strong>Minor in: </strong> {education.minor}
+                  </Paragraph>
+                )}
+                {education.gpa && (
+                  <Paragraph className='user-details-list--content'>
+                    <strong>GPA: </strong>
+                    {education.gpa}
+                  </Paragraph>
+                )}
                 <Button
+                  className='user-details-list--actions'
                   danger
                   onClick={() => deleteEducationDetails(education._id)}
                 >
                   <DeleteOutlined />
                 </Button>
                 <Button
+                  className='user-details-list--actions'
                   type='primary'
                   ghost
                   onClick={() => handleEditEducationClick(education)}
@@ -252,11 +265,15 @@ const EducationCard = () => {
     return (
       <Form
         layout='vertical'
+        className='user-details-list--form'
         onFinish={
           selectedEducation ? handleEditEducation : handleAddNewEducation
         }
         form={form}
       >
+        <Paragraph className='user-details-list--form-header'>
+          {selectedEducation ? 'Edit details' : 'Add new details'}
+        </Paragraph>
         <Form.Item
           label='School Name'
           name='schoolName'

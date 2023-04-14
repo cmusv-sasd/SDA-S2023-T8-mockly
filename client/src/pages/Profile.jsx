@@ -37,14 +37,14 @@ const ProfilePage = () => {
         <Col xs={24} sm={24} md={8} lg={8} xl={8}>
           <IdentityCard />
           <PersonalInformationCard />
+          <InterviewerDetailsCard />
           <SkillsCard />
           <CoursesCard />
         </Col>
         <Col xs={24} sm={24} md={16} lg={16} xl={16}>
           <SummaryCard />
-          <InterviewerDetailsCard />
-          <EducationCard />
           <ExperienceCard />
+          <EducationCard />
           <ProjectsCard />
         </Col>
       </Row>

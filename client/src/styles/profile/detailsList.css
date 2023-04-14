@@ -1,0 +1,45 @@
+.user-profile-card .user-details-list--form {
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.user-profile-card .user-details-list--form-header {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 4px 0;
+  margin-bottom: 0;
+}
+
+.user-profile-card .user-details-list--header {
+  font-size: 18px;
+  font-weight: 700;
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.user-profile-card .user-details-list--subheader {
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+.user-profile-card .user-details-list--date {
+  font-size: 12px;
+  color: #000000CC;
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.user-profile-card .user-details-list--content {
+  padding-bottom: 4px;
+  margin-bottom: 0;
+}
+
+.user-profile-card .user-details-list--content.content-description {
+  margin-top: 8px; 
+  white-space: pre-wrap
+}
+
+.user-profile-card .user-details-list--actions {
+  margin-right: 4px;
+  margin-top: 4px
+}

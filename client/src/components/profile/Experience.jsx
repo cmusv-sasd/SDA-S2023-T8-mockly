@@ -25,8 +25,9 @@ import {
   deleteExperienceDetailsAPI,
 } from '../../api/userProfile'
 import dayjs from 'dayjs'
+import '../../styles/profile/detailsList.css'
 
-const { Title, Paragraph } = Typography
+const { Paragraph } = Typography
 const { Item } = List
 
 const ExperienceCard = () => {
@@ -199,26 +200,30 @@ const ExperienceCard = () => {
               : null
             return (
               <Item>
-                <Title level={3} style={{ marginBottom: '5px' }}>
+                <Paragraph className='user-details-list--header'>
                   {experience.companyName}
-                </Title>
-                <Title level={4} style={{ marginTop: '5px' }}>
+                </Paragraph>
+                <Paragraph className='user-details-list--subheader'>
                   {experience.position}
-                </Title>
-                <Paragraph>
+                </Paragraph>
+                <Paragraph className='user-details-list--date'>
                   {startDate} - {endDate || 'Current'}
                 </Paragraph>
-                <Paragraph>{experience.location}</Paragraph>
-                <Paragraph style={{ marginTop: '8px', whiteSpace: 'pre-wrap' }}>
+                <Paragraph className='user-details-list--content'>
+                  {experience.location}
+                </Paragraph>
+                <Paragraph className='user-details-list--content content-description'>
                   {experience.description}
                 </Paragraph>
                 <Button
+                  className='user-details-list--actions'
                   danger
                   onClick={() => deleteExperienceDetails(experience._id)}
                 >
                   <DeleteOutlined />
                 </Button>
                 <Button
+                  className='user-details-list--actions'
                   type='primary'
                   ghost
                   onClick={() => handleEditExperienceClick(experience)}
@@ -237,11 +242,15 @@ const ExperienceCard = () => {
     return (
       <Form
         layout='vertical'
+        className='user-details-list--form'
         onFinish={
           selectedExperience ? handleEditExperience : handleAddNewExperience
         }
         form={form}
       >
+        <Paragraph className='user-details-list--form-header'>
+          {selectedExperience ? 'Edit details' : 'Add new details'}
+        </Paragraph>
         <Form.Item
           label='Company Name'
           name='companyName'
