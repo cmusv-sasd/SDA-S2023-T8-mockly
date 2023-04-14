@@ -1,90 +1,76 @@
 import { Row, Typography, Form, Input, Select, Button } from 'antd'
-import React from "react"
+import React, { useEffect } from "react"
 import { useSelector } from 'react-redux'
 import { userSelector } from '../store/userSlice'
 import { getPaymentMethod, updatePaymentMethod, deletePaymentMethod } from '../api/payment'
+import useMessage from 'antd/es/message/useMessage'
 
 const PaymentMethodForm = () => {
-
+  const [messageApi, contextHolder] = useMessage()
   const user = useSelector(userSelector)
   const userId = user._id
 
   const [form] = Form.useForm()
 
-  const getInitialValues = async () => {
-    try {
+  useEffect(() => {
+    const getInitialValues = async () => {
       const res = await getPaymentMethod(userId)
-      if(res.status === 200){
-        return {
-          type: res.body.type,
-          account: res.body.account
-        }
-      } else {
-        return {}
-      }
-    } 
-    catch (e) {
-      console.log(e)
-      return {}
+      form.setFieldsValue({ ...res })
     }
-  }
+    getInitialValues()
+  }, [user])
   
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     try {
-      const res = updatePaymentMethod(userId, 
+     await updatePaymentMethod(userId, 
         { type: values.type, account: values.account }
       )
-      if (res.status === 200) {
-        // TODO: show success
-        console.log(res.status)
-      }
-      else {
-        // TODO: show invalid input
-        console.log(res.status)
-      }
+      messageApi.open({ type: 'success', content: 'Successfully updated payment method.' })
     }
     catch (e) {
-      // TODO: show system error
-      console.log(e)
+      console.error(e)
+      messageApi.open({ type: 'error', content: 'Failed to update payment method.' })
     }
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     try {
-      const res = deletePaymentMethod(userId)
-      if (res.status === 200) {
-        form.resetFields()
-      }
-      else {
-        // TODO: shouldn't be reached
-        console.log(res.status)
-      }
+      await deletePaymentMethod(userId)
+      messageApi.open({ type: 'success', content: 'Successfully deleted payment method.' })
+      form.resetFields()
     }
     catch (e) {
-      // TODO: show system error
-      console.log(e)
+      console.error(e)
+      messageApi.open({ type: 'error', content: 'Failed to delete payment method.' })
     }
   }
 
   return (
     <div className='payment-method'>
+      {contextHolder}
       <Row justify='center'>
           <Typography.Title level={2}>Payment Method</Typography.Title>
         </Row>
       <Row justify='center'>
-        <Form onFinish={handleSubmit} initialValues={getInitialValues()}>
-          <Form.Item label="Type" name="type" rules={[{ required: true, message: '-- Select a payment option --' }]}>
+        <Form form={form} onFinish={handleSubmit}>
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: 'Select a payment option.' }]}>
             <Select>
               <Select.Option value="paypal">Paypal</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Account" name="account" rules={[{ required: true, message: 'Please enter your account' }]}>
+          <Form.Item label="Account Email" name="account" rules={[{ required: true, message: 'Please enter a valid email.', type: 'email' }]}>
             <Input />
           </Form.Item>
-          <Form.Item>
-          <Button type="primary" htmlType="submit">Submit</Button>
-          <Button onClick={handleDelete}>Delete Existing</Button>
-          </Form.Item>
+          <Row justify='center'>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">Submit</Button>
+            </Form.Item>
+          </Row>
+          <Row justify='center'>
+            <Form.Item>
+              <Button onClick={handleDelete}>Delete Existing</Button>
+            </Form.Item>
+          </Row>
         </Form>
       </Row>
     </div>
