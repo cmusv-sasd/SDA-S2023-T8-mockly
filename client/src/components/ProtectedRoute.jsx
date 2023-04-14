@@ -20,9 +20,10 @@ const ProtectedRoute = ({ children }) => {
       const res = await fetchUserAPI(uid)
       dispatch(setUser(res))
     }
-    fetchUser()
+    if (uid) {
+      fetchUser()
+    }
   }, [])
-
 
   return <Header>{children}</Header>
 }
