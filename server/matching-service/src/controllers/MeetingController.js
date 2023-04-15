@@ -26,8 +26,8 @@ class MeetingController {
     const fieldString = field[0] + field.substring(1).replace(' ').toLowerCase()
     const description = `Interviewer: ${interviewer}, Interviewee: ${interviewee}. Subject: ${fieldString}`
     const resource = {
-      start: { dateTime: dayjs(time), timeZone: 'America/Los_Angeles' },
-      end: { dateTime: dayjs(time).add(1, 'hour').toISOString(), timeZone: 'America/Los_Angeles' },
+      start: { dateTime: dayjs(time * 1000), timeZone: 'America/Los_Angeles' },
+      end: { dateTime: dayjs(time * 1000).add(1, 'hour').toISOString(), timeZone: 'America/Los_Angeles' },
       attendees: [{ email: intervieweeEmail }, { email: interviewerEmail }],
       conferenceData: {
         createRequest: {
