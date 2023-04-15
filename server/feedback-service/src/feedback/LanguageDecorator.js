@@ -45,6 +45,11 @@ class LanguageDecorator extends QuestionsDecorator{
     super.addQuestions(newQuestionsObj)
     console.log("L", newQuestionsObj)
   }
+  //
+  removeQuestions(newQuestionsObj={}){
+    super.removeQuestions()
+    super.removeQuestions(newQuestionsObj)
+  }
 }
 
 export default LanguageDecorator

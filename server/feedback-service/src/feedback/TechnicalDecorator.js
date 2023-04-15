@@ -44,6 +44,10 @@ class TechnicalDecorator extends QuestionsDecorator{
     super.addQuestions(newQuestionsObj)
     console.log("T", newQuestionsObj)
   }
+  removeQuestions(newQuestionsObj={}){
+    super.removeQuestions()
+    super.removeQuestions(newQuestionsObj)
+  }
 }
 
 export default TechnicalDecorator

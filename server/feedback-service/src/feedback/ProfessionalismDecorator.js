@@ -49,6 +49,10 @@ class ProfessionalismDecorator extends QuestionsDecorator{
     super.addQuestions(newQuestionsObj)
     console.log("P", newQuestionsObj)
   }
+  removeQuestions(newQuestionsObj={}){
+    super.removeQuestions()
+    super.removeQuestions(newQuestionsObj)
+  }
 }
 
 export default ProfessionalismDecorator

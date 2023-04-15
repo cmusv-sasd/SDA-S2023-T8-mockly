@@ -22,9 +22,8 @@ const DashboardPage = () => {
   // eslint-disable-next-line no-unused-vars
   const [openFeedbackForm, setOpenFeedbackForm] = useState(false)
   // eslint-disable-next-line no-unused-vars
-  const [selectedFeedbackForm, setSelectedFeedbackForm] = useState(0)
-  // eslint-disable-next-line no-unused-vars
-  const [currInterviewer, setCurrInterviewer] = useState('')
+  const [currRecipient, setCurrRecipient] = useState('')
+  const [isInterviewer, setIsInterviewer] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [currTime, setCurrTime] = useState('')
   //
@@ -53,9 +52,9 @@ const DashboardPage = () => {
         {upcomingInterviews.map((interview, i) => (
           <InterviewCard
             {...interview}
-            setSelectedFeedbackForm={setSelectedFeedbackForm}
             setCurrTime={setCurrTime}
-            setCurrInterviewer={setCurrInterviewer}
+            setCurrRecipient={setCurrRecipient}
+            setIsInterviewer={setIsInterviewer}
             key={i}
           />
         ))}
@@ -68,10 +67,10 @@ const DashboardPage = () => {
         {completedInterviews.map((interview, i) => (
           <InterviewCard
             {...interview}
-            setSelectedFeedbackForm={setSelectedFeedbackForm}
             setOpenFeedbackForm={setOpenFeedbackForm}
             setCurrTime={setCurrTime}
-            setCurrInterviewer={setCurrInterviewer}
+            setCurrRecipient={setCurrRecipient}
+            setIsInterviewer={setIsInterviewer}
             key={i}
           />
         ))}
@@ -88,9 +87,9 @@ const DashboardPage = () => {
       <FeedbackFormModal
         open={openFeedbackForm}
         setOpen={setOpenFeedbackForm}
-        selectedFeedbackForm={selectedFeedbackForm}
         time={currTime}
-        interviewer={currInterviewer}
+        currRecipient={currRecipient}
+        isInterviewer={isInterviewer}
       />
     </div>
   )

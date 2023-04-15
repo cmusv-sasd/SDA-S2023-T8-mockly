@@ -25,7 +25,7 @@ class ConcreteFeedbackQuestions {
     //  this.questions = {...this.questions, ...newQuestionsObj}
   }
   //
-  removeQuestions(questionsArray,isInterviewer=false){
+  removeQuestions(newQuestionsObj={}){
     console.log("")
   }
 

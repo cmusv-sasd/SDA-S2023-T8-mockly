@@ -16,10 +16,10 @@ const InterviewCard = (interview) => {
     preferences, 
     url,
     isPaid, 
-    setSelectedFeedbackForm,
     setOpenFeedbackForm,
     setCurrTime,
-    setCurrInterviewer,
+    setCurrRecipient,
+    setIsInterviewer,
   } = interview
   const dispatch = useDispatch()
   const user = useSelector(userSelector)
@@ -96,10 +96,21 @@ const InterviewCard = (interview) => {
               type='default'
               onClick={(e) => {
                 e.stopPropagation()
-                //  this should be an ID instead
-                setSelectedFeedbackForm(`${interviewerFirstName} ${interviewerLastName}` + time)
+                setIsInterviewer(
+                  (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
+                    false :
+                    true
+                )
+                setCurrRecipient(
+                  (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
+                    `${intervieweeFirstName} ${intervieweeLastName}` :
+                    `${interviewerFirstName} ${interviewerLastName}`
+                  )
                 setOpenFeedbackForm(true)
-                setCurrInterviewer(`${interviewerFirstName} ${interviewerLastName}`)
+                console.log("TRY: ", (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
+                    `${intervieweeFirstName} ${intervieweeLastName}` :
+                    `${interviewerFirstName} ${interviewerLastName}`)
+                
                 setCurrTime(time)
               }}
             >
