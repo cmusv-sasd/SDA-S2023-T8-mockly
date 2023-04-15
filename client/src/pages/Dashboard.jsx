@@ -55,6 +55,7 @@ const DashboardPage = () => {
             setCurrTime={setCurrTime}
             setCurrRecipient={setCurrRecipient}
             setIsInterviewer={setIsInterviewer}
+            setOpenFeedbackForm={setOpenFeedbackForm}
             key={i}
           />
         ))}
