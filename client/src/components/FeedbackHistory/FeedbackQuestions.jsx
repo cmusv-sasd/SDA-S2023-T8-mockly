@@ -151,13 +151,12 @@ const FeedbackQuestions = () => {
           </Col>
             */}
           <Col  span={12}>
-            As an interviwer, what would you like to receive feedback about? 
-            <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} style={{display: "inline-flex", flexDirection: "column", margin:4}} />
+            As an interviewer, what would you like to receive feedback about? 
+            <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} />
           </Col>
           <Col span={12}>
-            As an interviwee, what would you like to receive feedback about? 
-            <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} style={{display: "inline-flex", flexDirection: "column", margin:4}} />
-
+            As an interviewee, what would you like to receive feedback about? 
+            <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} />
           </Col>
         </Row>
         
