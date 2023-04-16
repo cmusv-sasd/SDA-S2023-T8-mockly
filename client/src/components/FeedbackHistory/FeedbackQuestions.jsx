@@ -1,40 +1,20 @@
-// eslint-disable-next-line no-unused-vars
-import { Card, Modal, Slider, Input, Form, Button, Space, Checkbox, Row, Col } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Card, Form, Checkbox, Row, Col } from 'antd'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-// eslint-disable-next-line no-unused-vars
 import {
-  // eslint-disable-next-line no-unused-vars
-  setFeedbackQuestions,addQuestions
+  setFeedbackQuestions, addQuestions
 } from '../../store/feedbackQuestionsSlice'
 import { userSelector } from '../../store/userSlice'
-// eslint-disable-next-line no-unused-vars
 import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
-// eslint-disable-next-line no-unused-vars
-import { fetchFeedbackQuestions, updateFeedbackQuestions,createFeedbackQuestions } from '../../api/feedback'
-// eslint-disable-next-line no-unused-vars
-const { TextArea } = Input
-
-/*
-
-
-This file is the top part of the FeedbackHistory page where users can select what
-type of feedback they would like to receive
-
-
-*/
+import { fetchFeedbackQuestions, updateFeedbackQuestions, createFeedbackQuestions } from '../../api/feedback'
+import { useForm } from 'antd/es/form/Form'
 
 // eslint-disable-next-line no-unused-vars
 const FeedbackQuestions = () => {
-  // eslint-disable-next-line no-unused-vars
   const feedbackQuestions = useSelector(feedbackQuestionsSelector)
   const dispatch = useDispatch()
-  // eslint-disable-next-line no-unused-vars
   const user = useSelector(userSelector)
-  // eslint-disable-next-line no-unused-vars
-  const [checkedInterviewer, setCheckedInterviewer] = useState([])
-  // eslint-disable-next-line no-unused-vars
-  const [checkedInterviewee, setCheckedInterviewee] = useState([])
+  const [form] = useForm()
 
   const interviewerOptions = [
     { label: "Professionalism", value: "Professionalism" },
@@ -47,126 +27,66 @@ const FeedbackQuestions = () => {
     { label: "Technical", value: "Technical" }
   ];
 
-  // eslint-disable-next-line no-unused-vars
-  const onFinish = async (values) => {
-    
-    //  console.log('Success:', values)
-    //  save to MongoDB
-    try {
-      //const questions = { questions: values }
-      //  console.log('in onFinish', interviewer)
-      /*
-      setOpen(false)
-      await createFeedback({
-        questions: feedback.questions,
-        answers: values,
-        reviewer: `${user.firstName} ${user.lastName}`,
-        time,
-        reviewee: interviewer,
-      })
-      */
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo)
-  }
-
   const onChangeInterviewer = async (checkedValues) => {
-    console.log("checked = ", checkedValues);
-   
     const res = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
-    console.log(res)
-    await dispatch(addQuestions({questionsInterviewer: res.questionsInterviewer}))
-  };
+    dispatch(addQuestions({questionsInterviewer: res.questionsInterviewer}))
+  }
 
   const onChangeInterviewee = async (checkedValues) => {
-    console.log("checked = ", checkedValues);
     const res = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
-    await dispatch(addQuestions({questionsInterviewee: res.questionsInterviewee}))
-  };
+    dispatch(addQuestions({questionsInterviewee: res.questionsInterviewee}))
+  }
 
-  
-  //
   useEffect(() => {
     const getFeedback = async () => {
       try {
+        if (!user.firstName || !user.lastName) return
         let res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
-        console.log("res", res)
-        console.log("name is ", user.firstName + ' ' + user.lastName)
         if(res === null || res.length <= 0){
-          console.log("creating FQ")
           await createFeedbackQuestions(user.firstName + ' ' + user.lastName)
-          //  await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {isInterviewer: false, questions:{}})
-          //  await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {isInterviewer: true, questions:{}})
           res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
         }
-        console.log("res updated", res)
-        dispatch(setFeedbackQuestions(res))
+        const { questionsInterviewee, questionsInterviewer } = res
+        dispatch(setFeedbackQuestions({ questionsInterviewee, questionsInterviewer }))
       } catch (error) {
         console.error(error)
       }
     }
     getFeedback()
-  }, [dispatch])
+  }, [dispatch, user])
+
+  useEffect(() => {
+    const { questionsInterviewee, questionsInterviewer } = feedbackQuestions
+    const intervieweeKeys = Object.keys(questionsInterviewee).map((q) => q[0])
+    const interviewerKeys = Object.keys(questionsInterviewer).map((q) => q[0])
+    const intervieweeValues = Object.values(intervieweeOptions).map(({ value }) => value).filter(v => intervieweeKeys.indexOf(v[0]) !== -1)
+    const interviewerValues = Object.values(interviewerOptions).map(({ value }) => value).filter(v => interviewerKeys.indexOf(v[0]) !== -1)
+    form.setFieldValue('interviewer', interviewerValues)
+    form.setFieldValue('interviewee', intervieweeValues)
+  }, [feedbackQuestions])
+
   return (
     <Card className="w-10 m-3 feedback-details">
-      <Form name="questionsForm"        
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+      <Form
+        form={form} 
+        name="questionsForm"        
         autoComplete='off'
         layout="horizontal"
       >
         <Row>
-          {/*
-                      <Col  span={12}>
-            
-            <Checkbox.Group onChange={onChangeInterviewer} style={{display: "inline-flex", flexDirection: "column", margin:4}}>Interviewer: 
-              <Form.Item style = {{margin:0}} name={`interviewer-language`} key={`interviewer-language-item`}label="Language" >
-                <Checkbox></Checkbox>
-              </Form.Item>
-              <Form.Item style = {{margin:0}} label="Professionalism" name={`interviewer-professionalism`} key={`interviewer-professionalism-item`}>
-                <Checkbox></Checkbox>
-              </Form.Item>
-              <Form.Item style = {{margin:0}} label="Technical" name={`interviewer-technical`} key={`interviewer-technical-item`}>
-                <Checkbox></Checkbox>
-              </Form.Item>
-            </Checkbox.Group>
-          </Col>
-          <Col span={12}>
-            <Checkbox.Group onChange={onChangeInterviewee} style={{display: "inline-flex", flexDirection: "column", margin:4}}>Interviewee: 
-              <Form.Item style = {{margin:0}} name={`interviewee-language`} key={`interviewee-language-item`}label="Language" >
-                <Checkbox></Checkbox>
-              </Form.Item>
-              <Form.Item style = {{margin:0}} label="Professionalism" name={`interviewee-professionalism`} key={`interviewee-professionalism-item`}>
-                <Checkbox></Checkbox>
-              </Form.Item>
-              <Form.Item style = {{margin:0}} label="Technical" name={`interviewee-technical`} key={`interviewee-technical-item`}>
-                <Checkbox></Checkbox>
-              </Form.Item>
-            </Checkbox.Group>
-          </Col>
-            */}
           <Col  span={12}>
             As an interviewer, what would you like to receive feedback about? 
-            <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} />
+            <Form.Item name="interviewer">
+              <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} />
+            </Form.Item>
           </Col>
           <Col span={12}>
             As an interviewee, what would you like to receive feedback about? 
-            <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} />
+            <Form.Item name="interviewee">
+              <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} />
+            </Form.Item>
           </Col>
         </Row>
-        
-
-        
-      
-        
-        
-
-
       </Form>
     </Card>
   )
