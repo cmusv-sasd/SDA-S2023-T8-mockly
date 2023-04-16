@@ -141,7 +141,7 @@ const InterviewerDetailsCard = () => {
   // Render the Interviewer Details Card
   return (
     <Card
-      className='user-profile-card'
+      className='user-profile-card interviewer-details'
       title='Interviewer Details'
       loading={loading}
       extra={

@@ -113,7 +113,7 @@ const FeedbackQuestions = () => {
     getFeedback()
   }, [dispatch])
   return (
-    <Card className="w-10 m-3" >
+    <Card className="w-10 m-3 feedback-details">
       <Form name="questionsForm"        
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -151,11 +151,11 @@ const FeedbackQuestions = () => {
           </Col>
             */}
           <Col  span={12}>
-            Interviewer: 
+            As an interviwer, what would you like to receive feedback about? 
             <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} style={{display: "inline-flex", flexDirection: "column", margin:4}} />
           </Col>
           <Col span={12}>
-            Interviewee: 
+            As an interviwee, what would you like to receive feedback about? 
             <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} style={{display: "inline-flex", flexDirection: "column", margin:4}} />
 
           </Col>

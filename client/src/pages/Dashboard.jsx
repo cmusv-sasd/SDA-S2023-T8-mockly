@@ -26,15 +26,14 @@ const DashboardPage = () => {
   const [isInterviewer, setIsInterviewer] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [currTime, setCurrTime] = useState('')
-  //
-
+  
   const upcomingInterviews = interviews.filter((interview) =>
     now.isBefore(dayjs(interview.time * 1000))
   )
   const completedInterviews = interviews.filter(
     (interview) => !now.isBefore(dayjs(interview.time * 1000))
   )
-
+  
   useEffect(() => {
     const loadInterviews = async () => {
       const res = await fetchInterviews(user._id)
@@ -46,7 +45,7 @@ const DashboardPage = () => {
   return (
     <div>
       <Row>
-        <Typography.Title level={2}>Upcoming Interviews</Typography.Title>
+        <Typography.Title level={2} className="upcoming-interviews">Upcoming Interviews</Typography.Title>
       </Row>
       <Row>
         {upcomingInterviews.map((interview, i) => (
@@ -62,7 +61,7 @@ const DashboardPage = () => {
       </Row>
       <Divider />
       <Row>
-        <Typography.Title level={2}>Completed Interviews</Typography.Title>
+        <Typography.Title level={2} className="completed-interviews">Completed Interviews</Typography.Title>
       </Row>
       <Row>
         {completedInterviews.map((interview, i) => (
@@ -81,7 +80,7 @@ const DashboardPage = () => {
           open={openInterviewModal}
           setOpen={setOpenInterviewModal}
         />
-        <Button type='primary' onClick={() => setOpenInterviewModal(true)}>
+        <Button type='primary' onClick={() => setOpenInterviewModal(true)} className='create-interview'>
           Create new interview
         </Button>
       </Row>
