@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import request from '../utils/request'
 // import { useDispatch } from 'react-redux'
 import { useState } from 'react'
+import  {createFeedbackQuestions} from '../api/feedback'
 import Features from '../components/Features'
 
 const RegistrationPage = () => {
@@ -52,7 +53,14 @@ const RegistrationPage = () => {
       })
       // on success response, show the success message and link to go to login page
       if (!res.status) {
-        console.log(res)
+        console.log("HERE   IS THE RES", res)
+        try{
+          console.log("HERE: ",`${res.firstName} ${res.lastName}`)
+          createFeedbackQuestions(`${res.firstName} ${res.lastName}`)
+        }
+        catch(error){
+          console.log("ERROR ADDING QUESTIONS ", error)
+        }
         setSuccessRegistered(true)
       }
     } catch (error) {

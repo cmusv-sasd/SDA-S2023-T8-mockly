@@ -126,7 +126,7 @@ const updateFeedbackQuestions = async (userId, payload) =>
 
 
 const createFeedbackQuestions = async (userName) =>
-  request(`feedback/addFeedbackQuestions`, {
+  request(`feedbackQuestions/addBaseFeedbackQuestions`, {
     method: 'POST',
     body: JSON.stringify({userName}),
   })
