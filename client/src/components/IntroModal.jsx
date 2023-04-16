@@ -11,7 +11,8 @@ const IntroModal = ({ isOpen, setOpen, setRun }) => {
     <Modal
       open={isOpen}
       width={800}
-      footer={null}>
+      footer={null}
+      onCancel={() => setOpen(false)}>
       <Typography.Title>Welcome to Mockly!</Typography.Title>
       <Typography.Title level={3}>
         Mockly solves your interview problems. 

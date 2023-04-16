@@ -75,7 +75,8 @@ const ProtectedRoute = ({ children }) => {
 
     const fetchUser = async () => {
       const res = await fetchUserAPI(uid)
-      dispatch(setUser(res))
+      const payload = { ...res, initialLogin: user.initialLogin }
+      dispatch(setUser(payload))
     }
     if (uid) {
       fetchUser()
@@ -114,6 +115,7 @@ const ProtectedRoute = ({ children }) => {
       navigate('/')
     }
   }
+
   return (
     <>
       <Joyride 
