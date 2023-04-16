@@ -7,6 +7,7 @@ const SALT_ROUNDS = process.env.SALT_ROUNDS || 10
 const { Schema } = mongoose
 
 const userSchema = new Schema({
+  initialLogin: { type: Boolean, default: true },
   andrewId: String,
   password: String,
   firstName: String,

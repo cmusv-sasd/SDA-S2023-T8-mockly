@@ -117,6 +117,10 @@ export const validateUserCredentials = async (req, res) => {
     }
     // eslint-disable-next-line
     const { password: _, ...fieldsToReturn } = user.toObject()
+    if (user.initialLogin) {
+      user.initialLogin = false
+      await user.save()
+    }
     return res.status(200).json(fieldsToReturn)
   } catch (error) {
     console.error(error)
