@@ -2,7 +2,14 @@ import { Modal } from 'antd'
 import { useSelector } from 'react-redux'
 //  import dayjs from 'dayjs'
 import { feedbackHistorySelector } from '../../store/feedbackHistorySlice'
+/*
 
+
+This file is the Modal that people see that shows the corresponding answers for the
+feedback they receive
+
+
+*/
 const FeedbackModal = ({ open, setOpen, selectedFeedback }) => {
   const feedbackHistory = useSelector(feedbackHistorySelector)
   const feedback = feedbackHistory[selectedFeedback]

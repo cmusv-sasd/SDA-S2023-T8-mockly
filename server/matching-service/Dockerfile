@@ -9,7 +9,6 @@ COPY src /app/src
 COPY .eslintrc.json ./
 COPY .prettierrc ./
 COPY .babelrc ./
-COPY .env ./
 
 COPY package.json /app
 COPY package-lock.json /app

@@ -22,20 +22,18 @@ const DashboardPage = () => {
   // eslint-disable-next-line no-unused-vars
   const [openFeedbackForm, setOpenFeedbackForm] = useState(false)
   // eslint-disable-next-line no-unused-vars
-  const [selectedFeedbackForm, setSelectedFeedbackForm] = useState(0)
-  // eslint-disable-next-line no-unused-vars
-  const [currInterviewer, setCurrInterviewer] = useState('')
+  const [currRecipient, setCurrRecipient] = useState('')
+  const [isInterviewer, setIsInterviewer] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [currTime, setCurrTime] = useState('')
-  //
-
+  
   const upcomingInterviews = interviews.filter((interview) =>
-    now.isBefore(dayjs(interview.time))
+    now.isBefore(dayjs(interview.time * 1000))
   )
   const completedInterviews = interviews.filter(
-    (interview) => !now.isBefore(dayjs(interview.time))
+    (interview) => !now.isBefore(dayjs(interview.time * 1000))
   )
-
+  
   useEffect(() => {
     const loadInterviews = async () => {
       const res = await fetchInterviews(user._id)
@@ -47,31 +45,32 @@ const DashboardPage = () => {
   return (
     <div>
       <Row>
-        <Typography.Title level={2}>Upcoming Interviews</Typography.Title>
+        <Typography.Title level={2} className="upcoming-interviews">Upcoming Interviews</Typography.Title>
       </Row>
       <Row>
         {upcomingInterviews.map((interview, i) => (
           <InterviewCard
             {...interview}
-            setSelectedFeedbackForm={setSelectedFeedbackForm}
             setCurrTime={setCurrTime}
-            setCurrInterviewer={setCurrInterviewer}
+            setCurrRecipient={setCurrRecipient}
+            setIsInterviewer={setIsInterviewer}
+            setOpenFeedbackForm={setOpenFeedbackForm}
             key={i}
           />
         ))}
       </Row>
       <Divider />
       <Row>
-        <Typography.Title level={2}>Completed Interviews</Typography.Title>
+        <Typography.Title level={2} className="completed-interviews">Completed Interviews</Typography.Title>
       </Row>
       <Row>
         {completedInterviews.map((interview, i) => (
           <InterviewCard
             {...interview}
-            setSelectedFeedbackForm={setSelectedFeedbackForm}
             setOpenFeedbackForm={setOpenFeedbackForm}
             setCurrTime={setCurrTime}
-            setCurrInterviewer={setCurrInterviewer}
+            setCurrRecipient={setCurrRecipient}
+            setIsInterviewer={setIsInterviewer}
             key={i}
           />
         ))}
@@ -81,16 +80,16 @@ const DashboardPage = () => {
           open={openInterviewModal}
           setOpen={setOpenInterviewModal}
         />
-        <Button type='primary' onClick={() => setOpenInterviewModal(true)}>
+        <Button type='primary' onClick={() => setOpenInterviewModal(true)} className='create-interview'>
           Create new interview
         </Button>
       </Row>
       <FeedbackFormModal
         open={openFeedbackForm}
         setOpen={setOpenFeedbackForm}
-        selectedFeedbackForm={selectedFeedbackForm}
         time={currTime}
-        interviewer={currInterviewer}
+        currRecipient={currRecipient}
+        isInterviewer={isInterviewer}
       />
     </div>
   )

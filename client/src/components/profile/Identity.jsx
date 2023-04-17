@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
-import { Card, Avatar, Typography, Form, Input, Button } from 'antd'
+import { Card, Typography, Form, Input, Button } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { EditOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserIdentity } from '../../store/userSelector'
 import { setIdentity } from '../../store/userSlice'
 import { updatePersonalIdentityAPI } from '../../api/userProfile'
+import '../../styles/profile/identity.css'
 
-const { Title } = Typography
+const { Paragraph } = Typography
 
 const IdentityCard = () => {
   const dispatch = useDispatch()
@@ -77,9 +78,6 @@ const IdentityCard = () => {
         </Button>
       }
     >
-      <div className='user-identity--avatar-div'>
-        <Avatar size={128} />
-      </div>
       {editMode ? (
         <>
           <Form form={form} layout='vertical' onFinish={handleSaveClick}>
@@ -99,11 +97,11 @@ const IdentityCard = () => {
             <Form.Item name='lastName' label='Last Name'>
               <Input name='lastName' />
             </Form.Item>
-            <Form.Item name='organization' label='Organization'>
-              <Input name='organization' />
-            </Form.Item>
             <Form.Item name='position' label='Position/Degree Name'>
               <Input name='position' />
+            </Form.Item>
+            <Form.Item name='organization' label='Organization'>
+              <Input name='organization' />
             </Form.Item>
             <Form.Item>
               <div className='user-card--button-container'>
@@ -129,18 +127,18 @@ const IdentityCard = () => {
         </>
       ) : (
         <>
-          <Title level={2} className='user-identity--fullname'>
+          <Paragraph className='user-identity--fullname'>
             {`${userIdentity.firstName}  ${userIdentity.lastName}`}
-          </Title>
-          {userIdentity.organization && (
-            <Title level={4} className='user-identity--organization'>
-              {userIdentity.organization}
-            </Title>
-          )}
+          </Paragraph>
           {userIdentity.position && (
-            <Title level={4} className='user-identity--position'>
+            <Paragraph className='user-identity--position'>
               {userIdentity.position}
-            </Title>
+            </Paragraph>
+          )}
+          {userIdentity.organization && (
+            <Paragraph className='user-identity--organization'>
+              {userIdentity.organization}
+            </Paragraph>
           )}
         </>
       )}

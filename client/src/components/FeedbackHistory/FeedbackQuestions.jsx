@@ -14,6 +14,16 @@ import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
 import { fetchFeedbackQuestions, updateFeedbackQuestions,createFeedbackQuestions } from '../../api/feedback'
 // eslint-disable-next-line no-unused-vars
 const { TextArea } = Input
+
+/*
+
+
+This file is the top part of the FeedbackHistory page where users can select what
+type of feedback they would like to receive
+
+
+*/
+
 // eslint-disable-next-line no-unused-vars
 const FeedbackQuestions = () => {
   // eslint-disable-next-line no-unused-vars
@@ -67,12 +77,16 @@ const FeedbackQuestions = () => {
 
   const onChangeInterviewer = async (checkedValues) => {
     console.log("checked = ", checkedValues);
-    await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
+   
+    const res = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
+    console.log(res)
+    await dispatch(addQuestions({questionsInterviewer: res.questionsInterviewer}))
   };
 
   const onChangeInterviewee = async (checkedValues) => {
     console.log("checked = ", checkedValues);
-    await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
+    const res = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
+    await dispatch(addQuestions({questionsInterviewee: res.questionsInterviewee}))
   };
 
   
@@ -99,7 +113,7 @@ const FeedbackQuestions = () => {
     getFeedback()
   }, [dispatch])
   return (
-    <Card className="w-10 m-3" >
+    <Card className="w-10 m-3 feedback-details">
       <Form name="questionsForm"        
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -137,13 +151,12 @@ const FeedbackQuestions = () => {
           </Col>
             */}
           <Col  span={12}>
-            Interviewer: 
-            <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} style={{display: "inline-flex", flexDirection: "column", margin:4}} />
+            As an interviewer, what would you like to receive feedback about? 
+            <Checkbox.Group options={interviewerOptions} onChange={onChangeInterviewer} />
           </Col>
           <Col span={12}>
-            Interviewee: 
-            <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} style={{display: "inline-flex", flexDirection: "column", margin:4}} />
-
+            As an interviewee, what would you like to receive feedback about? 
+            <Checkbox.Group options={intervieweeOptions} onChange={onChangeInterviewee} />
           </Col>
         </Row>
         

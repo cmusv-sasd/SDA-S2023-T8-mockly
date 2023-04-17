@@ -57,12 +57,13 @@ class FeedbackDecoratorController {
     //  console.log(current.toObject())
     const current_decorators = isInterviewer ? current_questions.decoratorsInterviewer : current_questions.decoratorsInterviewee
     console.log("cQ vs nQ", current_decorators, newQuestions)
+    //  PROCESS TO ADD QUESTIONS
     let decorators = new QuestionsDecorator(current, isInterviewer)
     console.log("PREVIOUS QUESTIONS: ", current.toObject())
     const questionTypes = ["Language", "Technical", "Professionalism"]
     questionTypes.map((type)=>{
       //  include the preferences
-      if(!current_decorators.includes(type) && newQuestions.includes(type)){
+      if((!current_decorators.includes(type) && newQuestions.includes(type))){
         switch(type){
           case "Language":
             decorators = new LanguageDecorator(decorators, isInterviewer )
@@ -75,17 +76,40 @@ class FeedbackDecoratorController {
             break;
         }
       }
-      //  remove the preference
     })
-    //  add the questions
     decorators.addQuestions()
     console.log("decorators", decorators)
     console.log(current)
     console.log("CURRENT QUESTIONS: ", current.toObject())
+    //  =====================================
+    //  PROCESS TO REMOVE QUESTIONS
+    decorators = new QuestionsDecorator(current, isInterviewer)
+    questionTypes.map((type)=>{
+      //  include the preferences
+      if((current_decorators.includes(type) && !newQuestions.includes(type))){
+        switch(type){
+          case "Language":
+            decorators = new LanguageDecorator(decorators, isInterviewer )
+            break;
+          case "Technical":
+            decorators  = new TechnicalDecorator(decorators, isInterviewer )
+            break;
+          case "Professionalism":
+            decorators  = new ProfessionalismDecorator(decorators, isInterviewer )
+            break;
+        }
+      }
+    })
+    decorators.removeQuestions()
+    console.log("decorators", decorators)
+    console.log(current)
+    console.log("CURRENT QUESTIONS: ", current.toObject())
+
+
 
     const currentObj = current.toObject()
 
-    const fq= isInterviewer ? await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewer: currentObj.questionsInterviewer}) : await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewee: currentObj.questionsInterviewee})
+    const fq= isInterviewer ? await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewer: currentObj.questionsInterviewer, decoratorsInterviewer: newQuestions}, ) : await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewee: currentObj.questionsInterviewee, decoratorsInterviewee: newQuestions})
     if (fq) {
       console.log("mFQ result: ", fq)
       return fq

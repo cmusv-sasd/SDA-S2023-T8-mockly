@@ -14,5 +14,8 @@ const createInterview = async (interviewData) => request('matching/interviews', 
     body: JSON.stringify(interviewData)
   })
 
+const deleteInterview = async (interviewId) => request(`matching/interviews/${interviewId}`, {
+  method: 'DELETE'
+})
 
-export { fetchInterviews, findMatches, createInterview }
+export { fetchInterviews, findMatches, createInterview, deleteInterview }

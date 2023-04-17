@@ -1,70 +1,63 @@
 import { Modal, Slider, Input, Form, Button, Space } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+/*
 import {
   setFeedbackQuestions,
   feedbackSelector,
 } from '../../store/feedbackSlice'
+*/
 import { createFeedback } from '../../api/feedback'
 import { userSelector } from '../../store/userSlice'
+// eslint-disable-next-line no-unused-vars
+import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
+// eslint-disable-next-line no-unused-vars
+import { fetchFeedbackQuestions } from '../../api/feedback'
+import {
+  // eslint-disable-next-line no-unused-vars
+  setFeedbackQuestions
+} from '../../store/feedbackQuestionsSlice'
+/*
+
+
+This file is the Modal that people use to SEND feedback to the recepient.
+
+
+*/
 // eslint-disable-next-line no-unused-vars
 const { TextArea } = Input
 // eslint-disable-next-line no-unused-vars
 const FeedbackFormModal = ({
   open,
   setOpen,
-  // eslint-disable-next-line no-unused-vars
-  selectedFeedbackForm,
   time,
-  interviewer,
+  currRecipient,
+  isInterviewer
 }) => {
-  const feedback = useSelector(feedbackSelector)
-  const dispatch = useDispatch()
+  /*
+  Selectors and states
+  */
+  //  const feedback = useSelector(feedbackSelector)
+  //  const feedbackQuestions = useSelector(feedbackQuestionsSelector)
   // eslint-disable-next-line no-unused-vars
   const user = useSelector(userSelector)
-  //
+  const dispatch = useDispatch()
   // eslint-disable-next-line no-unused-vars
-  /*
-  const handleConfirm = async (idx) => {
-    try {
-      const {
-        interviewer: interviewerType,
-        field,
-        difficulty,
-      } = form.getFieldsValue()
-      const match = {
-        ...matches[idx],
-        interviewerType,
-        field,
-        difficulty,
-        interviewee: user._id,
-      }
-      const res = await createInterview(match)
-      messageApi.open({
-        type: 'success',
-        content: 'Successfully booked your interview!',
-      })
-      dispatch(addInterview(res))
-      setOpen(false)
-    } catch (e) {
-      messageApi.open({ type: 'error', content: 'Failed to request matches.' })
-    }
-  }
-  */
+  const [currQuestions, setCurrQuestions] = useState({})
 
   const onFinish = async (values) => {
     //  console.log('Success:', values)
     //  save to MongoDB
     try {
       //const questions = { questions: values }
-      //  console.log('in onFinish', interviewer)
+      //  console.log('in onFinish', currRecipient)
       setOpen(false)
       await createFeedback({
-        questions: feedback.questions,
+        questions: currQuestions, // feedback.questions,
         answers: values,
         reviewer: `${user.firstName} ${user.lastName}`,
         time,
-        reviewee: interviewer,
+        reviewee: currRecipient,
       })
     } catch (e) {
       console.log(e)
@@ -90,6 +83,7 @@ const FeedbackFormModal = ({
         */
         //  this will be replaced with fetching the questions
         //  This uses dummy data for now
+        // eslint-disable-next-line no-unused-vars
         const response = {
           time: '2019-01-25',
           reviewee: 'userA',
@@ -124,15 +118,32 @@ const FeedbackFormModal = ({
             },
           },
         }
-
+        console.log("CURR RECIPIENT IS: ", currRecipient)
+        let res = await fetchFeedbackQuestions(currRecipient)
+        console.log("RES BEFORE: ",res)
         //  console.log('done')
-        dispatch(setFeedbackQuestions(response))
+        //  dispatch(setFeedbackQuestions(response))
+        //  If the recipient is not an interiviewer, then they want to have the interviewee questions
+        if(res){
+          res = isInterviewer ? res.questionsInterviewer : res.questionsInterviewee
+          console.log("RES: ",res)
+          setCurrQuestions(res)
+        }
+        
+        /*
+        if(res !== null){
+          dispatch(setFeedbackQuestions(res))
+        }
+        */
+        
+        
+        
       } catch (error) {
         console.error(error)
       }
     }
     getFeedback()
-  }, [dispatch])
+  }, [dispatch, currRecipient])
   return (
     <Modal
       open={open}
@@ -144,6 +155,7 @@ const FeedbackFormModal = ({
           </Button>
         </Space>]}
     >
+      Recipient: {`${currRecipient}`}
       <Form
         name='feedbackForm'
         onFinish={onFinish}
@@ -153,9 +165,9 @@ const FeedbackFormModal = ({
         validateMessages={validateMessages}
       >
         {open &&
-          feedback &&
-          Object.keys(feedback.questions).map((key) => {
-            const currQuestion = feedback.questions[key]
+          currQuestions &&
+          Object.keys(currQuestions).map((key) => {
+            const currQuestion = currQuestions[key]
             //  console.log(currQuestion)
             const questionType = currQuestion.type
             switch (questionType) {

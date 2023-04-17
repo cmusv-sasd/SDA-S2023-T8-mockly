@@ -7,6 +7,9 @@ class QuestionsDecorator {
   addQuestions(newQuestionsObj={}){
       this.feedback.addQuestions(newQuestionsObj);
   }
+  removeQuestions(removeQuestionsArray=[]){
+      this.feedback.removeQuestions(removeQuestionsArray);
+  }
 }
 
 export default QuestionsDecorator

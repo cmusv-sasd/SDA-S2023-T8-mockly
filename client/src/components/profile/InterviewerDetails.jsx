@@ -9,6 +9,7 @@ import { setInterviewerDetails } from '../../store/userSlice'
 import { updateInterviewerDetailsAPI } from '../../api/userProfile'
 import { find } from 'lodash'
 import dayjs from 'dayjs'
+import '../../styles/profile/interviewerDetails.css'
 
 const { Paragraph } = Typography
 const { Option } = Select
@@ -116,7 +117,7 @@ const InterviewerDetailsCard = () => {
     return fields.map((field) => {
       const fieldObj = find(FIELD_OPTIONS, { value: field })
       return (
-        <Tag className='user-field-tag' key={fieldObj.value}>
+        <Tag className='user-profile-interviewer--tag' key={fieldObj.value}>
           {fieldObj.text}
         </Tag>
       )
@@ -127,7 +128,7 @@ const InterviewerDetailsCard = () => {
   const renderTimeSlots = (timeSlots, isClosable) => {
     return timeSlots.map((slot, index) => (
       <Tag
-        className='user-time-slot-tag'
+        className='user-profile-interviewer--tag'
         closable={isClosable}
         key={`${slot}-${index}`}
         onClose={isClosable ? () => handleRemoveTimeSlot(index) : null}
@@ -140,7 +141,7 @@ const InterviewerDetailsCard = () => {
   // Render the Interviewer Details Card
   return (
     <Card
-      className='user-profile-card'
+      className='user-profile-card interviewer-details'
       title='Interviewer Details'
       loading={loading}
       extra={
@@ -179,7 +180,11 @@ const InterviewerDetailsCard = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label='Date/Time' name='timeSlots'>
+          <Form.Item
+            label='Date/Time'
+            name='timeSlots'
+            style={{ marginBottom: '12px' }}
+          >
             <DatePicker
               showTime={{ use12Hours: true }}
               format='MM/DD/YY h A'
@@ -192,11 +197,15 @@ const InterviewerDetailsCard = () => {
                   current > dayjs().endOf('day').add(3, 'week')
                 return inPast || afterThreeWeeks
               }}
+              style={{ width: '100%' }}
             />
           </Form.Item>
           <div>{renderTimeSlots(timeSlots, true)}</div>
           <Form.Item>
-            <div className='user-card--button-container'>
+            <div
+              className='user-card--button-container'
+              style={{ marginTop: '8px' }}
+            >
               <Button
                 className='user-card--cancel-btn'
                 type='default'
@@ -218,14 +227,19 @@ const InterviewerDetailsCard = () => {
         </Form>
       ) : (
         <>
-          <Paragraph>{`Interviewer Type: ${
-            interviewer.type
+          <Paragraph className='user-profile-interviewer--field-name'>
+            <strong>Interviewer Type: </strong>
+            {interviewer.type
               ? find(INTERVIEWER_TYPES, { value: interviewer.type }).text
-              : ''
-          }`}</Paragraph>
-          <Paragraph>Fields:</Paragraph>
+              : ''}
+          </Paragraph>
+          <Paragraph className='user-profile-interviewer--field-name'>
+            <strong>Fields:</strong>
+          </Paragraph>
           {renderFields(interviewer.fields)}
-          <Paragraph>My Availability:</Paragraph>
+          <Paragraph className='user-profile-interviewer--field-name'>
+            <strong>My Availability: </strong>
+          </Paragraph>
           {renderTimeSlots(timeSlots, false)}
         </>
       )}

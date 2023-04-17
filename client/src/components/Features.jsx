@@ -1,11 +1,12 @@
 import React from 'react'
-import { Card } from 'antd'
+import { Card, Image } from 'antd'
 import {
   UserOutlined,
   SyncOutlined,
   DollarCircleOutlined,
   MessageOutlined,
 } from '@ant-design/icons'
+import Logo from '../assets/logo.png'
 
 const { Meta } = Card
 
@@ -52,6 +53,9 @@ const Features = () => {
 
   return (
     <div style={{ padding: '20px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <Image src={Logo} width={200} preview={false} />
+      </div>
       {features.map((feature, index) => (
         <FeatureCard
           key={index}

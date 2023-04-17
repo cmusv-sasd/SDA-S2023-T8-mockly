@@ -1,21 +1,8 @@
 .user-profile-card {
-  border-radius: 30px;
+  border-radius: 24px;
   margin-bottom: 10px;
 }
 
-.user-identity--avatar-div {
-  text-align: center;
-}
-.user-identity--fullname {
-  text-align: center;
-  margin-top: 10px;
-}
-.user-identity--organization {
-  text-align: center;
-}
-.user-identity--position {
-  text-align: center;
-}
 /* Common btns for left column of grid */
 .user-card--button-container {
   display: flex;
@@ -38,35 +25,4 @@
 }
 .user-right-card--cancel-btn {
   width: 120px;
-}
-
-.user-skill-actions-div {
-  display: inline-flex;
-  margin-top: 10px;
-  width: 100%;
-}
-.user-add-skill-btn {
-  margin-left: 5px;
-}
-.user-course-actions-div {
-  display: inline-flex;
-  margin-top: 10px;
-  width: 100%;
-}
-.user-add-course-btn {
-  margin-left: 5px;
-}
-
-/* TODO: Combine user-skill-tag and user-course-tag */
-.user-skill-tag {
-  padding: 5px;
-  max-width: 100%;
-  white-space: normal;
-  word-wrap: break-word;
-}
-.user-course-tag {
-  padding: 5px;
-  max-width: 100%;
-  white-space: normal;
-  word-wrap: break-word;
 }

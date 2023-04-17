@@ -25,8 +25,18 @@ class ConcreteFeedbackQuestions {
     //  this.questions = {...this.questions, ...newQuestionsObj}
   }
   //
-  removeQuestions(questionsArray,isInterviewer=false){
-    console.log("")
+  removeQuestions(removeQuestionsArray=[]){
+    console.log(removeQuestionsArray)
+    if(this.isInterviewer){
+      removeQuestionsArray.map((key)=>{
+        delete this.questionsInterviewer[key]
+      })
+    }
+    else{
+      removeQuestionsArray.map((key)=>{
+        delete this.questionsInterviewee[key]
+      })
+    }
   }
 
 

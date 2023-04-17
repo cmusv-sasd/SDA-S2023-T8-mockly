@@ -14,6 +14,7 @@ const feedbackQuestionsSlice = createSlice({
       const { questions, isInterviewer } = action.payload
       //  need some logic to add questions
       const new_state = isInterviewer ? { ...state, questionsInterviewer: questions } : { ...state, questionsInterviewee: questions }
+      console.log("COMPLETED ADD")
       return new_state
     },
     removeQuestions: (state, action) => {

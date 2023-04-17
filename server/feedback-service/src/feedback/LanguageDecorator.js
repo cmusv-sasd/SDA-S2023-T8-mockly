@@ -45,6 +45,18 @@ class LanguageDecorator extends QuestionsDecorator{
     super.addQuestions(newQuestionsObj)
     console.log("L", newQuestionsObj)
   }
+  //
+  removeQuestions(removeQuestionsArray=[]){
+    super.removeQuestions()
+    if(removeQuestionsArray.length <= 0 && this.isInterviewer){
+      //  console.log("Inside language loop")
+      removeQuestionsArray = ["L1", "L2"]
+    }
+    else if(removeQuestionsArray.length <=1 && !this.isInterviewer){
+      removeQuestionsArray = ["L1", "L2"]
+    }
+    super.removeQuestions(removeQuestionsArray)
+  }
 }
 
 export default LanguageDecorator

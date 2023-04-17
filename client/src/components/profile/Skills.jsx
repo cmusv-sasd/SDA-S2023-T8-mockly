@@ -5,6 +5,7 @@ import { getUserSkills } from '../../store/userSelector'
 import { Card, Tag, Input, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { addSkillAPI, deleteSkillAPI } from '../../api/userProfile'
+import '../../styles/profile/tags.css'
 
 // SkillsCard component to display and manage user skills
 const SkillsCard = () => {
@@ -63,7 +64,7 @@ const SkillsCard = () => {
   const renderSkills = () => {
     return skills.map((skill) => (
       <Tag
-        className='user-skill-tag'
+        className='user-tag'
         closable
         key={skill._id}
         onClose={() => handleRemoveSkillClick(skill._id)}
@@ -77,14 +78,14 @@ const SkillsCard = () => {
   return (
     <Card className='user-profile-card' title='Skills' loading={loading}>
       {renderSkills()}
-      <div className='user-skill-actions-div'>
+      <div className='user-tag-actions-div'>
         <Input
           value={newSkill}
           onChange={handleNewSkillChange}
           placeholder='Add skill'
         />
         <Button
-          className='user-add-skill-btn'
+          className='user-tag-action-btn'
           type='primary'
           onClick={handleAddSkillClick}
           icon={<PlusOutlined />}

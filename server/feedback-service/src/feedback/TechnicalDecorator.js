@@ -44,6 +44,17 @@ class TechnicalDecorator extends QuestionsDecorator{
     super.addQuestions(newQuestionsObj)
     console.log("T", newQuestionsObj)
   }
+  removeQuestions(removeQuestionsArray=[]){
+    super.removeQuestions()
+    if(removeQuestionsArray.length <= 0 && this.isInterviewer){
+      //  console.log("Inside language loop")
+      removeQuestionsArray = ["T1", "T2"]
+    }
+    else if(removeQuestionsArray.length <= 0 && !this.isInterviewer){
+      removeQuestionsArray = ["T1", "T2"]
+    }
+    super.removeQuestions(removeQuestionsArray)
+  }
 }
 
 export default TechnicalDecorator

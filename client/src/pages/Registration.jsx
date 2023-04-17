@@ -8,21 +8,22 @@ import { Row, Form, Col, Typography, Input, Button, Alert } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { useNavigate } from 'react-router-dom'
 import request from '../utils/request'
-import { setUser } from '../store/userSlice'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 import { useState } from 'react'
+import  {createFeedbackQuestions} from '../api/feedback'
 import Features from '../components/Features'
 
 const RegistrationPage = () => {
   const [form] = useForm()
 
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   // shows loading icon on the button till we get registration response
   const [loading, setLoading] = useState(false)
   // to display error for the entire form as an alert
   const [errorMessage, setErrorMessage] = useState(null)
+  const [successRegistered, setSuccessRegistered] = useState(false)
 
   // displays error message below the form field
   const setFormFieldError = (fieldName, errorMessage) => {
@@ -45,19 +46,22 @@ const RegistrationPage = () => {
       setLoading(true)
       // validates the form and retrieve the field values
       const values = await form.validateFields()
-      console.log(values)
       // send message to the register endpoint
       const res = await request('register', {
         method: 'POST',
         body: JSON.stringify(values),
       })
-      // on success response, saves the user in redux store and set's the jwt token in local storage
+      // on success response, show the success message and link to go to login page
       if (!res.status) {
-        const { token, ...fieldsToStore } = res
-        dispatch(setUser(fieldsToStore))
-        localStorage.setItem('token', token)
-        localStorage.setItem('id', fieldsToStore.userId)
-        navigate('/')
+        console.log("HERE   IS THE RES", res)
+        try{
+          console.log("HERE: ",`${res.firstName} ${res.lastName}`)
+          createFeedbackQuestions(`${res.firstName} ${res.lastName}`)
+        }
+        catch(error){
+          console.log("ERROR ADDING QUESTIONS ", error)
+        }
+        setSuccessRegistered(true)
       }
     } catch (error) {
       if (error.status === 409) {
@@ -75,14 +79,14 @@ const RegistrationPage = () => {
   return (
     <div>
       <Row>
-        <Col xs={0} sm={0} md={10} lg={10} xl={10}>
+        <Col xs={0} sm={0} md={12} lg={10} xl={10}>
           <div style={{ background: '#35185A', height: '100vh' }}>
             <Row justify='center' align='middle' style={{ minHeight: '100vh' }}>
               <Features />
             </Row>
           </div>
         </Col>
-        <Col xs={24} sm={24} md={14} lg={14} xl={14}>
+        <Col xs={24} sm={24} md={12} lg={14} xl={14}>
           <Row
             justify='center'
             align='middle'
@@ -90,6 +94,27 @@ const RegistrationPage = () => {
           >
             <div>
               <Typography.Title level={1}>Sign Up to Mockly.</Typography.Title>
+              {successRegistered && (
+                <Alert
+                  message={
+                    <>
+                      Registered successfully.{' '}
+                      <Typography.Link
+                        onClick={handleLoginLink}
+                        style={{ color: '#1890ff' }}
+                      >
+                        Log In
+                      </Typography.Link>
+                    </>
+                  }
+                  type='success'
+                  style={{ marginBottom: '16px' }}
+                  onClose={() => {
+                    setSuccessRegistered(false)
+                  }}
+                  closable
+                />
+              )}
               {errorMessage && (
                 <Alert
                   message={errorMessage}

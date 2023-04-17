@@ -56,6 +56,7 @@ const InterviewModal = ({ open, setOpen }) => {
       setMatches(res)
       setStep(step + 1)
     } catch (e) {
+      console.error(e)
       messageApi.open({ type: 'error', content: 'Failed to request matches.' })
     }
   }
@@ -209,8 +210,8 @@ const InterviewModal = ({ open, setOpen }) => {
                 :
                 <Space direction="vertical" size="large">
                   {matches.map((match, i) => {
-                      const { time, username = '' } = match
-                      const formattedTime = dayjs(time[0]).format('MM/DD/YY h A')
+                      const { time, username } = match
+                      const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
                       return (
                         <Button key={i} onClick={() => handleConfirm(i)} type="dashed">{username} at {formattedTime}</Button>
                       )

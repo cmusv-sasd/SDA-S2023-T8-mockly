@@ -36,23 +36,23 @@ app.post('/matches', async (request, response) => {
     response.json(matches)
   } catch (e) {
     console.error(e)
-    response.status(500).send({ message: 'Internal server error.'})
+    response.status(500).json({ message: 'Internal server error.'})
   }
 })
 
 app.post('/interviews', async (request, response) => {
   const { interviewer, interviewee, field, difficulty, interviewerType, time } = request.body
   const preference = new PreferenceBuilder().field(field).difficulty(difficulty).interviewer(interviewerType).make()
-  const preferenceObj = preference.toObject()
+  const preferences = preference.toObject()
   try {
-    const interview = await MatchController.create(interviewee, interviewer, preferenceObj, time)
+    const interview = await MatchController.create({ interviewee, interviewer, preferences, time })
     const res = await fetch(`http://mockly-profile-service:${PORTS.PROFILE}/users/${interview.interviewer}`, { method: 'GET' })
     const interviewerDetails = await res.json()
     const data = { ...interview.toObject(), interviewer: interviewerDetails }
     response.json(data)
   } catch (e) {
     console.error(e)
-    response.status(500).send({ message: 'Internal server error.'})
+    response.status(500).json({ message: 'Internal server error.'})
   }
 })
 
@@ -72,10 +72,10 @@ app.delete('/interviews/:interviewId', async (request, response) => {
   const { interviewId } = request.params
   try {
     await MatchController.deleteInterview(interviewId)
-    response.status(204).send({ message: 'Successfully deleted interview.' })
+    response.status(200).json({ message: 'Successfully deleted interview.' })
   } catch (e) {
     console.error(e)
-    response.status(500).send({ message: 'Internal server error.'})
+    response.status(500).json({ message: 'Internal server error.'})
   }
 })
 

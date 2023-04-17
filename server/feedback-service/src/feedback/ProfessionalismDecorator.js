@@ -49,6 +49,17 @@ class ProfessionalismDecorator extends QuestionsDecorator{
     super.addQuestions(newQuestionsObj)
     console.log("P", newQuestionsObj)
   }
+  removeQuestions(removeQuestionsArray=[]){
+    super.removeQuestions()
+    if(removeQuestionsArray.length <= 0 && this.isInterviewer){
+      //  console.log("Inside language loop")
+      removeQuestionsArray = ["P1", "P2", "P3"]
+    }
+    else if(removeQuestionsArray.length <= 0 && !this.isInterviewer){
+      removeQuestionsArray = ["P1", "P2"]
+    }
+    super.removeQuestions(removeQuestionsArray)
+  }
 }
 
 export default ProfessionalismDecorator
