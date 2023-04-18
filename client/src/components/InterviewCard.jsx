@@ -20,6 +20,7 @@ const InterviewCard = (interview) => {
     setCurrTime,
     setCurrRecipient,
     setIsInterviewer,
+    setIsUpdated
   } = interview
   const dispatch = useDispatch()
   const user = useSelector(userSelector)
@@ -35,11 +36,11 @@ const InterviewCard = (interview) => {
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
   const toBePaid = !isUpcoming && !isPaid && !isInterviewer
-
+// eslint-disable-next-line
   const handleLaunch = () => {
     window.open(url, '_blank');
   }
-
+// eslint-disable-next-line
   const handleDelete = async () => {
     try {
       await deleteInterview(_id)
@@ -76,18 +77,30 @@ const InterviewCard = (interview) => {
         <Divider />
         {isUpcoming ? (
           <>
-            <>
-              <Button type="primary" disabled={!isWithinHour} onClick={handleLaunch}>
-                Launch Meeting
-              </Button> 
-              {!isWithinHour ? <p>Launch within an hour of interview</p> : null}
-            </>
-            <>
-              <Button danger type="primary" disabled={isWithinHour} onClick={handleDelete}>
-                Delete
+                        <Button
+              type='default'
+              onClick={(e) => {
+                e.stopPropagation()
+                setIsInterviewer(
+                  (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
+                    false :
+                    true
+                )
+                setCurrRecipient(
+                  (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
+                    `${intervieweeFirstName} ${intervieweeLastName}` :
+                    `${interviewerFirstName} ${interviewerLastName}`
+                  )
+                setOpenFeedbackForm(true)
+                console.log("TRY: ", (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
+                    `${intervieweeFirstName} ${intervieweeLastName}` :
+                    `${interviewerFirstName} ${interviewerLastName}`)
+                setIsUpdated(true)
+                setCurrTime(time)
+              }}
+            >
+              Add or Edit Feedback
               </Button>
-              Cancel up to an hour within interview
-            </>
           </>)
           :
           <>
@@ -110,7 +123,7 @@ const InterviewCard = (interview) => {
                 console.log("TRY: ", (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
                     `${intervieweeFirstName} ${intervieweeLastName}` :
                     `${interviewerFirstName} ${interviewerLastName}`)
-                
+                setIsUpdated(true)
                 setCurrTime(time)
               }}
             >

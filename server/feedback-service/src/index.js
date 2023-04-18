@@ -103,6 +103,7 @@ app.patch('/feedbackQuestions/:userName', async (request, response) => {
   console.log("IN PATCH", userName, isInterviewer, questions)
   try {
     const modifiedQuestions= await FeedbackDecoratorController.modifyFeedbackQuestions(userName, questions, isInterviewer)
+    console.log("MQ: ", modifiedQuestions)
     response.status(200).json(modifiedQuestions)
   } catch (e) {
     console.error(e)
