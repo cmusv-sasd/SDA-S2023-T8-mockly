@@ -6,6 +6,7 @@ import { userSelector } from "../store/userSlice"
 import { deleteInterview } from "../api/interview"
 import { deleteInterview as deleteInterviewFromStore } from '../store/interviewsSlice'
 import useMessage from "antd/es/message/useMessage"
+import { processPayment } from "../api/payment"
 
 const InterviewCard = (interview) => {
   const { 
@@ -30,11 +31,11 @@ const InterviewCard = (interview) => {
 
   const isInterviewer = user._id === interviewerId
   const { field, interviewer: interviewerType, difficulty } = preferences
-  const isUpcoming = dayjs().isBefore(dayjs(time * 1000))
+  const isUpcoming = false && dayjs().isBefore(dayjs(time * 1000))
   const isWithinHour = dayjs().add(1, 'day').isAfter(dayjs(time * 1000))
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
-  const toBePaid = !isUpcoming && !isPaid && !isInterviewer
+  const toBePaid = true && !isUpcoming && !isPaid && !isInterviewer
 
   const handleLaunch = () => {
     window.open(url, '_blank');
@@ -50,7 +51,18 @@ const InterviewCard = (interview) => {
       messageApi.open({ type: 'error', content: 'Failed to delete interview.'})
     }
   }
-  console.log(isWithinHour)
+
+  const handlePayment = async () => {
+    try {
+      const payload = { payer: interviewee._id, payee: interviewer._id, amount: 10 }
+      await processPayment(payload)
+      messageApi.open({ type: 'success', content: 'Successfully paid for interview!'})
+    } catch (e) {
+      console.error(e)
+      messageApi.open({ type: 'error', content: 'Failed to pay for interview.'})
+    }
+  }
+
   return (
     <Card className='w-10 m-3'>
       {contextHolder}
@@ -91,7 +103,7 @@ const InterviewCard = (interview) => {
           </>)
           :
           <>
-            {toBePaid ? <Button danger type="default">Pay</Button> : null}
+            {toBePaid ? <Button danger type="default" onClick={handlePayment}>Pay</Button> : null}
             <Button
               type='default'
               onClick={(e) => {

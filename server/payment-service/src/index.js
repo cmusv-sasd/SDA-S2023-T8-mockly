@@ -2,7 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import * as Database from './utils/Database'
 import PaymentMethodController from './controllers/PaymentMethodController'
-import PaymentProcessor from './controllers/processing/PaymentProcessor'
+//import PaymentProcessor from './controllers/processing/PaymentProcessor'
+import PaypalProcessor from './controllers/processing/PaypalProcessor'
 
 // eslint-disable-next-line no-undef
 const PORT = parseInt(process.env.PORT || '3004')
@@ -23,7 +24,7 @@ app.get('/api/', (req, res) => {
 
 app.post('/payment', (req, res) => {
   const { payer, payee, match } = req.body
-  var paymentProcessor = new PaymentProcessor(payer, payee, match, amount)
+  var paymentProcessor = new PaypalProcessor(payer, payee, match, amount)
   const result = paymentProcessor.processPayment()
   if (result.error) {
     res.status(400).json(result)
@@ -35,8 +36,9 @@ app.post('/payment', (req, res) => {
     res.status(200).json(result)
   }
 })
-
+/*
 app.get('/payment/confirm', async (req, res) => {
+  console.log('IN CONFIRM PAYMENT')
   try {
     console.log(req.query)
     let payload = req.query
@@ -52,7 +54,7 @@ app.get('/payment/confirm', async (req, res) => {
     res.status(500).json(err)
   } 
 })
-
+*/
 app.get('/payment/cancel', async (req, res) => {
   res.status(200)
 })

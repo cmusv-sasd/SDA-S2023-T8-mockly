@@ -91,4 +91,4 @@ class PaypalProcessor extends PaymentProcessor {
 
 } 
 
-export default new PaypalProcessor
+export default PaypalProcessor
