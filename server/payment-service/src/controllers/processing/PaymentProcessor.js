@@ -18,11 +18,11 @@ class PaymentProcessor {
   async processPayment() {
     const payer = await this.fetchPaymentMethod(this.payerId)
     if (!payer || payer.error) {
-      return { success: false, message: "payer account cannot be fetched" }
+      return { success: false, message: "Payer account not set or cannot be fetched" }
     }
     const payee = await this.fetchPaymentMethod(this.payeeId)
     if (!payee || payee.error) {
-      return { success: false, message: "payee account cannot be fetched" }
+      return { success: false, message: "payee account not set or cannot be fetched" }
     }
     const rawRequestResult = this.request(payer, payee, this.amount)
     const processedResult = this.processRequestResult(rawRequestResult)

@@ -21,7 +21,7 @@ router.post('/', async (request, response) => {
       headers,
     })
     const paymentResponse = await resp.json()
-    response.json(paymentResponse)
+    response.status(resp.status).json(paymentResponse)
   } catch (e) {
     console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })

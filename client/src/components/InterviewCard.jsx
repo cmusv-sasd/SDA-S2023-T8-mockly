@@ -54,12 +54,12 @@ const InterviewCard = (interview) => {
 
   const handlePayment = async () => {
     try {
-      const payload = { payer: interviewee._id, payee: interviewer._id, amount: 10 }
+      const payload = { payer: interviewee._id, payee: interviewer._id, match: _id }
       await processPayment(payload)
       messageApi.open({ type: 'success', content: 'Successfully paid for interview!'})
     } catch (e) {
       console.error(e)
-      messageApi.open({ type: 'error', content: 'Failed to pay for interview.'})
+      messageApi.open({ type: 'error', content: e.message })
     }
   }
 

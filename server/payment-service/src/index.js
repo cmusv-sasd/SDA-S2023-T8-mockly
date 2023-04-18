@@ -8,8 +8,6 @@ import PaypalProcessor from './controllers/processing/PaypalProcessor'
 // eslint-disable-next-line no-undef
 const PORT = parseInt(process.env.PORT || '3004')
 
-const amount = 20
-
 const app = express().use(
   cors({
     origin: ['http://localhost:3001'],
@@ -22,11 +20,14 @@ app.get('/api/', (req, res) => {
   res.json({ message: 'Hello from Payment' })
 })
 
-app.post('/payment', (req, res) => {
+app.post('/payment', async (req, res) => {
   const { payer, payee, match } = req.body
+  const amount = 20
   var paymentProcessor = new PaypalProcessor(payer, payee, match, amount)
-  const result = paymentProcessor.processPayment()
-  if (result.error) {
+  const result = await paymentProcessor.processPayment()
+  console.log(result)
+  if (!result.success) {
+    console.log(result.success)
     res.status(400).json(result)
   }
   else if (result.redirect) {
