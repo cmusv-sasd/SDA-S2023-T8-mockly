@@ -31,7 +31,7 @@ const InterviewCard = (interview) => {
   const isInterviewer = user._id === interviewerId
   const { field, interviewer: interviewerType, difficulty } = preferences
   const isUpcoming = dayjs().isBefore(dayjs(time * 1000))
-  const isWithinHour = dayjs().add('hour', 1).isAfter(dayjs(time * 1000))
+  const isWithinHour = dayjs().add(1, 'day').isAfter(dayjs(time * 1000))
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
   const toBePaid = !isUpcoming && !isPaid && !isInterviewer
@@ -50,7 +50,7 @@ const InterviewCard = (interview) => {
       messageApi.open({ type: 'error', content: 'Failed to delete interview.'})
     }
   }
-
+  console.log(isWithinHour)
   return (
     <Card className='w-10 m-3'>
       {contextHolder}

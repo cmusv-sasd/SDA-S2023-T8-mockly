@@ -2,7 +2,7 @@ import { Card, Form, Checkbox, Row, Col } from 'antd'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  setFeedbackQuestions, addQuestions
+  setFeedbackQuestions
 } from '../../store/feedbackQuestionsSlice'
 import { userSelector } from '../../store/userSlice'
 import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
@@ -28,13 +28,23 @@ const FeedbackQuestions = () => {
   ];
 
   const onChangeInterviewer = async (checkedValues) => {
-    const res = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
-    dispatch(addQuestions({questionsInterviewer: res.questionsInterviewer}))
+    try {
+      await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
+      const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+      dispatch(setFeedbackQuestions(res))
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const onChangeInterviewee = async (checkedValues) => {
-    const res = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
-    dispatch(addQuestions({questionsInterviewee: res.questionsInterviewee}))
+    try {
+      await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
+      const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+      dispatch(setFeedbackQuestions(res))
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   useEffect(() => {

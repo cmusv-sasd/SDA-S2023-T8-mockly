@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  questions: {},
+  questionsInterviewer: {},
+  questionsInterviewee: {}
 }
 
 const feedbackSlice = createSlice({
