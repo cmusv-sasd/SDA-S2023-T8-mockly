@@ -15,7 +15,7 @@ const FeedbackModal = ({ open, setOpen, selectedFeedback }) => {
   const feedback = feedbackHistory[selectedFeedback]
   // eslint-disable-next-line no-unused-vars
   return (
-    <Modal open={open} onCancel={() => setOpen(false)} width={1000}>
+    <Modal open={open} onCancel={() => setOpen(false)} footer={null} width={1000}>
       {feedback &&
         feedback.questions &&
         Object.keys(feedback.questions).map((key) => {

@@ -114,7 +114,7 @@ const InterviewCard = (interview) => {
                 setCurrTime(time)
               }}
             >
-              Complete Feedback
+              Add or Edit Feedback
               </Button>
           </>
         }
