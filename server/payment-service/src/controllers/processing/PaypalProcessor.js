@@ -16,7 +16,7 @@ class PaypalProcessor extends PaymentProcessor {
         "payment_method": "paypal"
       },
       "redirect_urls": {
-        "return_url": `http://localhost:3001/api/payment/confirm`,
+        "return_url": `http://localhost:3001/api/payment/confirm?matchId=${this.matchId}`,
         "cancel_url": `http://localhost:3001/api/payment/cancel`
       },
       "transactions": [{
@@ -77,7 +77,6 @@ class PaypalProcessor extends PaymentProcessor {
         if (error) {
           reject(error)
         } else {
-          console.log(JSON.stringify(payment));
           resolve(payment)
         }
       })

@@ -9,6 +9,7 @@ import authenticate from '../middlewares/authenticate'
 
 const router = Router()
 const BASE_URL = 'http://mockly-payment-service:3004/payment'
+const REDIRECT_URL = 'http://localhost:3000'
 
 
 // POST /payment/
@@ -38,7 +39,7 @@ router.get('/confirm', async (req, res) => {
       body: JSON.stringify(req.query),
       headers,
     })
-    res.send(200)
+    res.redirect(REDIRECT_URL)
   } catch (e) {
     console.log(e)
     res.status(500).json({ message: 'Internal Server Error', error: e })

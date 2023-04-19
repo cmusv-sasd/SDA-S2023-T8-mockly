@@ -1,8 +1,7 @@
 
 import fetch from 'node-fetch'
 import PaymentMethodController from '../PaymentMethodController'
-
-import { PORTS } from '../../utils/constants'
+import { PORTS, headers } from '../../utils/constants'
 
 class PaymentProcessor {
   
@@ -45,8 +44,8 @@ class PaymentProcessor {
     if (processedResult.success) {
       const patch = {isPaid: true}
       await fetch(
-        `http://mockly-matching-service:${PORTS.MATCHING}/matches/${this.matchId}`,
-        { method: 'PATCH', body: JSON.stringify(patch) }
+        `http://mockly-matching-service:${PORTS.MATCHING}/interviews/${payload.matchId}`,
+        { method: 'PATCH', body: JSON.stringify(patch), headers }
       )
     }
     return processedResult
