@@ -60,6 +60,7 @@ const FeedbackFormModal = ({
         reviewer: `${user.firstName} ${user.lastName}`,
         time,
         reviewee: currRecipient,
+        isInterviewer,
       })
     } catch (e) {
       console.log(e)

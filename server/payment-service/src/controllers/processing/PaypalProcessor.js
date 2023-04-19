@@ -32,10 +32,7 @@ class PaypalProcessor extends PaymentProcessor {
         "amount": {
           "currency": "USD",
           "total": amount
-        },          
-        "payee": {
-          "email_address": payee,
-        },
+        },      
         "description": `Match ${this.matchId}`
       }]
     };
@@ -91,4 +88,4 @@ class PaypalProcessor extends PaymentProcessor {
 
 } 
 
-export default new PaypalProcessor
+export default PaypalProcessor

@@ -16,23 +16,22 @@ class PaymentProcessor {
   }
 
   async processPayment() {
-    const payer = await PaymentProcessor.fetchPaymentMethod(this.payerId)
+    const payer = await this.fetchPaymentMethod(this.payerId)
     if (!payer || payer.error) {
       return { success: false, message: "payer account cannot be fetched" }
     }
-
-    const payee = await PaymentProcessor.fetchPaymentMethod(this.payeeId)
+    const payee = await this.fetchPaymentMethod(this.payeeId)
     if (!payee || payee.error) {
       return { success: false, message: "payee account cannot be fetched" }
     }
-    const rawRequestResult = PaymentProcessor.request(payer, payee, this.amount)
-    const processedResult = PaymentProcessor.processRequestResult(rawRequestResult)
+    const rawRequestResult = this.request(payer, payee, this.amount)
+    const processedResult = this.processRequestResult(rawRequestResult)
     return processedResult
   }
   
   async confirmPayment(payload) {
-    const rawConfirmResult = PaymentProcessor.confirm(payload)
-    const processedResult = PaymentProcessor.processConfirmResult(rawConfirmResult)
+    const rawConfirmResult = this.confirm(payload)
+    const processedResult = this.processConfirmResult(rawConfirmResult)
     if (processedResult.success) {
       const patch = {isPaid: true}
       await fetch(
@@ -75,4 +74,4 @@ class PaymentProcessor {
 
 }
 
-export default new PaymentProcessor
+export default PaymentProcessor

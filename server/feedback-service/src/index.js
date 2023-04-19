@@ -58,9 +58,9 @@ app.get('/feedback', async (request, response) => {
 })
 
 app.post('/feedback', async (request, response) => {
-  const { answers , reviewer, time, reviewee, questions} = request.body
+  const { answers , reviewer, time, reviewee, questions, isInterviewer} = request.body
   try {
-    const feedback= await FeedbackController.create(reviewer, reviewee, time, questions, answers)
+    const feedback= await FeedbackController.create(reviewer, reviewee, time, isInterviewer, questions, answers)
     response.json(feedback)
   } catch (e) {
     console.error(e)
