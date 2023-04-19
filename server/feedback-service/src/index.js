@@ -25,7 +25,6 @@ app.get('/api/', (req, res) => {
 
 
 app.get('/feedbackAll', async (request, response) => {
-  //  const { userId } = request.query
   try {
     const receivedFeedback = await FeedbackController.getAll()
     response.json(receivedFeedback)
@@ -36,7 +35,6 @@ app.get('/feedbackAll', async (request, response) => {
 })
 
 app.get('/feedbackQuestionsAll', async (request, response) => {
-  //  const { userId } = request.query
   try {
     const receivedFeedback = await FeedbackDecoratorController.getAll()
     response.json(receivedFeedback)
@@ -69,11 +67,8 @@ app.post('/feedback', async (request, response) => {
 })
 
 app.get('/feedbackQuestions', async (request, response) => {
-  console.log("FQ GET")
   const { userName } = request.query
-  console.log("IN FQ, userName", userName)
   try {
-    console.log("IN FQ TRY")
     const receivedQuestions = await FeedbackDecoratorController.getQuestions(userName)
     response.json(receivedQuestions)
   } catch (e) {
@@ -86,7 +81,6 @@ app.post('/feedbackQuestions', async (request, response) => {
   //  const { userName } = request.params
   const { userName } = request.body
   //  const {isInterviewer, questions} = request.body
-  console.log("IN POST FQ")
   try {
     const modifiedQuestions= await FeedbackDecoratorController.create(userName)
     response.status(200).json(modifiedQuestions)
@@ -99,11 +93,8 @@ app.post('/feedbackQuestions', async (request, response) => {
 app.patch('/feedbackQuestions/:userName', async (request, response) => {
   const userName = request.params.userName
   const {isInterviewer, questions} = request.body
-  console.log(request.params)
-  console.log("IN PATCH", userName, isInterviewer, questions)
   try {
     const modifiedQuestions= await FeedbackDecoratorController.modifyFeedbackQuestions(userName, questions, isInterviewer)
-    console.log("MQ: ", modifiedQuestions)
     response.status(200).json(modifiedQuestions)
   } catch (e) {
     console.error(e)

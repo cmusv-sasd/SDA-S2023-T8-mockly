@@ -26,7 +26,6 @@ class ConcreteFeedbackQuestions {
   }
   //
   removeQuestions(removeQuestionsArray=[]){
-    console.log(removeQuestionsArray)
     if(this.isInterviewer){
       removeQuestionsArray.map((key)=>{
         delete this.questionsInterviewer[key]

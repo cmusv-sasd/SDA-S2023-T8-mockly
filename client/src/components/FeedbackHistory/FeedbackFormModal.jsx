@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createFeedback } from '../../api/feedback'
 import { userSelector } from '../../store/userSlice'
-// eslint-disable-next-line no-unused-vars
-import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
-// eslint-disable-next-line no-unused-vars
+//  import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
 import { fetchFeedbackQuestions } from '../../api/feedback'
+/*
 import {
-  // eslint-disable-next-line no-unused-vars
   setFeedbackQuestions
 } from '../../store/feedbackQuestionsSlice'
+*/
+
 /*
 
 
@@ -18,9 +18,8 @@ This file is the Modal that people use to SEND feedback to the recepient.
 
 
 */
-// eslint-disable-next-line no-unused-vars
+
 const { TextArea } = Input
-// eslint-disable-next-line no-unused-vars
 const FeedbackFormModal = ({
   open,
   setOpen,
@@ -33,19 +32,13 @@ const FeedbackFormModal = ({
   /*
   Selectors and states
   */
-  //  const feedback = useSelector(feedbackSelector)
-  //  const feedbackQuestions = useSelector(feedbackQuestionsSelector)
-  // eslint-disable-next-line no-unused-vars
   const user = useSelector(userSelector)
   const dispatch = useDispatch()
-  // eslint-disable-next-line no-unused-vars
   const [currQuestions, setCurrQuestions] = useState({})
 
   const onFinish = async (values) => {
     //  save to MongoDB
     try {
-      //const questions = { questions: values }
-      //  console.log('in onFinish', currRecipient)
       setOpen(false)
       await createFeedback({
         questions: currQuestions, // feedback.questions,
@@ -72,27 +65,13 @@ const FeedbackFormModal = ({
   useEffect(() => {
     const getFeedback = async () => {
       try {
-        console.log("CURR RECIPIENT IS: ", currRecipient)
         let res = await fetchFeedbackQuestions(currRecipient)
-        console.log("RES BEFORE: ",res)
-        //  console.log('done')
-        //  dispatch(setFeedbackQuestions(response))
         //  If the recipient is not an interiviewer, then they want to have the interviewee questions
         if(res){
           res = isInterviewer ? res.questionsInterviewer : res.questionsInterviewee
-          console.log("RES: ",res)
           setCurrQuestions(res)
           setIsUpdated(false)
         }
-        
-        /*
-        if(res !== null){
-          dispatch(setFeedbackQuestions(res))
-        }
-        */
-        
-        
-        
       } catch (error) {
         console.error(error)
       }
@@ -123,7 +102,6 @@ const FeedbackFormModal = ({
           currQuestions &&
           Object.keys(currQuestions).map((key) => {
             const currQuestion = currQuestions[key]
-            //  console.log(currQuestion)
             const questionType = currQuestion.type
             switch (questionType) {
               case 'text':

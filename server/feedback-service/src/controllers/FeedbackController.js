@@ -11,7 +11,6 @@ class FeedbackController {
     //    so we want the opposite. If isInterviewer is true, the Interviewee is sending feedback
     const type = isInterviewer ? "Interviewee to Interviewer" : "Interviewer to Interviewee"
     let decorators = []
-    console.log(answers)
     Object.keys(answers).map((key)=>{
       switch(key){
         case "B1":

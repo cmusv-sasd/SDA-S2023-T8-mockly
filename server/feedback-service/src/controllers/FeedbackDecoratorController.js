@@ -50,16 +50,12 @@ class FeedbackDecoratorController {
   * Modify questions by name
   */ 
   async modifyFeedbackQuestions(userName, newQuestions, isInterviewer) {
-    console.log("In mFQ", userName, newQuestions, isInterviewer)
     const current_questions  = await FeedbackQuestions.findOne({ userName } ).exec()
-    console.log("CQ: ",current_questions)
     const current = new ConcreteFeedbackQuestions({isInterviewer, questionsInterviewer: current_questions.questionsInterviewer, questionsInterviewee: current_questions.questionsInterviewee});
     //  console.log(current.toObject())
     const current_decorators = isInterviewer ? current_questions.decoratorsInterviewer : current_questions.decoratorsInterviewee
-    console.log("cQ vs nQ", current_decorators, newQuestions)
     //  PROCESS TO ADD QUESTIONS
     let decorators = new QuestionsDecorator(current, isInterviewer)
-    console.log("PREVIOUS QUESTIONS: ", current.toObject())
     const questionTypes = ["Language", "Technical", "Professionalism"]
     questionTypes.map((type)=>{
       //  include the preferences
@@ -78,9 +74,6 @@ class FeedbackDecoratorController {
       }
     })
     decorators.addQuestions()
-    console.log("decorators", decorators)
-    console.log(current)
-    console.log("CURRENT QUESTIONS: ", current.toObject())
     //  =====================================
     //  PROCESS TO REMOVE QUESTIONS
     decorators = new QuestionsDecorator(current, isInterviewer)
@@ -101,20 +94,12 @@ class FeedbackDecoratorController {
       }
     })
     decorators.removeQuestions()
-    console.log("decorators", decorators)
-    console.log(current)
-    console.log("CURRENT QUESTIONS: ", current.toObject())
-
-
-
+    //
     const currentObj = current.toObject()
-
     const fq= isInterviewer ? await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewer: currentObj.questionsInterviewer, decoratorsInterviewer: newQuestions}, ) : await FeedbackQuestions.findOneAndUpdate({userName}, {questionsInterviewee: currentObj.questionsInterviewee, decoratorsInterviewee: newQuestions})
     if (fq) {
-      console.log("mFQ result: ", fq)
       return fq
     } else {
-      console.log("failed mFQ")
       throw new Error('Failed to update feedback questions.')
     }
   }
