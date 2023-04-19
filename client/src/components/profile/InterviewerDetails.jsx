@@ -93,13 +93,12 @@ const InterviewerDetailsCard = () => {
       }
       // Make an API call to update the user's interviewer details
       const res = await updateInterviewerDetailsAPI(userId, { ...formData })
-      console.log('Interviewer Details updated: ', res)
       // if API call is successful, dispatch the setInterviewerDetails action to update the Redux store
       if (!res.status) {
         dispatch(setInterviewerDetails(formData))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setEditMode(false)

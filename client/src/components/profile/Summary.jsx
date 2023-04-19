@@ -46,13 +46,12 @@ const SummaryCard = () => {
       const formValues = await form.validateFields()
       // Call the API to update the summary with the new form values
       const res = await updateSummaryAPI(userId, { ...formValues })
-      console.log('Summary updated', res)
       // If the update is successful, update the summary in the Redux store
       if (!res.status) {
         dispatch(setSummary(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setEditMode(false)

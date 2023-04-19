@@ -21,15 +21,12 @@ router.post('/', async (req, res) => {
     const responseJSON = await response.json()
     if (response.status == 201) {
       // new user created
-      console.log("HERE IS  THE RESPONSE JSON", responseJSON)
-      res
-        .status(response.status)
-        .json({
-          userId: responseJSON.user._id,
-          firstName:  responseJSON.user.firstName,
-          lastName: responseJSON.user.lastName,
-          message: 'New user registered successfully',
-        })
+      res.status(response.status).json({
+        userId: responseJSON.user._id,
+        firstName: responseJSON.user.firstName,
+        lastName: responseJSON.user.lastName,
+        message: 'New user registered successfully',
+      })
     } else {
       /**
        * 400 - Missing required fields
@@ -41,6 +38,5 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
-
 
 export default router

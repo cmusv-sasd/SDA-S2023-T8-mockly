@@ -73,13 +73,12 @@ const PersonalInformationCard = () => {
       const formValues = await form.validateFields()
       // Make an API call to update the user's personal information
       const res = await updatePersonalInformationAPI(userId, { ...formValues })
-      console.log('Personal Information updated: ', res)
       // if API call is successful, dispatch the setPersonalInformation action to update the Redux store
       if (!res.status) {
         dispatch(setPersonalInformation(formValues))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setEditMode(false)

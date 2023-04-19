@@ -4,7 +4,6 @@ export const connect = async (
   url = `mongodb://root:example@mongo:27017/`,
   name = 'mockly'
 ) => {
-
   mongoose.connect(url, {
     useUnifiedTopology: true,
     useNewUrlParser: true,

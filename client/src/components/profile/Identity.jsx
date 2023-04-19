@@ -47,13 +47,12 @@ const IdentityCard = () => {
       const formValues = await form.validateFields()
       // Make an API call to update the user's personal identity
       const res = await updatePersonalIdentityAPI(userId, { ...formValues })
-      console.log('Personal Identity updated: ', res)
       // if API call is successful, dispatch the setIdentity action to update the Redux store
       if (!res.status) {
         dispatch(setIdentity(formValues))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setEditMode(false)

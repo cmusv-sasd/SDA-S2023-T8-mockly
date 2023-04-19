@@ -44,7 +44,6 @@ export const createCourse = async (req, res) => {
 export const deleteCourse = async (req, res) => {
   const userId = req.params.userId
   const { courseId } = req.body
-  console.log(courseId)
   // Validate request body, ensure user ID and course ID are provided
   if (!userId || !courseId) {
     return res.status(400).json({

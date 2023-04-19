@@ -100,13 +100,12 @@ const ProjectsCard = () => {
       }
       // Make an API call to add new project to user's projects list
       const res = await addProjectDetailsAPI(userId, { ...formData })
-      console.log('Project Details added: ', res)
       // if API call is successful, dispatch the addProject action to update the Redux store
       if (!res.status) {
         dispatch(addProject(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setAddProjectMode(false)
@@ -124,13 +123,12 @@ const ProjectsCard = () => {
     try {
       // Make an API call to delete project from user's projects list
       const res = await deleteProjectDetailsAPI(userId, { projectId })
-      console.log('Project Details delete: ', res)
       // if API call is successful, dispatch the removeProject action to update the Redux store
       if (!res.status) {
         dispatch(removeProject(projectId))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
   // Handle the click event for editing an project entry
@@ -160,13 +158,12 @@ const ProjectsCard = () => {
       }
       // Make an API call to add new project to user's projects list
       const res = await updateProjectDetailsAPI(userId, { ...formData })
-      console.log('Project Details updated: ', res)
       // if API call is successful, dispatch the updateProject action to update the Redux store
       if (!res.status) {
         dispatch(updateProject(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setSelectedProject(null)
     setLoading(false)

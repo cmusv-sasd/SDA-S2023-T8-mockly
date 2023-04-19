@@ -157,13 +157,12 @@ const ExperienceCard = () => {
       }
       // Make an API call to add new experience to user's experience list
       const res = await updateExperienceDetailsAPI(userId, { ...formData })
-      console.log('Experience Details updated: ', res)
       // if API call is successful, dispatch the updateExperience action to update the Redux store
       if (!res.status) {
         dispatch(updateExperience(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setSelectedExperience(null)
     setLoading(false)

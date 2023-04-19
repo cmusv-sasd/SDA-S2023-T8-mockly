@@ -30,13 +30,12 @@ const SkillsCard = () => {
       try {
         const userId = localStorage.getItem('id')
         const res = await addSkillAPI(userId, { skillName: newSkill })
-        console.log('Added new skills', res)
         // Check if the API call is successful and dispatch addSkill action with response
         if (!res.status) {
           dispatch(addSkill(res))
         }
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
       setLoading(false)
       setNewSkill('') // Clear the new skill input
@@ -49,13 +48,12 @@ const SkillsCard = () => {
     try {
       const userId = localStorage.getItem('id')
       const res = await deleteSkillAPI(userId, { skillId: skillToRemove })
-      console.log('Deleted a skill', res.message)
       // Check if API call is successful and dispatch the removeSkill action with the skill ID
       if (!res.status) {
         dispatch(removeSkill({ skillId: skillToRemove }))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
   }
