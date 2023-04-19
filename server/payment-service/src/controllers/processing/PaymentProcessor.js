@@ -15,7 +15,7 @@ class PaymentProcessor {
     this.amount = amount
   }
 
-  async processPayment() {
+  async fetchAccounts() {
     const payer = await this.fetchPaymentMethod(this.payerId)
     if (!payer || payer.error) {
       return { success: false, message: "Payer account not set or cannot be fetched" }
@@ -24,9 +24,19 @@ class PaymentProcessor {
     if (!payee || payee.error) {
       return { success: false, message: "payee account not set or cannot be fetched" }
     }
-    const rawRequestResult = this.request(payer, payee, this.amount)
-    const processedResult = this.processRequestResult(rawRequestResult)
-    return processedResult
+    return { success: true, payer, payee }
+  }
+
+  async processPayment() {
+    const res = await this.fetchAccounts()
+    if (!res.success) {
+      return res
+    }
+    else {
+      const rawRequestResult = await this.request(res.payer, res.payee, this.amount)
+      const processedResult = this.processRequestResult(rawRequestResult)
+      return processedResult
+    }
   }
   
   async confirmPayment(payload) {

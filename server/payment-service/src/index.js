@@ -25,13 +25,13 @@ app.post('/payment', async (req, res) => {
   const amount = 20
   var paymentProcessor = new PaypalProcessor(payer, payee, match, amount)
   const result = await paymentProcessor.processPayment()
+  console.log("===========Payment Result===========")
   console.log(result)
-  if (!result.success) {
-    console.log(result.success)
+  if (!result || !result.success) {
     res.status(400).json(result)
   }
   else if (result.redirect) {
-    res.redirect(result.link)
+    res.status(307).json({ Location: result.link })
   }
   else {
     res.status(200).json(result)

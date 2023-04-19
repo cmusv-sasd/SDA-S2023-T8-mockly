@@ -36,6 +36,7 @@ const InterviewCard = (interview) => {
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
   const toBePaid = true && !isUpcoming && !isPaid && !isInterviewer
+  const unpaid = true && !isUpcoming && !isPaid && isInterviewer
 
   const handleLaunch = () => {
     window.open(url, '_blank');
@@ -59,7 +60,12 @@ const InterviewCard = (interview) => {
       messageApi.open({ type: 'success', content: 'Successfully paid for interview!'})
     } catch (e) {
       console.error(e)
-      messageApi.open({ type: 'error', content: e.message })
+      if (e.status === 307) {
+        window.location.href = e.Location
+      }
+      else {
+        messageApi.open({ type: 'error', content: 'Payment failed: ' + e.message })
+      }
     }
   }
 
@@ -85,6 +91,7 @@ const InterviewCard = (interview) => {
         }
         <p>Level: {difficulty}</p>
         {toBePaid ? <Tag color="volcano">To be paid</Tag> : null}
+        {unpaid ? <Tag color="volcano">Not yet paid</Tag> : null}
         <Divider />
         {isUpcoming ? (
           <>

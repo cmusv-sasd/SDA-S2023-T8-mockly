@@ -37,22 +37,28 @@ class PaypalProcessor extends PaymentProcessor {
       }]
     };
     
-    paypal.payment.create(create_payment_json, function (error, payment) {
-      if (error) {
-        throw error;
-      } else {
-        for(let i = 0;i < payment.links.length;i++){
-          if(payment.links[i].rel === 'approval_url'){
-            return {
-              'redirect': true,
-              'link': payment.links[i].href
+    const linkPromise = new Promise((resolve, reject) => {
+      paypal.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+          reject(error);
+        } else {
+          console.log(payment)
+          for(let i = 0;i < payment.links.length;i++){
+            if(payment.links[i].rel === 'approval_url'){
+              resolve({ 
+                redirect: true,
+                link: payment.links[i].href
+              })
             }
           }
         }
-      }
-    });
+    })
     
-  }
+     
+  })
+
+  return linkPromise
+}
 
   async confirm(payload){
     const {payerId, paymentId, amount} = payload
@@ -79,7 +85,8 @@ class PaypalProcessor extends PaymentProcessor {
   }
   
   processRequestResult(result) {
-    return result
+    console.log(result)
+    return {success: true, redirect: result.redirect, link: result.link}
   }
 
   processConfirmResult(result) {
