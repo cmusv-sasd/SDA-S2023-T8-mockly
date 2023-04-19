@@ -4,6 +4,7 @@ import { validate } from '../utils/token'
 import { setUserIdFromToken } from '../middlewares/setUserIdFromToken'
 import { headers } from '../utils/constants'
 import { verifyUserIdParam } from '../middlewares/verifyUserIdParam'
+import authenticate from '../middlewares/authenticate'
 
 
 const router = Router()
@@ -12,7 +13,7 @@ const BASE_URL = 'http://mockly-payment-service:3004/payment'
 
 // POST /payment/
 // Process a payment request
-router.post('/', async (request, response) => {
+router.post('/', authenticate, async (request, response) => {
   try {
     const { body } = request
     const resp = await fetch(`${BASE_URL}/`, {
@@ -30,8 +31,21 @@ router.post('/', async (request, response) => {
 
 // GET /payment/confirm
 // Confirm payment
-router.get('/confirm', async (req, res) => {t
+router.get('/confirm', async (req, res) => {
+  const { paymentId, token, PayerID } = req.query
   try {
+    res.send({ blah: 'blah'})
+    /*
+    const body = {
+      paymentId, token, PayerID
+    }
+
+    const resp = await fetch(`${BASE_URL}/`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers,
+    })
+    
     let urlQuery = ''
     for (const key in request.query) {
       if (request.query.hasOwnProperty(key)) {
@@ -46,6 +60,7 @@ router.get('/confirm', async (req, res) => {t
       headers,
     })
     response.json(resp)
+    */
   } catch (e) {
     console.log(e)
     response.status(500).json({ message: 'Internal Server Error', error: e })
@@ -78,7 +93,7 @@ router.get('/cancel', async (req, res) => {t
 
 // GET /payment/payment-method
 // Get payment method
-router.get('/payment-method', async (request, response) => {
+router.get('/payment-method', authenticate, async (request, response) => {
   try {
     const { userId } = request.query
     let requestURL = `${BASE_URL}/payment-method?userId=${userId}`
@@ -97,7 +112,7 @@ router.get('/payment-method', async (request, response) => {
 
 // POST /payment/payment-method
 // Create/Update payment method
-router.post('/payment-method', async (request, response) => {
+router.post('/payment-method', authenticate, async (request, response) => {
   try {
     const { userId } = request.query
     const { body } = request
@@ -117,7 +132,7 @@ router.post('/payment-method', async (request, response) => {
 
 // DELETE /payment/payment-method
 // Delete payment method
-router.delete('/payment-method', async (request, response) => {
+router.delete('/payment-method', authenticate, async (request, response) => {
   try {
     const { userId } = request.query
     let requestURL = `${BASE_URL}/payment-method?userId=${userId}`
