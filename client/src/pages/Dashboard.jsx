@@ -26,6 +26,8 @@ const DashboardPage = () => {
   const [isInterviewer, setIsInterviewer] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [currTime, setCurrTime] = useState('')
+  // eslint-disable-next-line no-unused-vars
+  const [isUpdated, setIsUpdated] = useState(false)
   
   const upcomingInterviews = interviews.filter((interview) =>
     now.isBefore(dayjs(interview.time * 1000))
@@ -55,6 +57,7 @@ const DashboardPage = () => {
             setCurrRecipient={setCurrRecipient}
             setIsInterviewer={setIsInterviewer}
             setOpenFeedbackForm={setOpenFeedbackForm}
+            setIsUpdated={setIsUpdated}
             key={i}
           />
         ))}
@@ -71,6 +74,7 @@ const DashboardPage = () => {
             setCurrTime={setCurrTime}
             setCurrRecipient={setCurrRecipient}
             setIsInterviewer={setIsInterviewer}
+            setIsUpdated={setIsUpdated}
             key={i}
           />
         ))}
@@ -90,6 +94,8 @@ const DashboardPage = () => {
         time={currTime}
         currRecipient={currRecipient}
         isInterviewer={isInterviewer}
+        isUpdated={isUpdated}
+        setIsUpdated={setIsUpdated}
       />
     </div>
   )

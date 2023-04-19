@@ -14,7 +14,9 @@ const FeedbackSchema = new Schema({
   //  for now, have answers as an object
   answers:  Object,
   questions:  Object,
-  time: String
+  time: String,
+  type: String,
+  decorators: Array
 })
 
 export default mongoose.model('Feedback', FeedbackSchema)

@@ -29,9 +29,10 @@ const FeedbackQuestions = () => {
 
   const onChangeInterviewer = async (checkedValues) => {
     try {
-      await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
-      const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
-      dispatch(setFeedbackQuestions(res))
+      const temp = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
+      console.log("TEMP: ", temp)
+      //  const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+      //  dispatch(setFeedbackQuestions(res))
     } catch (error) {
       console.error(error)
     }
@@ -40,8 +41,8 @@ const FeedbackQuestions = () => {
   const onChangeInterviewee = async (checkedValues) => {
     try {
       await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
-      const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
-      dispatch(setFeedbackQuestions(res))
+      //const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
+      //dispatch(setFeedbackQuestions(res))
     } catch (error) {
       console.error(error)
     }

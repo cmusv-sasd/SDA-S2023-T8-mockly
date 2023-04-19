@@ -21,6 +21,7 @@ const InterviewCard = (interview) => {
     setCurrTime,
     setCurrRecipient,
     setIsInterviewer,
+    setIsUpdated
   } = interview
   const dispatch = useDispatch()
   const user = useSelector(userSelector)
@@ -32,16 +33,19 @@ const InterviewCard = (interview) => {
   const isInterviewer = user._id === interviewerId
   const { field, interviewer: interviewerType, difficulty } = preferences
   const isUpcoming = false && dayjs().isBefore(dayjs(time * 1000))
+  // eslint-disable-next-line
   const isWithinHour = dayjs().add(1, 'day').isAfter(dayjs(time * 1000))
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
   // eslint-disable-next-line
   const toBePaid = true && !isUpcoming && !isPaid && !isInterviewer
+  // TODO: remind interviewer to add payment method if not added
   const unpaid = true && !isUpcoming && !isPaid && isInterviewer
 
+  // eslint-disable-next-line
   const handleLaunch = () => {
     window.open(url, '_blank');
   }
-
+// eslint-disable-next-line
   const handleDelete = async () => {
     try {
       await deleteInterview(_id)
@@ -94,15 +98,24 @@ const InterviewCard = (interview) => {
         {unpaid ? <Tag color="volcano">Not yet paid</Tag> : null}
         <Divider />
         {isUpcoming ? (
-          <>
+                    <>
             <>
-              <Button type="primary" disabled={!isWithinHour} onClick={handleLaunch}>
+              <Button
+                type="primary"
+                disabled={!isWithinHour}
+                onClick={handleLaunch}
+              >
                 Launch Meeting
-              </Button> 
+              </Button>
               {!isWithinHour ? <p>Launch within an hour of interview</p> : null}
             </>
             <>
-              <Button danger type="primary" disabled={isWithinHour} onClick={handleDelete}>
+              <Button
+                danger
+                type="primary"
+                disabled={isWithinHour}
+                onClick={handleDelete}
+              >
                 Delete
               </Button>
               Cancel up to an hour within interview
@@ -129,7 +142,7 @@ const InterviewCard = (interview) => {
                 console.log("TRY: ", (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
                     `${intervieweeFirstName} ${intervieweeLastName}` :
                     `${interviewerFirstName} ${interviewerLastName}`)
-                
+                setIsUpdated(true)
                 setCurrTime(time)
               }}
             >

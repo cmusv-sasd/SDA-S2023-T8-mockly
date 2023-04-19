@@ -5,9 +5,26 @@ class FeedbackController {
   /*
   * Create a feedback result created by reviewer for the reviewee
   */
-  async create(reviewer="default Reviewer", reviewee="default Reviewee", time, questions, answers) {
+  async create(reviewer="default Reviewer", reviewee="default Reviewee", time, isInterviewer, questions, answers) {
     //  prob should check that the feedback is written then return something
-    const ifs = new Feedback ({ reviewer, reviewee, time, questions, answers })
+    //  this isInterviewer  checks if the recipient is the Interviewer
+    //    so we want the opposite. If isInterviewer is true, the Interviewee is sending feedback
+    const type = isInterviewer ? "Interviewee to Interviewer" : "Interviewer to Interviewee"
+    let decorators = []
+    console.log(answers)
+    Object.keys(answers).map((key)=>{
+      switch(key){
+        case "B1":
+          decorators.push("base")
+          break;
+        case "P1":
+          decorators.push("professionalism")
+          break;
+        case "T1":
+          decorators.push("technical")
+      }
+    })
+    const ifs = new Feedback ({ reviewer, reviewee, time, type, decorators, questions, answers })
     await ifs.save()
     return ifs
   }
