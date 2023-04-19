@@ -60,11 +60,7 @@ app.patch('/interviews/:interviewId', async (request, response) => {
   const { interviewId } = request.params
   const interview = request.body
   try {
-    console.log('=============================')
-    console.log(interview)
     const modifiedInterview = await MatchController.modifyInterview(interviewId, interview)
-    console.log(modifiedInterview)
-    console.log('=============================')
     response.status(200).json(modifiedInterview)
   } catch (e) {
     console.error(e)

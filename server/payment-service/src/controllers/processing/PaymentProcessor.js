@@ -42,7 +42,7 @@ class PaymentProcessor {
     const rawConfirmResult = await this.confirm(payload)
     const processedResult = await this.processConfirmResult(rawConfirmResult)
     if (processedResult.success) {
-      const patch = {isPaid: true}
+      const patch = { isPaid: true }
       await fetch(
         `http://mockly-matching-service:${PORTS.MATCHING}/interviews/${payload.matchId}`,
         { method: 'PATCH', body: JSON.stringify(patch), headers }

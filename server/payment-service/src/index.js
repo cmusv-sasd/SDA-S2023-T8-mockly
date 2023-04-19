@@ -36,17 +36,17 @@ app.post('/payment', async (req, res) => {
   }
 })
 
-app.post('/payment/confirm', async (req, res) => {
+app.post('/payment/confirm', async (request, response) => {
   try {
     const paypalProcessor = new PaypalProcessor()
-    const res = await paypalProcessor.confirmPayment(req.body)
+    const res = await paypalProcessor.confirmPayment(request.body)
     if (res.success){
-      res.status(200)
+      response.status(200).json({ message: 'Successfuly confirmed payment'})
     }
   }
   catch (err) {
-    console.log(err)
-    res.status(500).json(err)
+    console.error(err)
+    response.status(500).json(err)
   } 
 })
 
