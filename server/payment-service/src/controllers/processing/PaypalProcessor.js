@@ -60,7 +60,7 @@ class PaypalProcessor extends PaymentProcessor {
 }
 
   async confirm(payload){
-    const {PayerID, paymentId, amount} = payload
+    const {PayerID, paymentId} = payload
     const execute_payment_json = {
       "payer_id": PayerID,
       "transactions": [{
@@ -90,8 +90,14 @@ class PaypalProcessor extends PaymentProcessor {
     return {success: true, redirect: result.redirect, link: result.link}
   }
 
-  processConfirmResult(result) {
-    return result
+  processConfirmResult(paypalResult) {
+    console.log(paypalResult)
+    const success = (paypalResult.state === 'approved')
+    const time = paypalResult.update_time
+    const payer = paypalResult.payer.payer_info.email
+    const payee = paypalResult.transactions.payee
+    const amount = paypalResult.transactions.amount
+    return { success, payer, payee, amount, time }
   }
 
 } 
