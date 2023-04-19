@@ -32,38 +32,16 @@ router.post('/', authenticate, async (request, response) => {
 // GET /payment/confirm
 // Confirm payment
 router.get('/confirm', async (req, res) => {
-  const { paymentId, token, PayerID } = req.query
-  try {
-    res.send({ blah: 'blah'})
-    /*
-    const body = {
-      paymentId, token, PayerID
-    }
-
-    const resp = await fetch(`${BASE_URL}/`, {
+  try {    
+    await fetch(`${BASE_URL}/confirm`, {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: JSON.stringify(req.query),
       headers,
     })
-    
-    let urlQuery = ''
-    for (const key in request.query) {
-      if (request.query.hasOwnProperty(key)) {
-        urlQuery += `${key}=${request.query[key]}&`
-      }
-    }
-    urlQuery = urlQuery.slice(0, -1)
-
-    let requestURL = `${BASE_URL}/confirm?${urlQuery}`
-    const resp = await fetch(requestURL, {
-      method: 'GET',
-      headers,
-    })
-    response.json(resp)
-    */
+    res.send(200)
   } catch (e) {
     console.log(e)
-    response.status(500).json({ message: 'Internal Server Error', error: e })
+    res.status(500).json({ message: 'Internal Server Error', error: e })
   }
 })
 
