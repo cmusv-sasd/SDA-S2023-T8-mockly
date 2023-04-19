@@ -36,16 +36,12 @@ app.post('/payment', async (req, res) => {
     res.status(200).json(result)
   }
 })
-/*
-app.get('/payment/confirm', async (req, res) => {
-  console.log('IN CONFIRM PAYMENT')
+
+app.post('/payment/confirm', async (req, res) => {
   try {
-    console.log(req.query)
-    let payload = req.query
-    payload.amount = amount
-    const result = PaymentProcessor.confirmPayment(payload)
-    if (result.success){
-      console.log(result)
+    const paypalProcessor = new PaypalProcessor()
+    const res = await paypalProcessor.confirmPayment(req.body)
+    if (res.success){
       res.status(200)
     }
   }
@@ -54,7 +50,7 @@ app.get('/payment/confirm', async (req, res) => {
     res.status(500).json(err)
   } 
 })
-*/
+
 app.get('/payment/cancel', async (req, res) => {
   res.status(200)
 })

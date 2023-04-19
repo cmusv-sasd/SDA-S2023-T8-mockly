@@ -10,15 +10,14 @@ paypal.configure({
 
 class PaypalProcessor extends PaymentProcessor {
   async request(payer, payee, amount) {
-    console.log(payer, payee, amount)
     const create_payment_json = {
       "intent": "sale",
       "payer": {
         "payment_method": "paypal"
       },
       "redirect_urls": {
-        "return_url": `http://localhost:3000/api/payment/confirm`,
-        "cancel_url": `http://localhost:3000/api/payment/cancel`
+        "return_url": `http://localhost:3001/api/payment/confirm`,
+        "cancel_url": `http://localhost:3001/api/payment/cancel`
       },
       "transactions": [{
         "item_list": {
@@ -35,7 +34,7 @@ class PaypalProcessor extends PaymentProcessor {
         },
         "description": `Match ${this.matchId}`,
         "payee": {
-          "email": payee
+          "email": payee.account
         }
       }]
     };
@@ -45,7 +44,6 @@ class PaypalProcessor extends PaymentProcessor {
         if (error) {
           reject(error);
         } else {
-          console.log(payment)
           for(let i = 0;i < payment.links.length;i++){
             if(payment.links[i].rel === 'approval_url'){
               resolve({ 
@@ -62,13 +60,13 @@ class PaypalProcessor extends PaymentProcessor {
 }
 
   async confirm(payload){
-    const {payerId, paymentId, amount} = payload
+    const {PayerID, paymentId, amount} = payload
     const execute_payment_json = {
-      "payer_id": payerId,
+      "payer_id": PayerID,
       "transactions": [{
         "amount": {
           "currency": "USD",
-          "total": amount
+          "total": 20
         }
       }]
     };

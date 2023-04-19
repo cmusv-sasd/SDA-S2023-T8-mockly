@@ -40,8 +40,8 @@ class PaymentProcessor {
   }
   
   async confirmPayment(payload) {
-    const rawConfirmResult = this.confirm(payload)
-    const processedResult = this.processConfirmResult(rawConfirmResult)
+    const rawConfirmResult = await this.confirm(payload)
+    const processedResult = await this.processConfirmResult(rawConfirmResult)
     if (processedResult.success) {
       const patch = {isPaid: true}
       await fetch(
