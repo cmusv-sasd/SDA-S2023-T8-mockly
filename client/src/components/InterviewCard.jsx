@@ -63,11 +63,11 @@ const InterviewCard = (interview) => {
       await processPayment(payload)
       messageApi.open({ type: 'success', content: 'Successfully paid for interview!'})
     } catch (e) {
-      console.error(e)
       if (e.status === 307) {
         window.location.href = e.Location
       }
       else {
+        console.error(e)
         messageApi.open({ type: 'error', content: 'Payment failed: ' + e.message })
       }
     }

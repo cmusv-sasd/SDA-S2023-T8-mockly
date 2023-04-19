@@ -25,7 +25,6 @@ app.post('/payment', async (req, res) => {
   const amount = 20
   var paymentProcessor = new PaypalProcessor(payer, payee, match, amount)
   const result = await paymentProcessor.processPayment()
-  console.log("===========Payment Result===========")
   console.log(result)
   if (!result || !result.success) {
     res.status(400).json(result)

@@ -52,10 +52,8 @@ class PaypalProcessor extends PaymentProcessor {
             }
           }
         }
+      })
     })
-    
-     
-  })
 
   return linkPromise
 }
@@ -73,15 +71,17 @@ class PaypalProcessor extends PaymentProcessor {
     };
   
     // Obtains the transaction details from paypal
-    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-      if (error) {
-        console.log(error.response);
-        return { success: false, error }
-      } else {
-        console.log(JSON.stringify(payment));
-        return { success: true }
-      }
+    const successPromise = new Promise((resolve, reject) => {
+      paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+          reject(error)
+        } else {
+          console.log(JSON.stringify(payment));
+          resolve(payment)
+        }
+      })
     })
+    return successPromise
   }
   
   processRequestResult(result) {
