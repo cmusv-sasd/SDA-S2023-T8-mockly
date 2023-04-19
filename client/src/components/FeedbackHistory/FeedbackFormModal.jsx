@@ -1,12 +1,6 @@
 import { Modal, Slider, Input, Form, Button, Space } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-/*
-import {
-  setFeedbackQuestions,
-  feedbackSelector,
-} from '../../store/feedbackSlice'
-*/
 import { createFeedback } from '../../api/feedback'
 import { userSelector } from '../../store/userSlice'
 // eslint-disable-next-line no-unused-vars
@@ -48,7 +42,6 @@ const FeedbackFormModal = ({
   const [currQuestions, setCurrQuestions] = useState({})
 
   const onFinish = async (values) => {
-    //  console.log('Success:', values)
     //  save to MongoDB
     try {
       //const questions = { questions: values }

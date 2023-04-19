@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import InterviewCard from '../components/InterviewCard'
 import InterviewModal from '../components/InterviewModal'
+import { getPaymentMethod } from '../api/payment'
 import { interviewsSelector } from '../store/interviewsSlice'
 import { userSelector } from '../store/userSlice'
 import { useDispatch } from 'react-redux'
@@ -11,23 +12,21 @@ import { setInterviews } from '../store/interviewsSlice'
 
 import dayjs from 'dayjs'
 import FeedbackFormModal from '../components/FeedbackHistory/FeedbackFormModal'
+import useMessage from 'antd/es/message/useMessage'
 
 const DashboardPage = () => {
   const [openInterviewModal, setOpenInterviewModal] = useState(false)
   const interviews = useSelector(interviewsSelector)
   const user = useSelector(userSelector)
   const dispatch = useDispatch()
+  const [messageApi, contextHolder] = useMessage()
   const now = dayjs()
-  //
-  // eslint-disable-next-line no-unused-vars
   const [openFeedbackForm, setOpenFeedbackForm] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [currRecipient, setCurrRecipient] = useState('')
   const [isInterviewer, setIsInterviewer] = useState(false)
-  // eslint-disable-next-line no-unused-vars
   const [currTime, setCurrTime] = useState('')
-  // eslint-disable-next-line no-unused-vars
   const [isUpdated, setIsUpdated] = useState(false)
+  const [validPayment, setValidPayment] = useState(false)
   
   const upcomingInterviews = interviews.filter((interview) =>
     now.isBefore(dayjs(interview.time * 1000))
@@ -41,11 +40,23 @@ const DashboardPage = () => {
       const res = await fetchInterviews(user._id)
       dispatch(setInterviews(res))
     }
+    const loadPaymentMethod = async () => {
+      const res = await getPaymentMethod(user._id)
+      if (res.account && res.type) setValidPayment(true)
+    }
     loadInterviews()
+    loadPaymentMethod()
   }, [user._id])
+
+  const handleCreateInterviewClick = () => {
+    if (!validPayment) {
+      messageApi.open({ type: 'error', content: 'Please set your payment method prior to creating any interviews!'})
+    }
+  }
 
   return (
     <div>
+      {contextHolder}
       <Row>
         <Typography.Title level={2} className="upcoming-interviews">Upcoming Interviews</Typography.Title>
       </Row>
@@ -84,7 +95,7 @@ const DashboardPage = () => {
           open={openInterviewModal}
           setOpen={setOpenInterviewModal}
         />
-        <Button type='primary' onClick={() => setOpenInterviewModal(true)} className='create-interview'>
+        <Button type='primary' onClick={handleCreateInterviewClick} className='create-interview'>
           Create new interview
         </Button>
       </Row>

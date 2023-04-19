@@ -29,10 +29,9 @@ const CoursesCard = () => {
       try {
         const userId = localStorage.getItem('id')
         const res = await addCourseAPI(userId, { courseName: newCourse })
-        console.log('Added new course', res)
         dispatch(addCourse(res))
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
       setLoading(false)
       setNewCourse('')
@@ -45,12 +44,11 @@ const CoursesCard = () => {
     try {
       const userId = localStorage.getItem('id')
       const res = await deleteCourseAPI(userId, { courseId: courseToRemove })
-      console.log(res.message)
       if (!res.status) {
         dispatch(removeCourse({ courseId: courseToRemove }))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
   }

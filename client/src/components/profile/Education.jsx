@@ -111,13 +111,12 @@ const EducationCard = () => {
       }
       // Make an API call to add new education to user's education list
       const res = await addEducationDetailsAPI(userId, { ...formData })
-      console.log('Education Details added: ', res)
       // if API call is successful, dispatch the addEducation action to update the Redux store
       if (!res.status) {
         dispatch(addEducation(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setAddEducationMode(false)
@@ -135,13 +134,12 @@ const EducationCard = () => {
     try {
       // Make an API call to delete education from user's education list
       const res = await deleteEducationDetailsAPI(userId, { educationId })
-      console.log('Education Details delete: ', res)
       // if API call is successful, dispatch the removeEducation action to update the Redux store
       if (!res.status) {
         dispatch(removeEducation(educationId))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 
@@ -170,13 +168,12 @@ const EducationCard = () => {
       }
       // Make an API call to add new education to user's education list
       const res = await updateEducationDetailsAPI(userId, { ...formData })
-      console.log('Education Details updated: ', res)
       // if API call is successful, dispatch the updateEducation action to update the Redux store
       if (!res.status) {
         dispatch(updateEducation(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setSelectedEducation(null)
     setLoading(false)

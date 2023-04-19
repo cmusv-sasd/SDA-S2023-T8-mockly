@@ -32,14 +32,10 @@ const InterviewCard = (interview) => {
 
   const isInterviewer = user._id === interviewerId
   const { field, interviewer: interviewerType, difficulty } = preferences
-  const isUpcoming = false && dayjs().isBefore(dayjs(time * 1000))
-  // eslint-disable-next-line
-  const isWithinHour = dayjs().add(1, 'day').isAfter(dayjs(time * 1000))
+  const isUpcoming = dayjs().isBefore(dayjs(time * 1000))
+  const isWithinDay = dayjs().add(1, 'day').isAfter(dayjs(time * 1000))
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')
-  // eslint-disable-next-line
-  const toBePaid = true && !isUpcoming && !isPaid && !isInterviewer
-  // TODO: remind interviewer to add payment method if not added
-  const unpaid = true && !isUpcoming && !isPaid && isInterviewer
+  const toBePaid = !isUpcoming && !isPaid && !isInterviewer
 
   // eslint-disable-next-line
   const handleLaunch = () => {
@@ -95,30 +91,29 @@ const InterviewCard = (interview) => {
         }
         <p>Level: {difficulty}</p>
         {toBePaid ? <Tag color="volcano">To be paid</Tag> : null}
-        {unpaid ? <Tag color="volcano">Not yet paid</Tag> : null}
         <Divider />
         {isUpcoming ? (
                     <>
             <>
               <Button
                 type="primary"
-                disabled={!isWithinHour}
+                disabled={!isWithinDay}
                 onClick={handleLaunch}
               >
                 Launch Meeting
               </Button>
-              {!isWithinHour ? <p>Launch within an hour of interview</p> : null}
+              {!isWithinDay ? <p>Launch within a day of interview</p> : null}
             </>
             <>
               <Button
                 danger
                 type="primary"
-                disabled={isWithinHour}
+                disabled={isWithinDay}
                 onClick={handleDelete}
               >
                 Delete
               </Button>
-              Cancel up to an hour within interview
+              Cancel up to a day within interview
             </>
           </>)
           :
@@ -139,9 +134,6 @@ const InterviewCard = (interview) => {
                     `${interviewerFirstName} ${interviewerLastName}`
                   )
                 setOpenFeedbackForm(true)
-                console.log("TRY: ", (interviewerFirstName === user.firstName && interviewerLastName === user.lastName) ? 
-                    `${intervieweeFirstName} ${intervieweeLastName}` :
-                    `${interviewerFirstName} ${interviewerLastName}`)
                 setIsUpdated(true)
                 setCurrTime(time)
               }}

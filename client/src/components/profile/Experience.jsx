@@ -100,13 +100,12 @@ const ExperienceCard = () => {
       }
       // Make an API call to add new experience to user's experience list
       const res = await addExperienceDetailsAPI(userId, { ...formData })
-      console.log('Experience Details added: ', res)
       // if API call is successful, dispatch the addExperience action to update the Redux store
       if (!res.status) {
         dispatch(addExperience(res))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
     setLoading(false)
     setAddExperienceMode(false)
@@ -124,13 +123,12 @@ const ExperienceCard = () => {
     try {
       // Make an API call to delete experience from user's experience list
       const res = await deleteExperienceDetailsAPI(userId, { experienceId })
-      console.log('Experience Details delete: ', res)
       // if API call is successful, dispatch the removeExperience action to update the Redux store
       if (!res.status) {
         dispatch(removeExperience(experienceId))
       }
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
 

@@ -8,11 +8,9 @@ const isObjEmpty = (obj) => {
 class ProfessionalismDecorator extends QuestionsDecorator{
   addQuestions(newQuestionsObj={}){
     //  call the previous decorators first
-    //console.log("Outside Professionalism loop", newQuestionsObj)
     super.addQuestions();
     //  Do what the Professionalism Decorator should do
     if(isObjEmpty(newQuestionsObj) && this.isInterviewer){
-      //console.log("Inside Professionalism loop")
       newQuestionsObj = {
         P1: 
           {
@@ -47,12 +45,10 @@ class ProfessionalismDecorator extends QuestionsDecorator{
     }
     //  add the new questions related to the Professionalism
     super.addQuestions(newQuestionsObj)
-    console.log("P", newQuestionsObj)
   }
   removeQuestions(removeQuestionsArray=[]){
     super.removeQuestions()
     if(removeQuestionsArray.length <= 0 && this.isInterviewer){
-      //  console.log("Inside language loop")
       removeQuestionsArray = ["P1", "P2", "P3"]
     }
     else if(removeQuestionsArray.length <= 0 && !this.isInterviewer){

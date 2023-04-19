@@ -5,13 +5,10 @@ const isObjEmpty = (obj) => {
 }
 class TechnicalDecorator extends QuestionsDecorator{
   addQuestions(newQuestionsObj={}){
-    //console.log("Outside technical loop", newQuestionsObj)
     //  call the previous decorators first
     super.addQuestions();
-    console.log("TECHNICAL CHECK", newQuestionsObj, this.isInterviewer)
     //  Do what the Language Decorator should do
     if(isObjEmpty(newQuestionsObj) && this.isInterviewer){
-      //console.log("Inside technical loop")
       newQuestionsObj = {
         T1: 
           {
@@ -26,7 +23,6 @@ class TechnicalDecorator extends QuestionsDecorator{
       }
     }
     else if(isObjEmpty(newQuestionsObj) && !this.isInterviewer){
-      //console.log("Inside technical loop")
       newQuestionsObj = {
         T1: 
           {
@@ -42,12 +38,10 @@ class TechnicalDecorator extends QuestionsDecorator{
     }
     //  add the new questions related to the Language
     super.addQuestions(newQuestionsObj)
-    console.log("T", newQuestionsObj)
   }
   removeQuestions(removeQuestionsArray=[]){
     super.removeQuestions()
     if(removeQuestionsArray.length <= 0 && this.isInterviewer){
-      //  console.log("Inside language loop")
       removeQuestionsArray = ["T1", "T2"]
     }
     else if(removeQuestionsArray.length <= 0 && !this.isInterviewer){

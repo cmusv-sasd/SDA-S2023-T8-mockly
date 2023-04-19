@@ -9,7 +9,6 @@ import { feedbackQuestionsSelector } from '../../store/feedbackQuestionsSlice'
 import { fetchFeedbackQuestions, updateFeedbackQuestions, createFeedbackQuestions } from '../../api/feedback'
 import { useForm } from 'antd/es/form/Form'
 
-// eslint-disable-next-line no-unused-vars
 const FeedbackQuestions = () => {
   const feedbackQuestions = useSelector(feedbackQuestionsSelector)
   const dispatch = useDispatch()
@@ -29,10 +28,7 @@ const FeedbackQuestions = () => {
 
   const onChangeInterviewer = async (checkedValues) => {
     try {
-      const temp = await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
-      console.log("TEMP: ", temp)
-      //  const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
-      //  dispatch(setFeedbackQuestions(res))
+      await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:true})
     } catch (error) {
       console.error(error)
     }
@@ -41,8 +37,6 @@ const FeedbackQuestions = () => {
   const onChangeInterviewee = async (checkedValues) => {
     try {
       await updateFeedbackQuestions(user.firstName + ' ' + user.lastName, {questions:checkedValues, isInterviewer:false})
-      //const res = await fetchFeedbackQuestions(user.firstName + ' ' + user.lastName)
-      //dispatch(setFeedbackQuestions(res))
     } catch (error) {
       console.error(error)
     }
