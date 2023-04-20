@@ -51,6 +51,8 @@ const DashboardPage = () => {
   const handleCreateInterviewClick = () => {
     if (!validPayment) {
       messageApi.open({ type: 'error', content: 'Please set your payment method prior to creating any interviews!'})
+    } else {
+      setOpenInterviewModal(true)
     }
   }
 
