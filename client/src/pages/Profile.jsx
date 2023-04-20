@@ -12,6 +12,7 @@ import ProjectsCard from '../components/profile/Projects'
 import InterviewerDetailsCard from '../components/profile/InterviewerDetails'
 import { fetchUserAPI } from '../api/userProfile'
 import { setUser } from '../store/userSlice'
+import FeedbackQuestions from '../components/FeedbackHistory/FeedbackQuestions'
 
 import '../styles/profile.css'
 
@@ -43,6 +44,7 @@ const ProfilePage = () => {
         </Col>
         <Col xs={24} sm={24} md={16} lg={16} xl={16}>
           <SummaryCard />
+          <FeedbackQuestions />
           <ExperienceCard />
           <EducationCard />
           <ProjectsCard />

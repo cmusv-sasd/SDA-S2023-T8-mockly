@@ -49,8 +49,13 @@ const steps = [
     placement: 'top'
   },
   {
+    target: 'body',
+    content: 'Receive feedback about your interviews here on the Interview History tab',
+    placement: 'center'
+  },
+  {
     target: '.payment-method',
-    content: 'Please fill out your payment method prior to scheduling any interviews!',
+    content: 'Please fill out your payment method here on the Payment Method tab prior to scheduling any interviews!',
     placement: 'top'
   },
 ]
@@ -95,14 +100,14 @@ const ProtectedRoute = ({ children }) => {
         setRun(true)
         setStepIndex(index + 1)
       }, 1000)
-    } else if (type === 'step:after' && index === 4) {
+    } else if (type === 'step:after' && index === 5) {
       setRun(false)
       navigate('/feedback')
       setTimeout(() => {
         setRun(true)
         setStepIndex(index + 1)
       }, 1000)
-    } else if (type === 'step:after' && index === 5) {
+    } else if (type === 'step:after' && index === 6) {
       setRun(false)
       navigate('/payment')
       setTimeout(() => {
