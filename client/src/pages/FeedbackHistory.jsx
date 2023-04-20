@@ -26,7 +26,7 @@ const FeedbackHistoryPage = () => {
       }
     }
     getFeedbackHistory()
-  }, [dispatch])
+  }, [dispatch, user._id])
   return (
     <div>
       <FeedbackQuestions />
