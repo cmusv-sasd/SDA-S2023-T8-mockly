@@ -51,7 +51,7 @@ app.post('/payment/confirm', async (request, response) => {
 })
 
 app.post('/payment/cancel', async (req, res) => {
-  res.status(200)
+  res.status(200).json(req.body)
 })
   
 app.get('/payment/payment-method', async (req, res) => {
