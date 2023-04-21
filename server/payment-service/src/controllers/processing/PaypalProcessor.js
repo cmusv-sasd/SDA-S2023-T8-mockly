@@ -16,7 +16,7 @@ class PaypalProcessor extends PaymentProcessor {
         "payment_method": "paypal"
       },
       "redirect_urls": {
-        "return_url": `http://localhost:3001/api/payment/confirm?matchId=${this.matchId}`,
+        "return_url": `http://localhost:3001/api/payment/confirm?matchId=${this.matchId}&amount=${amount}`,
         "cancel_url": `http://localhost:3001/api/payment/cancel`
       },
       "transactions": [{
@@ -57,16 +57,16 @@ class PaypalProcessor extends PaymentProcessor {
     })
 
   return linkPromise
-}
+  }
 
   async confirm(payload){
-    const {PayerID, paymentId} = payload
+    const {PayerID, paymentId, amount} = payload
     const execute_payment_json = {
       "payer_id": PayerID,
       "transactions": [{
         "amount": {
           "currency": "USD",
-          "total": 20
+          "total": amount
         }
       }]
     };
@@ -98,7 +98,6 @@ class PaypalProcessor extends PaymentProcessor {
     const amount = paypalResult.transactions.amount
     return { success, payer, payee, amount, time }
   }
-
 } 
 
 export default PaypalProcessor
