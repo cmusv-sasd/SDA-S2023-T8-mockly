@@ -53,11 +53,12 @@ const InterviewModal = ({ open, setOpen }) => {
       // eslint-disable-next-line no-unused-vars
       const { date, ...data } = { ...form.getFieldsValue(), times: formattedTimes }
       const res = await findMatches(data)
-      setMatches(res)
+      const filteredRes = res.filter(match => match.interviewer !== user._id)
+      setMatches(filteredRes)
       setStep(step + 1)
     } catch (e) {
       console.error(e)
-      messageApi.open({ type: 'error', content: 'Failed to request matches.' })
+      messageApi.open({ type: 'error', content: 'Failed to request matches. Please fill out all previous fields.' })
     }
   }
 
