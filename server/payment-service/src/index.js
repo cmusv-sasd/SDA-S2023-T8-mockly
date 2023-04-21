@@ -50,7 +50,7 @@ app.post('/payment/confirm', async (request, response) => {
   } 
 })
 
-app.get('/payment/cancel', async (req, res) => {
+app.post('/payment/cancel', async (req, res) => {
   res.status(200)
 })
   
