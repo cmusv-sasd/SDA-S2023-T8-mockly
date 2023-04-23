@@ -2,6 +2,13 @@ import { Card, Button } from "antd"
 import dayjs from 'dayjs'
 import "../../styles/feedback.css"
 
+/*
+This is the component in the history page that is the "rows" / "cards" of reviews people receive.
+
+Clicking on "Expand" will open the FeedbackModal
+*/
+
+
 const FeedbackRow = (feedback) => {
   const { time, reviewer,setSelectedFeedback,index,setOpenFeedbackModal } = feedback
   const formattedTime = dayjs(time * 1000).format('MM/DD/YY h A')

@@ -14,18 +14,13 @@ class ProfessionalismDecorator extends QuestionsDecorator{
       newQuestionsObj = {
         P1: 
           {
-            question: "Was the interview too lax?",
+            question: "Was the interview too lax or too formal, 1 being too lax and 5 being too formal",
             type: "1-5"
           },
-        P2: 
-          {
-            question: "Was the interview too formal?",
-            type: "1-5"
-          },
-        P3:
+        P2:
           {
             question: "Any additional feedback on my professionalism?",
-            type: "text"
+            type: "text", optional: true
           }
       }
     }
@@ -39,7 +34,7 @@ class ProfessionalismDecorator extends QuestionsDecorator{
         P2:
           {
             question: "Any additional feedback on my professionalism?",
-            type: "text"
+            type: "text", optional: true
           }
       }
     }

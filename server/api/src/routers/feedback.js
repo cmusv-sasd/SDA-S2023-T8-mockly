@@ -40,6 +40,9 @@ export default Router()
       response.status(500).send({ message: 'Internal server error '})
     }
   })
+  //  we do not really need this POST since it was extracted to the feedbackQeustions.js
+  //      so in account creation it uses the POST from feedbackQuestions.js
+  //  However, leave this here in case we ever need to add questions (like for custom questions) and need authentication before adding
   .post('/addFeedbackQuestions', async (request, response) => {
     const { body } = request
     const options = { method: 'POST' , body: JSON.stringify(body), headers }
@@ -47,12 +50,12 @@ export default Router()
     try {
       const resp = await fetch(`http://mockly-feedback-service:3002/feedbackQuestions`, options)
       const receivedQuestions = await resp.json()
-      console.log("RQ in POST:", receivedQuestions)
       response.json(receivedQuestions)
     } catch (e) {
       response.status(500).send({ message: 'Internal server error '})
     }
   })
+  //  update what type of feedback the user wants
   .patch('/feedbackQuestions/:userName', async (request, response) => {
     const { body } = request
     const options = { method: 'PATCH' , body: JSON.stringify(body), headers }
@@ -60,7 +63,6 @@ export default Router()
     try {
       const resp = await fetch(`http://mockly-feedback-service:3002/feedbackQuestions/${userName}`, options)
       const receivedQuestions = await resp.json()
-      console.log("RQ in PATCH:", receivedQuestions)
       response.json(receivedQuestions)
     } catch (e) {
       response.status(500).send({ message: 'Internal server error '})

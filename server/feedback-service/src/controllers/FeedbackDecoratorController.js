@@ -11,7 +11,7 @@ class FeedbackDecoratorController {
   * Create a feedback result created by reviewer for the user
   */
   async create(user="default user",  questions={}) {
-    //  prob should check that the feedback is written then return something
+
     if(!user || user.length === 0 || user === " "){
       return {}
     }
@@ -28,7 +28,8 @@ class FeedbackDecoratorController {
       },
       B2: {
         question: "Any additional comments?",
-        type: "text"
+        type: "text",
+        optional: true
       }} })
     await ifs.save()
     return ifs

@@ -31,7 +31,7 @@ const FeedbackHistoryPage = () => {
       {feedbackHistory.map((each, index) => {
         return (
           <FeedbackRow
-            key={`${each.reviewer}-${each.time}`}
+            key={`${each.reviewer}-${each.time}-${index}`}
             time={each.time}
             answers={each.answers}
             reviewer={each.reviewer}

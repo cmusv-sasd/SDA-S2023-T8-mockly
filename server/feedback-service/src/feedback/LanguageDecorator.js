@@ -13,13 +13,13 @@ class LanguageDecorator extends QuestionsDecorator{
       newQuestionsObj = {
         L1: 
           {
-            question: "I'm a foreigner and my english skills aren't too good. Did you understand what I was saying?",
+            question: "Could you clearly understand what questions I was asking / was my enunciation clear?",
             type: "1-5"
           },
         L2:
           {
             question: "Any additional feedback on my speech?",
-            type: "text"
+            type: "text", optional: true
           }
       }
     }
@@ -27,13 +27,13 @@ class LanguageDecorator extends QuestionsDecorator{
       newQuestionsObj = {
         L1: 
           {
-            question: "Was my speech clear?",
+            question: "Was my speech clear? Could you clearly understand my reasoning and ideas?",
             type: "1-5"
           },
         L2:
           {
             question: "Any additional feedback on my speech?",
-            type: "text"
+            type: "text", optional: true
           }
       }
     }
