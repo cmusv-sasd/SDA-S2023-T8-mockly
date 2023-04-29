@@ -46,9 +46,9 @@ router.get('/confirm', async (req, res) => {
   }
 })
 
-// GET /payment/cancel
+// POST /payment/cancel
 // Cancel payment
-router.get('/cancel', async (req, res) => {t
+router.post('/cancel', async (req, res) => {t
   try {
     let urlQuery = ''
     for (const key in request.query) {
@@ -62,7 +62,7 @@ router.get('/cancel', async (req, res) => {t
       method: 'GET',
       headers,
     })
-    // TODO: redirect back to meetings
+    // redirect back to meetings
     response.json(resp)
   } catch (e) {
     console.log(e)

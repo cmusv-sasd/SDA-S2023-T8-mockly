@@ -20,6 +20,8 @@ app.get('/api/', (req, res) => {
   res.json({ message: 'Hello from Payment' })
 })
 
+// POST /payment
+// Process a payment request
 app.post('/payment', async (req, res) => {
   const { payer, payee, match } = req.body
   const amount = 20
@@ -36,6 +38,8 @@ app.post('/payment', async (req, res) => {
   }
 })
 
+// GET /payment/confirm
+// Confirm payment
 app.post('/payment/confirm', async (request, response) => {
   try {
     const paypalProcessor = new PaypalProcessor()
@@ -50,10 +54,14 @@ app.post('/payment/confirm', async (request, response) => {
   } 
 })
 
+// POST /payment/cancel
+// Cancel payment
 app.post('/payment/cancel', async (req, res) => {
   res.status(200).json(req.body)
 })
   
+// GET /payment/payment-method
+// Get payment method
 app.get('/payment/payment-method', async (req, res) => {
   const userId = req.query.userId
   try {
@@ -74,6 +82,8 @@ app.get('/payment/payment-method', async (req, res) => {
   }
 })
 
+// POST /payment/payment-method
+// Create/Update payment method
 app.post('/payment/payment-method', async (req, res) => {
   const userId = req.query.userId
   const { type, account } = req.body
@@ -97,6 +107,8 @@ app.post('/payment/payment-method', async (req, res) => {
 
 })
 
+// DELETE /payment/payment-method
+// Delete payment method
 app.delete('/payment/payment-method', (req, res) => {
   const userId = req.query.userId
   try {
