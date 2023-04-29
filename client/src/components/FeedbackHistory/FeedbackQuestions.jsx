@@ -11,6 +11,11 @@ import { fetchFeedbackQuestions, updateFeedbackQuestions, createFeedbackQuestion
 import { useForm } from 'antd/es/form/Form'
 import useMessage from 'antd/es/message/useMessage'
 
+/*
+This is the component in the Profile section where users select what types of feedback 
+they want to receive
+*/
+
 const FeedbackQuestions = () => {
   const [messageApi, contextHolder] = useMessage()
   const [editing, setEditing] = useState(false)

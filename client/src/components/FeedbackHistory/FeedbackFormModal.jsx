@@ -103,21 +103,28 @@ const FeedbackFormModal = ({
           Object.keys(currQuestions).map((key) => {
             const currQuestion = currQuestions[key]
             const questionType = currQuestion.type
+
+            const rules = [{required: true,},]
+            console.log("optoonal:", currQuestion.optional)
+
             switch (questionType) {
               case 'text':
-                return (
+                return currQuestion.optional === undefined|| currQuestion.optional === null || currQuestion.optional ?  (
                   <Form.Item
                     label={currQuestion.question}
                     name={`${key}`}
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
                     key={`question-${key}-item`}
                   >
                     <TextArea rows={4} />
-                  </Form.Item>
+                  </Form.Item> ) 
+                  :(<Form.Item
+                    label={currQuestion.question}
+                    name={`${key}`}
+                    rules={rules}
+                    key={`question-${key}-item`}
+                  >
+                    <TextArea rows={4} />
+                  </Form.Item> 
                 )
                 //  eslint-disable-next-line no-unreachable
                 break
